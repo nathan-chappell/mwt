@@ -1,0 +1,51 @@
+%
+\newcommand{\dpos}{-4}
+\newcommand{\mhpos}{\numexpr \dpos+1}
+\newcommand{\mlpos}{\numexpr \dpos-1}
+\begin{figure}
+\begin{centering}
+\begin{tikzpicture}[>=triangle 45]
+  \node (PH) at (0,0) {\framebox{$\PH$}};
+  \node (CH) at (0,\dpos) {\framebox{$\CH$}};
+  \node (PV) at (4,0) {\framebox{$\PV$}};
+  \node (CV) at (4,\dpos) {\framebox{$\CV$}};
+  \node (CVp) at (2,\mhpos) {\framebox{$\CVp$}};
+  \node (CHp) at (2,\mlpos) {\framebox{$\CHp$}};
+  \draw[->,bend right=10] 
+      (PH) to
+      node[left,color=blue!70]{relax} 
+      (CH);
+  \draw[->,bend right=10] 
+      (CH) to
+      node[right,color=violet!70]{restrict} 
+      (PH);
+  \draw[->, bend right=10]
+      (PV) to
+      node[left,color=violet!70]{relax} 
+      (CV);
+  \draw[->,bend right=10]
+      (CV) to
+      node[right, color=blue!70]{restrict} 
+      (PV);
+  \draw[->,bend left=15]
+      (CH) to
+      node[above left,color=black!70]{lift}
+      (CVp);
+  \draw[->,bend left=15, color=red]
+      (CVp) to
+      node[above right]{$\F^*$}
+      (CV);
+  \draw[->,bend left=15]
+      (CV) to
+      node[below right,color=black!70]{lift}
+      (CHp);
+  \draw[->,bend left=15,color=red]
+      (CHp) to
+      node[below left]{$\F$}
+      (CH);
+\end{tikzpicture}
+\caption{Diagram of the proof}
+\label{fig:proof}
+\end{centering}
+\end{figure}
+

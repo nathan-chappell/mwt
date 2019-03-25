@@ -1,0 +1,193 @@
+\documentclass[a4,fleqn]{article}
+\usepackage{amsmath}
+%\usepackage{color}
+%\usepackage{svgcolor}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usetikzlibrary{arrows,snakes,backgrounds}
+
+\DeclareMathOperator{\conv}{conv}
+\DeclareMathOperator{\cone}{cone}
+\begin{document}
+\input{definitions}
+
+\section{Introduction}
+
+% importance
+The \MWT{} is a theorem of utmost importance in the theory of polyhedra.  Ziegler refers to it as the ``main theorem.''  It is a theorem which is easy to intuitively understand, but is surprisingly difficult to prove.  Going through the proof in detail, however, is a good excersice because it introduces various other imporant notions and techniques, as well as helps to mentally clarify the basic definitions relevant to the theory.
+
+Polyhedra are ``finitely generated'' convex subsets of $\R^n$.  ``Finitely generated'' here means that they can be described in a finite manner, in particular as a convex hull of either: a finite set of points and ray, or a finite intersection of halfspaces.  The \MWT{} states that these two finite representations are ``equivalent,'' that every polyhedra can be described either way.
+
+For a more concrete example, consider a polygon in the plane \todo{provide some nice pictures here}.
+
+% paper overview
+In this paper, the theorem and relvant definitions will be stated, and a proof will be given.  The proof will closely follow Ziegler's, however it is the author's intent to make this paper as accessible as possible \todo{who is the target audience?}.  Therefore, some concepts will be stated in somewhat more painstaking detail than some may find necessary, however these details will have to be addressed to implement an enumeration-algorithm that will accompany the proof.
+
+% diagram
+Perhaps the most important part of the paper is the diagram in figure \ref{fig:proof}.  This diagram illustrates the main steps of the proof, and will serve as a ``roadmap'' to the implementation.
+
+\section{Definitions}
+\subsection{Informal Notions}
+% informal notions
+
+Here shall be stated some of the fundamental ideas involved in the theory of polyhedra (formal definitions will be given in the next section).
+
+\paragraph{Convexity} Convexity is an essential notion in the study of polyhedra.  Here, it will be considered a property of subsets of $\R^n$.  Let $A \subseteq \R^n$.  A is \textit{convex} if, given any two points of $A$, the line segment connecting these two points is also contained in $A$.  It formalizes a notion of being ``filled-in,'' and implies that (given the standard metric) the shortest path between any two points of $A$ is included in $A$.  
+
+\paragraph{Convex Hulls} Associated with the notion of convexity is the operation of \textit{convex hull}.  Given any subset $B \subseteq \R^n$, the \textit{convex hull} of $B$ is the smallest set which contains $B$ and is convex.  For two isolated points, their convex hull is the line segment with the given points as endpoints.  For more complex sets, it can be thought of as in iterative procedure where the convex hull of every two points is added to the set, repeating this operation until no more points are added. \todo{a picture showing how the procedure must iterate}.
+
+\paragraph{Minkowski Sums}
+
+%- Important transforms
+\paragraph{Projections, Lifts, Relaxations, Restrictions}  These terms will be will be used informally in this paper, however when one is needed in a formal context it will be specified as necessary.  
+
+\textit{Projections} are very simple operations, which basically cause one to ``ignore'' the coordinates of a set for a given index set of coordinates.  For example, $\pi: (x,y) \mapsto (x)$ is a projection from $\R^2$ to $\R$.  Projections are often given a subscript to indicate which dimensions are being ``projected to,'' or a superscript to indicate which dimensions are being ``projected away.''  So $\pi$ above may be written as $\pi_x$ or perhaps $\pi^y$, however in formal contexts the precise nature of the projection will be indicated; this notation is meant only to be useful for the reader.
+
+A \textit{lift} refers to taking a set and representing it in a higher dimension.  For example, one may take the unit interval $I = [0,1] \subseteq \R^1$ and \textit{lift} it to $\R^2$ by considering $I \times {0}$.  
+
+\textit{Relaxations and Restrictions}: A \textit{relaxation} of a set will typically be a way to let a set ``grow,'' however it will typically be in a ``controlled'' or ``reversible'' manner.  These ``reversals'' will be referred to as \textit{restrictions}.  Take, for instance, this relaxation of the unit interval $I = [0,1]$: 
+  \[\bigcup_{t \geq 0} [0,t]\times t \quad=\quad 
+    \{(x,y) \suchthat x \geq 0\} \cap \{(x,y) \suchthat y - x \geq 0\}\]  
+From this relaxation (an ``infinite triangle'' of sorts) we may recover $I$ with a respective restriction, in this case by intersecting the relaxation with ${\{(x,y) \suchthat y = 1\}}$ and projecting it to the x axis.  Again, the terms \textit{relaxation} and \textit{restriction} will be used informally, while specific instances will be specified as needed.
+
+
+\subsection{Formal Definitions}
+Here are the formal defintions required for the statement of the theorem and its proof.  In all definitions, unless otherwise stated, $I$ represents and arbitray \textit{finite} index set, and $J$ is an \textit{arbitrary} index set.
+
+% convex combination
+\paragraph{Convex Combination} 
+Let $\vec{x},\vec{y} \in \R^n,\, \lambda \in [0,1]$.  Then
+  \[\convComb{\vec{x}}{\vec{y}}{\lambda}\]
+is called a \textit{convex combination} of $\vec{x}$ and $\vec{y}$.
+More generally, $\vec{x}_i \in \R^n$, $\lambda_i \in [0,1]$, and $\sum_i \lambda_i = 1$.  Then 
+  \[\convCombb{\vec{x}}{\lambda}{i}\]
+is called a \textit{convex combination} of $\vec{x}_i$.
+
+% convex
+\paragraph{Convex} 
+Let $A \subseteq R^n$.  $A$ is by definition \textit{convex} if every convex combination of its members is again a member.  In symbols:
+  \[\vec{x}_i \in A \Rightarrow
+    \convCombb{\vec{x}}{\lambda}{i} \in A\]
+Note: Let $(\forall j \in J) \, A_j \subseteq \R^n$ be convex, and $(\forall i\in I)\,\vec{x}_i, \in \bigcap_{j\in J}A_j$.  Then 
+  \[(\forall j\in J)\; \convCombb{\vec{x}}{\lambda}{i} \in A_j \Rightarrow \convCombb{\vec{x}}{\lambda}{i} \in \bigcap_{j \in J} A_j\]  
+ This implies that $\bigcap_{i \in I} A_i$ is also convex.  In other words, the property of being convex is closed under the operation of intersection.
+
+% halfspace
+\paragraph{Halfspace}
+Let $\vec{y} \in \R^n,\, c \in \R$.  Then the set
+  \[ \{\vec{x} \suchthat \dotproduct{\vec{x}}{\vec{y}} \leq c\} \]
+is called a \textit{halfspace}.  In particular, $H_k$ shall denote the halfspace given by
+  \[ \{\vec{x} \suchthat \dotproduct{\vec{x}}{\vec{e}_k} \leq 0 \} = 
+     \{\vec{x} \suchthat x_k \leq 0 \} \]
+Note:  Suppose that 
+  $\dotproduct{\vec{x}}{\vec{y}} \leq c,\;$ 
+  $\dotproduct{\vec{z}}{\vec{y}} \leq c,\;$ and
+  $\lambda \in [0,1]$.  Then
+  \[ \dotproduct{\convComb{\vec{x}}{\vec{z}}{\lambda}}{\vec{y}} = 
+    \convComb{\dotproduct{\vec{x}}{\vec{y}}}
+             {\dotproduct{\vec{z}}{\vec{y}}}
+             {\lambda} \leq \convComb{\cdot c}{\cdot c}{\lambda} = c
+  \]
+  This means that halfspaces are \textit{convex}.
+
+% H-polyhedron
+\paragraph{H-polyhedron}
+An \textit{H-polyhedron} is a finite intersection of halfspaces.  By the remark given under the definition of \textbf{convexity}, \textit{H-polyhedra are convex.}  Here is a useful way of ``writing down'' an H-polyhedron:
+  \[ \{ \vec{x} \in \R^n \suchthat 
+    \forall i:\, \dotproduct{\vec{x}}{\vec{a}_i} \leq b_i \} \]
+If all the $\vec{a}_i$ are gathered into a matrix $A$ (where the $\vec{a}_i$ become the rows of $A$), this is sometimes also written as:
+  \[ \{ \vec{x} \in \R^n \suchthat A\vec{x} \leq \vec{b} \} \]
+
+% -convex-hull
+\paragraph{Convex Hull}
+Let $A \subseteq \R^n$.  $B$ is by definition the \textit{convex-hull} of $A$ if
+  \[ B = \conv(A) = \{ \vec{x} \suchthat \exists \vec{a}_i \in A, \exists\lambda_i \in [0,1]: \sum_i \lambda_i = 1,\,\vec{x} = \convCombb{\vec{a}}{\lambda}{i} \} \]
+
+Note: Another useful, equivalent definition of \textit{convex hull} can be given as:
+\[ B' = \conv'(A) = \bigcap \{C \suchthat 
+      A \subseteq C, \, C \text{ is convex}\} \]
+This more clearly illustrates the idea of ``smallest convex set containing $A$.''  To see that these definitions are equivalent, first note that $B$ is convex, and $A \subseteq B$, so $B' \subseteq B$ (since $B$ will be included in the intersection).  Then note that if $C$ is convex and $A \subseteq C$, then any convex combination of members of $A$ must (by definition) be in $C$, so it will be in every such $C$ and therefore in their intersection, so $B' \subseteq B.$
+
+% conical hull
+\paragraph{Conical Hull}  Let $\cup_{i\in I} \vec{a}_i = A \subseteq \R^n$, then $B$ is by definition the \textit{conical hull} of $A$ if:
+  \[ B = \cone(A) = \{ \vec{x}\in \R^n \suchthat\; \exists t_i \in \R^n \suchthat \; t_i \geq 0,\; \vec{x} = \sum_{i\in I} t_i\vec{a}_i \} \]
+
+Note: A conical hull is convex.  Let $K,\, (\forall i\in I)\, J_i$ be finite index sets (i.e. $J_i$ is a collection of finite index sets, indexed by the finite set $I$), $(\forall i \in I)(j \in J_i): t_{i,j} \geq 0,\, \vec{a}_{i,j} \in A$, and, as usual, $\lambda_i \in [0,1],\, \sum_i \lambda_i = 1$.  Then
+  \[ \sum\nolimits_i \lambda_i \left(\sum\nolimits_{j \in J_i} t_{i,j} \vec{a}_{i,j}\right) = \sum\nolimits_{i,j\in J_i} \lambda_i \cdot t_{i,j} \vec{a}_{i,j}\]
+is a ``conical combination'' of vectors in $A$ (because $\lambda_i\cdot t_{i,j} \geq 0$), so every convex combination from $\cone(A)$ is again in $\cone(A)$.
+
+% minkowski sum
+\paragraph{Minkowski Sum}
+Let $P,Q \subseteq \R^n$.  Then the \textit{Minkowski Sum} of $P$ and $Q$ is given by:
+  \[ P \oplus Q = \{ p + q \suchthat p \in P,\, q \in Q \} \]
+
+Note:  If both $P$ and $Q$ are convex, then so is $P \oplus Q$.  Indeed, let $p_i \in P,\, q_i \in Q$, then
+  \[\sum_i\nolimits \lambda_i(p_i + q_i) = 
+  \convCombb{p}{\lambda}{i} + \convCombb{q}{\lambda}{i} = 
+  \bar{p} + \bar{q}
+  \]
+Where $\bar{p} \in P$ and $\bar{q} \in Q$ (because they are convex), so $\bar{p} + \bar{q} \in P \oplus Q$.
+
+% V-polyhedron
+\paragraph{V-Polyhedron}  A \textit{V-Polyhedron} is a subset $\mathcal{P}$ of $\R^n$ given by 
+  \[ \mathcal{P} = \cone(\mathcal{U}) \oplus \conv(\mathcal{V}) \] 
+where $\mathcal{U}$ and $\mathcal{V}$ are both finite (possibly empty) subsets of $\R^n$.  By the remark given under the definition of Minkowski Sums, \textit{V-Polyhedra are convex}.
+
+\bigskip
+\noindent We are now prepared to state the \MWT.
+
+% statement of theorem
+\paragraph{\MWT}
+Every V-Polyhedron is an H-Polyhedron, and every H-Polyhedron is a V-Polyhedron.  This permits the use of the term ``Polyhedron'' unambiguously.
+\medskip
+
+Note:  I've read that ``definitions should be hard and theorems should be easy.''  Perhaps there is a bit of this involved in the \MWT{}, but an unfortunate side effect is that the significance of a theorem may not be immediate.  The \MWT{} is a ``representation theorem,'' and is a consequence of a type of duality that exists between the V and H --type definitions of polyhedra.
+
+For a quick demonstration of why a dual representation is important for these types of sets, consider the following two tasks:
+\begin{itemize}
+  \item Given a point $\vec{x}$, determine if it is a member of the set
+  \item Produce an arbitrary member of the set
+\end{itemize}
+These two fundamental tasks tell completely different stories given one representation as opposed to the other.  For an H-Polyhedron, determining membership is straightforward and relatively inexpensive: for each halfspace constraint, check to see that it is fulfilled.  For a V-Polyhedron, you would need to either find a combination that produces the point, or provide a ``certificate'' that demonstrates that it is not in the set.  On the other hand, given an H-Polyhedron, producing a member of the set is not straightforward at all.  Given a list of half-spaces, it isn't even obvious (or necessarily cheap to determine) that their intersection is not empty!  A V-Polyhedron, on the other hand, is given by members of the set, so the task of providing a member (or determining if the set is empty or not) is already done for you.  Observe that these tasks are facilitated by the qualifiers used to describe the sets (the qualifier $\forall$ is used for the H-Polyhedron, while $\exists$ is used for the V-Polyhedron).
+
+It should be noted that guaranteeing the existence of two representations does not promise an efficient method of creating one from the other.  The proof of the \MWT{} indicates an enumeration algorithm, and an implementation will be provided.  This enumeration can be inefficient, however.
+
+% Equivalence of polyhedra
+\subsection{Equivalence of Polyhedra}  The notion of equivalence is worth a small discussion.  Consider the two polyhedra $I = [0,1]$ and $I\times\{0\}$ (i.e. the unit interval in $\R^1$ and the unit interval in $\R^2$).  It would be unfortunate if the theory of polyhedra didn't consider these two entities as \textit{equivalent} in some manner.  The basic operation of equivalence in the theory is the \textit{affine transformation}.  Then polyhedra are considered equivalent if there is an affine transformation from one to the other, which is bijective \textit{when restricted to the second polyhedron}.  In our setting, it is enough to consider a subset of the affine transformations called \textit{projections}.  For example, one may write a projection $\pi_x: (x,y) \mapsto (x)$.  Then we have $\pi_x (I \times \{0\}) = I$.  Note that this projection, when restricted to $I$ (and, more generally, the $x$--axis) is bijective.  Therefore, given our notion of equivalence, we can conclude that $I$ and $I\times \{0\}$ are equivalent.  As an anti--example, consider $I\times I$ (i.e. the unit square in $\R^2$).  While $\pi_x(I\times I) = I$, this mapping is not bijective when restricted to $I$.  Observe that $(0,0) \mapsto (0)$, and $(0,1) \mapsto (0)$, so the projection fails to be injective on $I$.  To indicate why this restricted definition of equivalence may not be suitable for a more robust theory, note that the two line segments $[0,1]$ and $[0,2]$ are not equivalent (given our defintion), even though they are geometrically congruent.  Considering the more general affine transformations resolves this problem, but is not necessary here \todo{mention projective transformations and give a reference for further reading}.
+
+\section{Proof of the \MWT}
+\input{proof_diagram}
+\subsection{Overview}
+The proof shall proceed by first considering an H-Polyhedron $\PH$, and constructing from it a V-Polyhedron $\PV$ which represents the same set of points, then starting with a V-Polyhedron $\PV$ and constructing an H-Polyhedron $\PH$.  The high-level steps are almost identical, and is illustrated in Figure \ref{fig:proof}.
+
+First, $\PH$ will be relaxed to a cone $\CH$.  While technically unnecessary, in the steps that follow it is convenient to have a cone, as opposed to a more general polyhedron.  $\CH$ is then immediately lifted to a higher dimension so that it can be directly represented as a V-Cone $\CV$ \todo{have we defined V-Cone?}.  It is at this point that the ``real work'' must be done (which is why this arrow is colored red).  This step requires intersecting the V-Cone with a number of hyperplanes, and requires a process which is dual to the so-called ``\FME.''  At this point, a simple observation will allow us to restrict $\CV$ to get us to $\PV$, completing this direction of the proof.  Note that this restriction is the opposite of the relaxation which occurs at the beginning of this direction of the proof, as the colors of the diagram reflect.
+
+For the other direction, the exact same steps are taken, however the relaxing and lifting that occur are designed to convert the V-Polyhedron into a V-Cone and H-Cone, instead of the other way around$^1$.  Also, the full fledged ``\FME'' shall take place, this time because we need to project an H-Cone down a number of dimensions.
+
+The transformation which go from $V \to H$ and $H \to V$ representations in the proof seem like a bit of trickery, but in earnest these come from the field of Linear Programming.  For more information on these types of transformations, and a more systematic treatment of them, see \todo{that book by Matusek...}, for instance.
+
+\medskip
+Finally, before we get started, I'd like to mention that Ziegler provides the questions:
+\begin{itemize}
+  \item ``Is a polyhedron intersected with a hyperplane also a polyhedron?''
+  \item ``Is the projection of a polyhedron also a polyhedron?''
+\end{itemize}
+as examples of the utility of the two different representations.  The answer to the first question is clear for H-Polyhedra, this is merely adding another constraint to the system, while it is not so clear for a V-Polyhedra (it seems as though you must somehow ``solve'' something to proof this...)  Similarly, the second question is clear for V-Polyhedra, you simply take the vectors that you already have and forget about one of the coordinates, while for H-Polyhedra it again seems like some system needs to somehow be solved in order to prove this statement.  Before you go and try to prove it yourself, know that the ``solving'' of these problems is essentially \FME, and is the bulk of the work in the proof that follows.
+
+\subsection{H-Polyhedra $\to$ V-Polyhedra}
+\subsection{V-Polyhedra $\to$ H-Polyhedra}
+% by arrow
+
+\section{Program}
+% overview
+% design principles
+% details
+% correctness
+% complexity
+
+\section{Discussion}
+% representations / polymorphism
+% algorithms
+% other proofs
+
+\end{document}
