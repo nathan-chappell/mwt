@@ -10,20 +10,14 @@
  * use the class hierarchy in this way.  The only forseen divergence in
  * implementation is for IO, but I'll cross that bridge when I get to it.
  */
-class cone_base {
+class cone_base : public serial_base {
 protected:
   math_vectors A; //matrix
   int d;          //dimension
   void clear();
-
 public:
+  void read_in(std::istream &, std::ostream*) override;
+  std::string to_string() const override;
   cone_base() : d{-1} {}
-  ~cone_base() { clear(); }
-
-  void read_interactive();
-  void read_file(const std::string&);
-
-  //IO
-  friend std::ostream &operator<<(std::ostream &, const cone_base&);
-  friend void read_in(cone_base&, std::istream &, std::ostream*);
+  ~cone_base() override { clear(); }
 };

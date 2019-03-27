@@ -1,4 +1,4 @@
-//lift_and_drop.h
+//generics.h
 #pragma once
 
 /*
@@ -35,7 +35,7 @@ template <
           typename RestrictFunctor,
           typename Rep
           >
-auto relax_lift_drop_restrict(Rep rep) ->
+auto relax_lift_drop_restrict(const Rep &rep) ->
           decltype(
             RestrictFunctor{}(
               DropFunctor{}(
