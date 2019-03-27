@@ -8,7 +8,7 @@ The paper is written in latex, and all latex files are contained in this folder.
 * new_commands.tex  - here are the \newcommands I'm using
 * proof_diagram.tex - here is the tikz image of the diagram I'm using to guide the proof
 * mwt.tex           - the main file (needs more organization)
-* ....tex           - all sections are broken up into separate files
+* mwt_.\*.tex       - all sections are broken up into separate files
 
 ## cpp
 src and include directories are self-explanatory
