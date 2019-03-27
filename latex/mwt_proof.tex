@@ -1,0 +1,24 @@
+%mwt_proof.tex
+
+\input{proof_diagram}
+\subsection{Overview}
+The proof shall proceed by first considering an H-Polyhedron $\PH$, and constructing from it a V-Polyhedron $\PV$ which represents the same set of points, then starting with a V-Polyhedron $\PV$ and constructing an H-Polyhedron $\PH$.  The high-level steps are almost identical, and is illustrated in Figure \ref{fig:proof}.
+
+First, $\PH$ will be relaxed to a cone $\CH$.  While technically unnecessary, in the steps that follow it is convenient to have a cone, as opposed to a more general polyhedron.  $\CH$ is then immediately lifted to a higher dimension so that it can be directly represented as a V-Cone $\CV$ \todo{have we defined V-Cone?}.  It is at this point that the ``real work'' must be done (which is why this arrow is colored red).  This step requires intersecting the V-Cone with a number of hyperplanes, and requires a process which is dual to the so-called ``\FME.''  At this point, a simple observation will allow us to restrict $\CV$ to get us to $\PV$, completing this direction of the proof.  Note that this restriction is the opposite of the relaxation which occurs at the beginning of this direction of the proof, as the colors of the diagram reflect.
+
+For the other direction, the exact same steps are taken, however the relaxing and lifting that occur are designed to convert the V-Polyhedron into a V-Cone and H-Cone, instead of the other way around$^1$.  Also, the full fledged ``\FME'' shall take place, this time because we need to project an H-Cone down a number of dimensions.
+
+The transformation which go from $V \to H$ and $H \to V$ representations in the proof seem like a bit of trickery, but in earnest these come from the field of Linear Programming.  For more information on these types of transformations, and a more systematic treatment of them, see \todo{that book by Matusek...}, for instance.
+
+\medskip
+Finally, before we get started, I'd like to mention that Ziegler provides the questions:
+\begin{itemize}
+  \item ``Is a polyhedron intersected with a hyperplane also a polyhedron?''
+  \item ``Is the projection of a polyhedron also a polyhedron?''
+\end{itemize}
+as examples of the utility of the two different representations.  The answer to the first question is clear for H-Polyhedra, this is merely adding another constraint to the system, while it is not so clear for a V-Polyhedra (it seems as though you must somehow ``solve'' something to proof this...)  Similarly, the second question is clear for V-Polyhedra, you simply take the vectors that you already have and forget about one of the coordinates, while for H-Polyhedra it again seems like some system needs to somehow be solved in order to prove this statement.  Before you go and try to prove it yourself, know that the ``solving'' of these problems is essentially \FME, and is the bulk of the work in the proof that follows.
+
+\subsection{H-Polyhedra $\to$ V-Polyhedra}
+\subsection{V-Polyhedra $\to$ H-Polyhedra}
+% by arrow
+
