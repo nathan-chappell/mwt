@@ -19,7 +19,9 @@ src and include directories are self-explanatory
 * hpolyhedron.(cc|h) - nothing yet
 * vpolyhedron.(cc|h) - nothing yet
 * polyhedra.(cc|h)   - gathers all the stuff together
+* parser_testing.cc  - unit testing for reading polyhedra
 
 generics.h           - the *generic* abstractions of algorithms described in the paper
 mwt.h                - *Minkowski Weyl Theorem* specific code
 polyhedra_common.h   - math terms, error class for input
+  * Now has the base class `serial_base` to facilitate IO
