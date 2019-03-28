@@ -1,17 +1,18 @@
-CC = g++ -std=c++14
-HEADERS = include
-SOURCE = src
-CPPFLAGS = -Wall -Og -I$(HEADERS)
-#OBJ_PREFIX = polyhedra
-#OBJS_ = hcone vcone hpolyhedron vpolyhedron
-OBJS_ = polyhedra polyhedra_common cone_base hcone vcone 
-OBJS = $(OBJS_:%=$(SOURCE)/%.o)
-TEST = test.o
+CC          = g++ -std=c++14
+HEADERS_DIR = include
+SOURCE_DIR  = src
+TEST_DIR    = testing
+CPPFLAGS    = -Wall -Og -I$(HEADERS_DIR)
+OBJS_       = polyhedra polyhedra_common cone_base \
+                hcone vcone vpolyhedron hpolyhedron mwt
+OBJS        = $(OBJS_:%=$(SOURCE_DIR)/%.o)
+TEST        = test.o
 
-all : test objs parser_testing
+all                    : objs testing/test testing/parser_testing
 
-test : test.o $(OBJS)
+testing/test           : testing/test.o $(OBJS)
 
-objs : $(OBJS)
+testing/parser_testing : testing/parser_testing.o $(OBJS)
 
-parser_testing : parser_testing.o $(OBJS)
+objs                   : $(OBJS)
+

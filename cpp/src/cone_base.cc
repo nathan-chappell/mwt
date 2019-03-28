@@ -2,16 +2,12 @@
 
 #include "cone_base.h"
 
-#include <fstream>
-#include <iomanip>
-
 using namespace std;
 
 void cone_base::read_in(istream &is, ostream *o) {
   clear();
   conditional_log(o,"input cone (q or eof to quit)");
   d = read_dimension(is, o);
-  conditional_log(o,"read d:"s + ::to_string(d));
   A = read_math_vectors(is, d, o);
   if (is.eof()) {
     return;
@@ -19,9 +15,7 @@ void cone_base::read_in(istream &is, ostream *o) {
     is.get();
     return;
   } else {
-    throw READ_ERROR("reading unexpectedly stopped with: "s + 
-                     static_cast<char>(is.peek()) +
-                     "(maybe invalid character?)"s);
+    throw READ_ERROR(unexpected_char_message(is.peek()));
   }
 }
 

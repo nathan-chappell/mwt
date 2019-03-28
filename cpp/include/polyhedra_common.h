@@ -12,15 +12,18 @@
 //
 using ordered_field = double;
 using math_vector   = std::valarray<ordered_field>;
-using math_vectors  = std::list<math_vector>;
+template<typename... Ts>
+using def_container = std::list<Ts...>;
+using math_vectors  = def_container<math_vector>;
 
 // <a,x> <= b
 struct constraint_vector {
   math_vector a;
   ordered_field b;
+  size_t size() const { return a.size(); }
 };
 
-using constraint_vectors = std::list<constraint_vector>;
+using constraint_vectors = def_container<constraint_vector>;
 
 /*
  * Abstract base provided for basic "parsing" or "reading" interface.  Important
@@ -54,20 +57,24 @@ std::ostream &operator<<(std::ostream &, const math_vectors &);
 std::ostream &operator<<(std::ostream &, const constraint_vector &);
 std::ostream &operator<<(std::ostream &, const constraint_vectors &);
 
-int               read_dimension        (std::istream &is, 
-                                         std::ostream *o);
-math_vector       read_math_vector      (std::istream &is, int d, 
-                                         std::ostream *);
-constraint_vector read_constraint_vector(std::istream &is, int d,
-                                         std::ostream *);
-math_vectors      read_math_vectors     (std::istream &is, int d, 
-                                         std::ostream *o);
+int          read_dimension    (std::istream &is, std::ostream * = nullptr);
+math_vector  read_math_vector  (std::istream &is, int d, 
+                                std::ostream * = nullptr);
+math_vectors read_math_vectors (std::istream &is, int d, 
+                                std::ostream * = nullptr, 
+                                const std::string& = "");
+
+constraint_vector  read_constraint_vector (std::istream &is, int d,
+                                           std::ostream * = nullptr);
+constraint_vectors read_constraint_vectors(std::istream &is, int d,
+                                           std::ostream * = nullptr);
 
 // parse errors
 //
-#define FILE_LOCATION string{__FILE__ ":"} + ::to_string(__LINE__)
-#define READ_ERROR(m)                                                          \
-  polyhedra_read_error { FILE_LOCATION + " -- " + (m) }
+#define FILE_LOCATION std::string{__FILE__ ":"} + std::to_string(__LINE__)
+#define READ_ERROR(m) polyhedra_read_error { FILE_LOCATION + " -- " + (m) }
+
+std::string unexpected_char_message(int c);
 
 class polyhedra_read_error : public std::exception {
   std::string message;
