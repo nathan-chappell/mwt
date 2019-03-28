@@ -62,6 +62,15 @@ Note:  Suppose that
   \]
   This means that halfspaces are \textit{convex}.
 
+%hyperplane
+\paragraph{Hyperplane}
+Let $\vec{y} \in \R^n,\, c \in \R$.  Then the set
+  \[ \{\x \in \R^n \suchthat \dotproduct{\x}{\vec{y}} = c\} \]
+is called a \textit{hyperplane}.  This is the precisely the boundary of a halfspace.
+Note:  A family of useful hyperplanes come from projections, i.e.
+  \[ \{\x \in \R^n \suchthat \dotproduct{\x}{\vec{e}_i} = c\} = 
+     \{\x \in \R^n \suchthat x_i = c\} \]
+
 % H-polyhedron
 \paragraph{H-polyhedron}
 An \textit{H-polyhedron} is a finite intersection of halfspaces.  By the remark given under the definition of \textbf{convexity}, \textit{H-polyhedra are convex.}  Here is a useful way of ``writing down'' an H-polyhedron:
