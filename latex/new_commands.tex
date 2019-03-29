@@ -1,21 +1,35 @@
 %new_commands.tex
 
-\newcommand{\R}{\mathbb{R}}
-
 \newcommand{\MWT}{Minkowski-Weyl Theorem}
 \newcommand{\FME}{Fourier-Motzkin Elimination}
 \newcommand{\MSum}{Minkowski Sum}
 \newcommand{\suchthat}{\;|\;}
+
+\newcommand{\R}{\mathbb{R}}
+
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\N}{\mathcal{N}}
+\renewcommand{\P}{\mathcal{P}}
+\newcommand{\U}{\mathcal{U}}
+\newcommand{\V}{\mathcal{V}}
+\newcommand{\Z}{\mathcal{Z}}
+
 \renewcommand{\vec}[1]{\mathbf{#1}}
-\newcommand{\x}{\vec{x}}
-\newcommand{\e}{\vec{e}}
-\renewcommand{\b}{\vec{b}}
-\newcommand{\w}{\vec{w}}
-\newcommand{\z}{\vec{z}}
 \renewcommand{\a}{\vec{a}}
+\renewcommand{\b}{\vec{b}}
+\newcommand{\e}{\vec{e}}
+\renewcommand{\u}{\vec{u}}
+\renewcommand{\v}{\vec{v}}
+\newcommand{\w}{\vec{w}}
+\newcommand{\x}{\vec{x}}
+\newcommand{\y}{\vec{y}}
+\newcommand{\z}{\vec{z}}
+
 \newcommand{\stack}[2]{\begin{pmatrix}#1 \\ #2\end{pmatrix}}
 \newcommand{\smallstack}[2]{\left(\begin{smallmatrix}#1 \\ #2\end{smallmatrix}\right)}
 \newcommand{\xx}{\stack{x_0}{\x}}
+\newcommand{\setzeq}[2]{\left\{\stack{\x}{\z} \in \R^{m+n} \,\Big|\, #1 = #2\right\}}
+\newcommand{\smallsetzeq}[2]{\left\{\smallstack{\x}{\z} \in \R^{m+n} \,|\, #1 = #2\right\}}
 
 \newcommand{\dotproduct}[2]{\langle #1, #2 \rangle}
 \newcommand{\convComb}[3]{#3 #1 + (1-#3) #2}
@@ -32,5 +46,11 @@
 
 \newcommand{\todo}[1]{\textcolor{red}{(#1)}}
 
+\newcommand{\setsum}[3]{\sum\nolimits_{#2 \in #3} {#1}_{#2} \u^{#2}}
+\newcommand{\setsumk}[3]{\sum\nolimits_{#2 \in #3} {#1}_{#2} u^{#2}_k}
+\newcommand{\setsumo}[3]{\sum\nolimits_{#2 \in #3} {#1}_{#2} u^{#2}_0}
+
+\newcommand{\fjoin}[1]{\overset{\F_{#1}}{*}}
+\newcommand{\fjoink}{\overset{\F_k}{*}}
 \DeclareMathOperator{\conv}{conv}
 \DeclareMathOperator{\cone}{cone}
