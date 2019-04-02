@@ -2,6 +2,8 @@
 
 #include "polyhedra_common.h"
 #include <istream>
+#include <iterator>
+#include <algorithm>
 
 using namespace std;
 

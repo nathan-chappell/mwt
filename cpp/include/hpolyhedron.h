@@ -16,6 +16,9 @@ public:
   HPolyhedron() { clear(); }
   ~HPolyhedron() override { clear(); }
 
+  const constraint_vectors &get_constraint_vectors() const { return A; }
+
+  //serial_base overrides
   void read_in(std::istream &, std::ostream *) override;
   std::string to_string() const override;
 };

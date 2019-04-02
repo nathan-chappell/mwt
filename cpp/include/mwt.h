@@ -4,13 +4,14 @@
 #include "generics.h"
 #include "polyhedra.h"
 
+#include <set>
+
 /*
  * Algorithms relevant to the mwt.  Many are wrapped in struct to create
  * functors.  These are for use with the generic algorithms from generics.h
  */
 
 struct LiftedVCone { /* TODO */ };
-struct LiftedHCone { /* TODO */ };
 
 VCone       relax    (const VPolyhedron &);
 LiftedVCone lift     (const VCone &);
@@ -22,6 +23,20 @@ LiftedHCone lift     (const HCone &);
 VCone       drop     (const LiftedHCone &);
 VPolyhedron restrict (const VCone &);
 
+math_vector  relax_constraint(const constraint_vector&);
+math_vectors relax_constraints(const constraint_vectors&);
+
+math_vector  fjoink_v    (const math_vector&, const math_vector&);
+math_vector  project_k   (const math_vector&, const size_t&);
+math_vectors fjoin_k     (math_vectors, const size_t&);
+math_vectors fjoin       (math_vectors, const std::list<size_t>&);
+math_vectors normalize_k (math_vectors, const size_t&);
+
+
+/*
+ * The following functors just wrap the above functions.
+ * This is for passing them to generic algorithms...
+ */
 
 struct F_relax_VPolyhedron {
 	VCone operator()(const VPolyhedron &VP) {

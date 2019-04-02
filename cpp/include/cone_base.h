@@ -16,8 +16,12 @@ protected:
   int d;          //dimension
   void clear();
 public:
-  void read_in(std::istream &, std::ostream*) override;
-  std::string to_string() const override;
   cone_base() : d{-1} {}
   ~cone_base() override { clear(); }
+  cone_base(math_vectors &&);
+  const math_vectors &get_math_vectors() const { return A; }
+  //serial_base overrides
+  void read_in(std::istream &, std::ostream*) override;
+  std::string to_string() const override;
 };
+

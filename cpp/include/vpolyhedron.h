@@ -15,6 +15,7 @@ protected:
 public:
   VPolyhedron() { clear(); }
   ~VPolyhedron() override { clear(); }
+  VPolyhedron(math_vectors &&U, math_vectors &&V) : U{move(U)}, V{move(V)} {}
 
   void read_in(std::istream &, std::ostream *) override;
   std::string to_string() const override;

@@ -4,6 +4,14 @@
 
 using namespace std;
 
+void cone_base::clear() {
+  A.clear();
+  d = -1;
+}
+
+cone_base::cone_base(math_vectors &&mvs) : 
+    A{move(mvs)}, d{mvs.empty() ? -1 : static_cast<int>(mvs.front().size())} {}
+
 void cone_base::read_in(istream &is, ostream *o) {
   clear();
   conditional_log(o,"input cone (q or eof to quit)");
@@ -17,13 +25,6 @@ void cone_base::read_in(istream &is, ostream *o) {
   } else {
     throw READ_ERROR(unexpected_char_message(is.peek()));
   }
-}
-
-// cone_base
-
-void cone_base::clear() {
-  A.clear();
-  d = -1;
 }
 
 std::string cone_base::to_string() const {
