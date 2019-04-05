@@ -8,12 +8,12 @@ Here shall be stated some of the fundamental ideas involved in the theory of pol
 
 \paragraph{Convex Hulls} Associated with the notion of convexity is the operation of \textit{convex hull}.  Given any subset $B \subseteq \R^n$, the \textit{convex hull} of $B$ is the smallest set which contains $B$ and is convex.  For two isolated points, their convex hull is the line segment with the given points as endpoints.  For more complex sets, it can be thought of as in iterative procedure where the convex hull of every two points is added to the set, repeating this operation until no more points are added. \todo{a picture showing how the procedure must iterate}.
 
-\paragraph{Minkowski Sums}
+\paragraph{Minkowski Sums}  There are a number of ways to ``combine'' two sets together in a meaningful way.  The most common include union, intersection, and product (sometimes called direct sum).  Another, less common, may be disjoint union.  In a space with a binary operator $+$, you may also consider a translation of a set, given by adding an element to every member of a set.  The Minkowski Sum is an aggregated translation, where instead of translating a set with one element, you translate a set with every member of one set, and then take the union of all these translations.
 
 %- Important transforms
 \paragraph{Projections, Lifts, Relaxations, Restrictions}  These terms will be will be used informally in this paper, however when one is needed in a formal context it will be specified as necessary.  
 
-\textit{Projections} are very simple operations, which basically cause one to ``ignore'' the coordinates of a set for a given index set of coordinates.  For example, $\pi: (x,y) \mapsto (x)$ is a projection from $\R^2$ to $\R$.  Projections are often given a subscript to indicate which dimensions are being ``projected to,'' or a superscript to indicate which dimensions are being ``projected away.''  So $\pi$ above may be written as $\pi_x$ or perhaps $\pi^y$, however in formal contexts the precise nature of the projection will be indicated; this notation is meant only to be useful for the reader.
+\textit{Projections} are very simple operations, which basically cause one to ``ignore'' the coordinates of a set for a given index set of coordinates.  For example, $\pi: (x,y) \mapsto (x)$ is a projection from $\R^2$ to $\R$.  Projections are often given a subscript to indicate which dimensions are being ``projected to,'' or a superscript to indicate which dimensions are being ``projected away.''  A formal notation for linear projections is provided below.
 
 A \textit{lift} refers to taking a set and representing it in a higher dimension.  For example, one may take the unit interval $I = [0,1] \subseteq \R^1$ and \textit{lift} it to $\R^2$ by considering $I \times {0}$.  
 
@@ -109,6 +109,47 @@ Note:  If both $P$ and $Q$ are convex, then so is $P \oplus Q$.  Indeed, let $p_
   \]
 Where $\bar{p} \in P$ and $\bar{q} \in Q$ (because they are convex), so $\bar{p} + \bar{q} \in P \oplus Q$.
 
+\paragraph{Linear Transforms}
+Let $T : \R^n \to \R^n$ satisfy:
+\begin{align*}  
+  &\forall \x,\y \in \R^n, \alpha \in \R, \\
+  &T(\alpha \x + \y) = \alpha T\x + T\y 
+\end{align*}
+Then $T$ is called a \textit{linear transform}.  By induction:
+\[ T \left(\sum\nolimits_i \alpha_i \x_i\right) = 
+           \sum\nolimits_i \alpha_i T(\x_i) \]
+
+Note: Let $A, B \subseteq \R^n,\, \alpha_i \geq 0,\, \lambda_i \geq 0,\, \sum_i \lambda_i = 1$.  Then as a consequence of this definition,
+\begin{align*} 
+  T(A \oplus B) &= \{T(\x + \y) \suchthat \x \in A,\,\y \in B\} \\
+                &= \{T(\x) + T(\y) \suchthat \x \in A,\,\y \in B\} \\
+                &= T(A) \oplus T(B) \\
+  T(\cone(A)) &= \left\{T\left(\sum\nolimits_i \alpha_i \a_i\right) 
+                        \Suchthat \a_i \in A\right\} \\
+              &= \left\{\sum\nolimits_i \alpha_i T(\a_i) 
+                        \Suchthat \a_i \in A\right\} \\
+              &= \cone(T(A)) \\
+  T(\conv(A)) &= \left\{T\left(\sum\nolimits_i \lambda_i \a_i\right) 
+                        \Suchthat \a_i \in A\right\} \\
+              &= \left\{\sum\nolimits_i \lambda_i T(\a_i) 
+                        \Suchthat \a_i \in A\right\} \\
+              &= \conv(T(A))
+\end{align*}
+
+\paragraph{Linear Projections}
+Let $\u \in \R^n$ be a unit vector, and $I \in \R^{n\times n}$ be the identity matrix.  Then
+  \[ \pi^{\u} : \R^n \to \R^n = \x \mapsto \Proj{\u}\x \]
+Is a \textit{linear projection induced by $\u$}.  It is so-called because it is a \textit{linear} transform: 
+\[\pi^{\u}(\alpha \x + \y) = \alpha\pi^{\u}\x + \pi^{\u}\y\]
+and a projection:
+\[ \pi^{\u} \circ \pi^{\u} = \pi^{\u} \]
+When $\u = \e_k$, then $\pi^{\e_k}$ is written $\pi^k$.  Another family of useful \textit{linear projections} are those given by
+\[ \pi_k = I - \sum\nolimits_{i \neq k} \e_i\e_i^T \]
+Note that: 
+\[ \dotproduct{\e_j}{\pi_k \x} = \delta_{jk} x_j \]
+
+Projections are discussed in more detail at the end of the paper.
+
 % V-polyhedron
 \paragraph{V-Polyhedron}  A \textit{V-Polyhedron} is a subset $\mathcal{P}$ of $\R^n$ given by 
   \[ \mathcal{P} = \cone(\mathcal{U}) \oplus \conv(\mathcal{V}) \] 
@@ -134,5 +175,5 @@ These two fundamental tasks tell completely different stories given one represen
 It should be noted that guaranteeing the existence of two representations does not promise an efficient method of creating one from the other.  The proof of the \MWT{} indicates an enumeration algorithm, and an implementation will be provided.  This enumeration can be inefficient, however.
 
 % Equivalence of polyhedra
-\subsection{Equivalence of Polyhedra}  The notion of equivalence is worth a small discussion.  Consider the two polyhedra $I = [0,1]$ and $I\times\{0\}$ (i.e. the unit interval in $\R^1$ and the unit interval in $\R^2$).  It would be unfortunate if the theory of polyhedra didn't consider these two entities as \textit{equivalent} in some manner.  The basic operation of equivalence in the theory is the \textit{affine transformation}.  Then polyhedra are considered equivalent if there is an affine transformation from one to the other, which is bijective \textit{when restricted to the second polyhedron}.  In our setting, it is enough to consider a subset of the affine transformations called \textit{projections}.  For example, one may write a projection $\pi_x: (x,y) \mapsto (x)$.  Then we have $\pi_x (I \times \{0\}) = I$.  Note that this projection, when restricted to $I$ (and, more generally, the $x$--axis) is bijective.  Therefore, given our notion of equivalence, we can conclude that $I$ and $I\times \{0\}$ are equivalent.  As an anti--example, consider $I\times I$ (i.e. the unit square in $\R^2$).  While $\pi_x(I\times I) = I$, this mapping is not bijective when restricted to $I$.  Observe that $(0,0) \mapsto (0)$, and $(0,1) \mapsto (0)$, so the projection fails to be injective on $I$.  To indicate why this restricted definition of equivalence may not be suitable for a more robust theory, note that the two line segments $[0,1]$ and $[0,2]$ are not equivalent (given our defintion), even though they are geometrically congruent.  Considering the more general affine transformations resolves this problem, but is not necessary here \todo{mention projective transformations and give a reference for further reading}.
+\subsection{Equivalence of Polyhedra}  The notion of equivalence is worth a small discussion.  Consider the two polyhedra $I = [0,1]$ and $I\times\{0\}$ (i.e. the unit interval in $\R^1$ and the unit interval in $\R^2$).  It would be unfortunate if the theory of polyhedra didn't consider these two entities as \textit{equivalent} in some manner.  The basic operation of equivalence in the theory is the \textit{affine transformation}.  Then polyhedra are considered equivalent if there is an affine transformation from one to the other, which is bijective \textit{when restricted to the second polyhedron}.  In our setting, it is enough to consider a subset of the affine transformations: \textit{linear projections}.  For example, $\pi^1: (x,y) \mapsto (x)$.  Then we have $\pi^1 (I \times \{0\}) = I$.  Note that this projection, when restricted to $I$ (and, more generally, the $x$--axis) is bijective.  Therefore, given our notion of equivalence, we can conclude that $I$ and $I\times \{0\}$ are equivalent.  As an anti--example, consider $I\times I$ (i.e. the unit square in $\R^2$).  While $\pi^1(I\times I) = I$, this mapping is not bijective when restricted to $I$.  Observe that $(0,0) \mapsto (0)$, and $(0,1) \mapsto (0)$, so the projection fails to be injective on $I$.  To indicate why this restricted definition of equivalence may not be suitable for a more robust theory, note that the two line segments $[0,1]$ and $[0,2]$ are not equivalent (given our defintion), even though they are geometrically congruent.  Considering the more general affine transformations resolves this problem, but is not necessary here \todo{mention projective transformations and give a reference for further reading}.
 
