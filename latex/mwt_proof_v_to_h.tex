@@ -161,4 +161,5 @@ The last loose end to get back to our original polyhedron is to intersect $\CH$ 
 This H-Polyhedron has been denoted $\PH$, and the construction is done.
 
 \subsubsection{Summary}
-
+\input{proof_diagram_v_to_h}
+Here's a brief summary of the construction just described, consult Figure \ref{fig:v_to_h}.  First, $\PV$ gets relaxed to a V-Cone $\CV$ by adding an extra coordinate with value $0$ for the rays and $1$ for the vertices.  Then, by adding a new dimension for each ray and vertex ($\t$) and forcing it to be greater than zero, we arrive at $\CHp$, which we must project back down to $\x$.  Using \FME, we can construct this projection one dimension at a time, arriving at $\CH$.  Restricting this cone, by adding the constraint $x_0 = 0$, is then straightforward.

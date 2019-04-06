@@ -1,5 +1,5 @@
 \documentclass[a4,fleqn]{article}
-\usepackage{amsmath}
+\usepackage{amsmath, amsthm}
 \usepackage{mathtools}
 %\usepackage{color}
 %\usepackage{svgcolor}
@@ -8,31 +8,199 @@
 \usetikzlibrary{arrows,snakes,backgrounds}
 
 \input{new_commands}
+
+\newtheorem{thm}{Theorem}
+\newtheorem{claim}{Claim}
+\newtheorem{definition}{Definition}
 \begin{document}
+\textcolor{blue}{The input is blocked from what I've done so far, I will attempt to do a rewrite of part of the proof to make sure I have the right ``style''}
 
-\section{Introduction}
-\input{mwt_introduction}
+\newcommand{\bset}[1]{\left\{#1\right\}}
+\newcommand{\hcone}[1]{\bset{\x \in \R^d \suchthat #1\x \leq \vec{0}}}
+\newcommand{\vcone}[1]{\bset{\x \in \R^d \suchthat 
+                            \exists \t \in\R^n\geq \vec{0},\, \x = #1\t}}
+\newcommand{\mdef}[3]{#1 \in \R^{#2 \times #3}}
+\newcommand{\hplane}[2]{\bset{\x \in \R^{#1} \suchthat x_{#2} = 0}}
+\newcommand{\svec}[2]{\begin{pmatrix*}[c] #1 \\ #2 \end{pmatrix*}}
 
-\section{Definitions}
-\input{mwt_definitions}
+\newcommand{\uvsum}{\sum_{\substack{ \u \in U \\ \v \in V }}}
 
-\input{mwt_notation}
+\subsection{Notation}  
+The canonical basis vectors will be written $\e_k$ for valid values of $k$.  Let $\x \in \R^n$.  It will be customary to write $x_k = \dotproduct{\e_k}{\x}$.  Given $\mdef{A}{m}{d}$, Let $A_i$ and $A^j$ denote the rows and columns of $A$, respectively.  Then $A^j_i$ will denote the entry from $A$ in the $i$-th row and $j$-th column.  Matrix multiplication is then given by:
+\[ A\x = \sum_{j=1}^{d} A^j x_j = 
+  \begin{pmatrix} 
+    \dotproduct{A_1}{\x} \\ \vdots \\ \dotproduct{A_m}{\x}
+  \end{pmatrix}
+\]
+Let $\x \in \R^d$, $\w \in \R^m$, and define the following notation for vectors in $\R^{d+m}$:
+\begin{align*}
+  \dotproduct{\e_k}{\svec{\x}{\w}} = 
+    \begin{cases} x_k     & k \leq d \\
+                  w_{k-d} & d+1 \leq k \leq d+m
+    \end{cases}
+\end{align*}
+Let $\sigma$ denote the sign function, i.e:
+\[ \sigma(x) = \begin{cases} 1 & x > 0 \\ 0 & x = 0 \\ -1 & x < 0 \end{cases} \]
+\hrule \bigskip
 
-\section{Proof of the \MWT}
-\input{mwt_proof}
+\subsection {Definitions}
 
-\section{Program}
+\begin{definition}{
+  Let $\mdef{A}{m}{d}$, then define $\CH(A) = \hcone{A}$.
+} \end{definition}
 
-% overview
-% design principles
-% details
-% correctness
-% complexity
+\begin{definition}{
+  Let $\mdef{V}{d}{n}$, then define $\CV(V) = \vcone{V}$.
+} \end{definition}
 
-\section{Discussion}
-\input{mwt_discussion}
-% representations / polymorphism
-% algorithms
-% other proofs
+\begin{definition}{
+  Let $H_{k}^{n} \subseteq \R^n$ be defined as $\hplane{n}{k}$.
+} \end{definition}
 
+\begin{definition}{
+  Let $[n] = \bset{1,2,\dots,n}$ $K = \bset{k_1,k_2,\dots,k_l} \subseteq [n]$.  Define $\pi^K : \R^n \to \R^{n-l}$ as follows.  Let $J = [n] \setminus K = \bset{j_1 < j_2 < \dots < j_{n-l}}$. Then
+  \[ \pi^K(x_1,x_2,\dots,x_n) = (x_{j_1},x_{j_2},\dots,x_{j_{n-l}})\]
+} \end{definition}
+
+\begin{definition}{
+Let $A \subseteq \R^d$, $B \subseteq \R^{d+n}$.  Then
+   \[ A \simeq B \Leftrightarrow \exists K \subseteq [d+n] : A = \pi^K(B) \]
+} \end{definition}
+
+\subsection {H-Cone $\to$ V-Cone}
+
+\begin{thm}{\label{thm:htov}
+  Let $\mdef{A}{m}{d}$, then for the set $\CH(A)$, there exists a ${\mdef{V}{(d+m)}{n}}$ such that 
+  \[\CH(A) \simeq \CV(V)\]
+} \end{thm}
+
+The proof of this theorem follows from the following claims:
+\begin{claim}{\label{claim:htovlift}
+  Let $\mdef{A}{m}{d}$.  Then there exists a $\mdef{V}{(d+m)}{(2d+m)}$ such that 
+  \[\CH(A) \simeq \CV(V) \bigcap_{k=d+1}^{d+m} H_k^{d+m}\]
+} \end{claim}
+
+\begin{claim}{\label{claim:htovdrop}
+  Let $\mdef{V}{d}{n}$, then there exists a set $\mdef{V'}{d}{n'}$ such that
+ \[ \CV(V) \cap H_{k}^{d} = \CV(V') \]
+} \end{claim}
+
+\bigskip \hrule
+
+\begin{proof}[Proof of \textnormal{\textbf{Claim \ref{claim:htovlift}}}]
+Define $V$:
+\[ V = \bset{\pm\svec{\e_j}{A^j}, \svec{\vec{0}}{\e_i} \Suchthat 1\leq j \leq d, 1 \leq i \leq m} \]
+Let $\x \in \CH(A)$.  Then it is to be shown that:
+\[ \svec{\x}{\vec{0}} \in \CV(V) \bigcap_{k=d+1}^{d+m} H_k^{d+m} \]
+Consider the vector:
+\[ \svec{\x}{A\x} = \sum_{j=1}^{d} x_j \svec{\e_j}{A^j} = 
+   \sum_{j=1}^{d} |x_j| \sigma(x_j) \svec{\e_j}{A^j} \in \CV(V) \]
+Membership follows from $|x_j| \geq 0$.  We now need a vector from $\CV(V)$ to add to this vector to make the ``bottom'' $\vec{0}$.  Note that $\forall i \dotproduct{A_i}{\x} \leq 0$.  Now consider the vector:
+\[ \svec{\vec{0}}{-A\x} = 
+   \sum_{i=1}^{m} -\dotproduct{A_i}{\x}\svec{\vec{0}}{\e_i} \in \CV(V)
+\]
+We now have:
+\[ \svec{\x}{\vec{0}} = \svec{\x}{A\x} + \svec{\vec{0}}{-A\x} =
+   \sum_{j=1}^{d} |x_j| \sigma(x_j) \svec{\e_j}{A^j} + 
+   \sum_{i=1}^{m} -\dotproduct{A_i}{\x}\svec{\vec{0}}{\e_i} \in \CV(V)
+\]
+We have shown that 
+\[ A\x \leq \vec{0} \Rightarrow \svec{\x}{\vec{0}} 
+      \in \CV(V) \bigcap_{k=d+1}^{d+m} H_k^{d+m} \]
+
+Now let $\svec{\x}{\vec{0}} \in \CV(V)$.  The task is to show that $A\x \leq 0$.  We have:
+\begin{align*} 
+   \svec{\x}{\vec{0}} = &\sum_{j=1}^{d} t_j^+ \svec{\e_j}{A^j} +
+                        \sum_{j=1}^{d} t_j^- -\svec{\e_j}{A^j} +
+                        \sum_{i=1}^{m} w_i \svec{\vec{0}}{\e_j} =&\Suchthat
+                        t_j^+,t_j^-,w_i \geq 0 \\
+                        &\sum_{j=1}^{d} (t_j^+-t_j^-) \svec{\e_j}{A^j} +
+                        \sum_{i=1}^{m} w_i \svec{\vec{0}}{\e_j} =&\Suchthat
+                        t_j^+,t_j^-,w_i \geq 0 \\
+                        &\sum_{j=1}^{d} x_j \svec{\e_j}{A^j} +
+                        \sum_{i=1}^{m} w_i \svec{\vec{0}}{\e_j} =&\Suchthat
+                        w_i \geq 0, x_j \in \R \\
+                        &\svec{\x}{A\x} + \svec{\vec{0}}{\w}    =&\Suchthat
+                        \w \geq \vec{0}, \x \in \R^d
+\end{align*} 
+This last line implies that $A\x + \w = \vec{0} \Rightarrow A\x = -\w \leq \vec{0}$.  Thus,
+\[ \svec{\x}{\vec{0}} \in \CV(V) \bigcap_{k=d+1}^{d+m} H_k^{d+m} \Rightarrow
+      A\x \leq \vec{0} \]
+To complete the proof, take $K = \bset{d+1,d+2,\dots,d+m}$, and observe that 
+  \[\pi^K\svec{\x}{\vec{0}} = \x \]
+It follows that
+  \[\pi^K\left(\CV(V) \bigcap_{k=d+1}^{d+m} H_k^{d+m}\right) = \CH(A) \]
+\end{proof}
+\bigskip \hrule \bigskip
+\begin{proof}[Proof of \textnormal{\textbf{Claim \ref{claim:htovdrop}}}]
+Define:
+\begin{align*}
+  &P = \u \in V \suchthat u_k > 0 \\
+  &N = \v \in V \suchthat v_k < 0 \\
+  &Z = \w \in V \suchthat w_k = 0
+\end{align*}
+Next, let
+\[ V' = Z \cup \bset{u_k \v - v_k \u \suchthat \u \in P,\, \v \in N} \]
+That $\CV(V') \subseteq \CV(V)$ follows from the fact that every vector in $\CV(V')$ is a positive linear combination of vectors from $V$.  In detail, say $\x \in \CV(V')$, then
+\begin{align*}
+\x &= \uvsum t_{uv}(u_k\v -v_k\u) + \sum_{\w\in Z} t_w\w  \\
+   &= \uvsum t_{uv}u_k\v + \uvsum -t_{uv}v_k\u + \sum_{\w\in Z} t_w\w  \\
+   &= \sum_{\v\in N}\left(\sum_{\u\in P} t_{uv}u_k\right)\v +
+      \sum_{\u\in P}\left(\sum_{\v\in N} -t_{uv}v_k\right)\u +
+      \sum_{\w\in Z} t_w\w
+\end{align*}
+This last line witness $\x \in \CV(V)$.
+
+Next, say $\x \in \CV(V) \cap H^d_k$.  Then $x_k = 0$, and
+\begin{align*}
+\x &= \sum_{\v\in P}t_v\v + \sum_{\u\in N} t_u\u + \sum_{\w\in Z} t_w\w \Rightarrow \\
+ 0 &= \sum_{\v\in P}t_v v_k + \sum_{\u\in N} t_u u_k + \sum_{\w\in Z} t_w w_k \\
+   &= \sum_{\v\in P}t_v v_k + \sum_{\u\in N} t_u u_k
+\end{align*}
+This final line implies that the sums have opposite values.  Denote this value by $\tau$, that is
+\[ \tau = \sum_{\v\in P}t_v v_k = -\sum_{\u\in N} t_u u_k \]
+Because of the way $N$ and $P$ are defined, we have that $0 \leq \tau$.  We can now rewrite $\x$ as
+\begin{align*}
+\x &= \sum_{\v\in P}t_v\v + \sum_{\u\in N} t_u\u + \sum_{\w\in Z} t_w\w = \\
+   &=   \frac{-1}{\tau}\sum_{\u\in N}t_u u_k \sum_{\v\in P}t_v \v + 
+        \frac{1}{\tau}\sum_{\v\in P}t_v v_k\sum_{\u\in N} t_u \u + 
+        \sum_{\w\in Z} t_w \w \\
+   &=   \frac{-1}{\tau}\uvsum t_u t_v u_k \v + 
+        \frac{1}{\tau}\uvsum t_u t_v v_k \u + 
+        \sum_{\w\in Z} t_w \w \\
+   &=  \uvsum \frac{t_u t_v}{\tau}(v_k\u - u_k\v) +
+        \sum_{\w\in Z} t_w \w
+\end{align*}
+This last line witnesses $\x \in \CV(V')$.
+\end{proof}
+
+\begin{proof}[Proof of \textnormal{\textbf{Theorem \ref{thm:htov}}}]
+Theorem \ref{thm:htov} follows by first applying claim \ref{claim:htovlift} to $A$, then successively applying claim \ref{claim:htovdrop} to each $H_k^{d+m}$ for $d+1\leq k \leq d+m$ to eliminate the intersection terms.
+\end{proof}
+%
+%\section{Introduction}
+%\input{mwt_introduction}
+%
+%\section{Definitions}
+%\input{mwt_definitions}
+%
+%\input{mwt_notation}
+%
+%\section{Proof of the \MWT}
+%\input{mwt_proof}
+%
+%\section{Program}
+%
+%% overview
+%% design principles
+%% details
+%% correctness
+%% complexity
+%
+%\section{Discussion}
+%\input{mwt_discussion}
+%% representations / polymorphism
+%% algorithms
+%% other proofs
+%
 \end{document}
