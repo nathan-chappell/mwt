@@ -7,6 +7,18 @@ using namespace std;
 //
 const string &continue_message{"(V to start entering vertices)"};
 
+VPolyhedron::VPolyhedron(math_vectors &&U, math_vectors &&V) 
+  : U{move(U)}, V{move(V)}, d{-1} {
+  //check to make sure U and V are compatible...
+  if (!U.empty() && !V.empty() && U.front().size() != V.front().size()) {
+    throw polyhedra_read_error{"U and V not compatible"};
+  } else if (!U.empty()) {
+    d = U.front().size();
+  } else if (!V.empty()) {
+    d = V.front().size();
+  }
+}
+
 void VPolyhedron::clear() {
   U.clear();
   V.clear();

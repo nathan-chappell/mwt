@@ -10,7 +10,7 @@ void cone_base::clear() {
 }
 
 cone_base::cone_base(math_vectors &&mvs) : 
-    A{move(mvs)}, d{mvs.empty() ? -1 : static_cast<int>(mvs.front().size())} {}
+    A{move(mvs)}, d{A.empty() ? -1 : static_cast<int>(A.front().size())} {}
 
 void cone_base::read_in(istream &is, ostream *o) {
   clear();

@@ -5,6 +5,7 @@
 #include "polyhedra.h"
 
 #include <set>
+#include <vector>
 
 /*
  * Algorithms relevant to the mwt.  Many are wrapped in struct to create
@@ -12,6 +13,14 @@
  */
 
 struct LiftedVCone { /* TODO */ };
+
+
+class LiftedHCone : public HCone { 
+  std::vector<size_t> lifted_dimensions;
+public:
+  LiftedHCone(math_vectors &&mvs, size_t);
+  std::vector<size_t> get_dimensions() const { return lifted_dimensions; }
+};
 
 VCone       relax    (const VPolyhedron &);
 LiftedVCone lift     (const VCone &);
@@ -23,14 +32,15 @@ LiftedHCone lift     (const HCone &);
 VCone       drop     (const LiftedHCone &);
 VPolyhedron restrict (const VCone &);
 
-math_vector  relax_constraint(const constraint_vector&);
-math_vectors relax_constraints(const constraint_vectors&);
+math_vector  relax_constraint  (const constraint_vector&);
+math_vectors relax_constraints (const constraint_vectors&);
 
 math_vector  fjoink_v    (const math_vector&, const math_vector&);
-math_vector  project_k   (const math_vector&, const size_t&);
+math_vector  project_K_v (const math_vector&, const std::vector<size_t>&);
 math_vectors fjoin_k     (math_vectors, const size_t&);
-math_vectors fjoin       (math_vectors, const std::list<size_t>&);
+math_vectors fjoin       (math_vectors, const std::vector<size_t>&);
 math_vectors normalize_k (math_vectors, const size_t&);
+math_vectors project_K   (const math_vectors&, std::vector<size_t>);
 
 
 /*

@@ -7,12 +7,21 @@ using namespace std;
 
 const string line_break(40,'-');
 
+HCone hcone;
+
 void generic() {
+  cout << "HC -> VC" << endl;
+  cout << lift_and_drop<
+                      F_lift_HCone, 
+                      F_drop_LiftedHCone
+                      >(hcone);
+  cout << line_break << endl;
+/*
   cout << "HC -> VC" << endl;
   VCone vc       = lift_and_drop<
                       F_lift_HCone, 
                       F_drop_LiftedHCone
-                      >(HCone{});
+                      >(hcone);
   cout << line_break << endl;
 
   cout << "HP -> VP" << endl;
@@ -39,8 +48,10 @@ void generic() {
                       F_restrict_HCone
                       >(VPolyhedron{});
   cout << line_break << endl;
+  */
 }
 
 int main(int argc, char *argv[]) {
+  hcone.read_interactive();
   generic();
 }

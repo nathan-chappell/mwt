@@ -2,9 +2,9 @@ CC          = g++ -std=c++14
 HEADERS_DIR = include
 SOURCE_DIR  = src
 TEST_DIR    = testing
-CPPFLAGS    = -Wall -Og -I$(HEADERS_DIR)
+CPPFLAGS    = -Wall -g -Og -I$(HEADERS_DIR)
 OBJS_       = polyhedra polyhedra_common cone_base \
-                hcone vcone vpolyhedron hpolyhedron lifted_hcone mwt
+                hcone vcone vpolyhedron hpolyhedron mwt
 OBJS        = $(OBJS_:%=$(SOURCE_DIR)/%.o)
 TEST        = test.o
 
