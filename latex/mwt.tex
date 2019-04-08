@@ -10,6 +10,7 @@
 \input{new_commands}
 
 \newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
 \newtheorem{claim}{Claim}
 \newtheorem{definition}{Definition}
 \begin{document}
@@ -23,14 +24,17 @@
 \newcommand{\hplane}[2]{\bset{\x \in \R^{#1} \suchthat x_{#2} = 0}}
 \newcommand{\svec}[2]{\begin{pmatrix*}[c] #1 \\ #2 \end{pmatrix*}}
 
-\newcommand{\uvsum}{\sum_{\substack{ \u \in U \\ \v \in V }}}
+\newcommand{\uvsum}{\sum_{\substack{ i \in P \\ j \in N }}}
 
 \subsection{Notation}  
-The canonical basis vectors will be written $\e_k$ for valid values of $k$.  Let $\x \in \R^n$.  It will be customary to write $x_k = \dotproduct{\e_k}{\x}$.  Given $\mdef{A}{m}{d}$, Let $A_i$ and $A^j$ denote the rows and columns of $A$, respectively.  Then $A^j_i$ will denote the entry from $A$ in the $i$-th row and $j$-th column.  Matrix multiplication is then given by:
+The canonical basis vectors will be written $\e_k$ for valid values of $k$.  Let $\x \in \R^n$.  It will be customary to write:
+  \[x_k = \dotproduct{\e_k}{\x}\]
+Given $\mdef{A}{m}{d}$, Let $A_i$ and $A^j$ denote the rows and columns of $A$, respectively.  Then $A^j_i$ will denote the entry from $A$ in the $i$-th row and $j$-th column.  Matrix multiplication is then given by:
 \[ A\x = \sum_{j=1}^{d} A^j x_j = 
   \begin{pmatrix} 
     \dotproduct{A_1}{\x} \\ \vdots \\ \dotproduct{A_m}{\x}
-  \end{pmatrix}
+  \end{pmatrix} =
+  \sum_{i=1}^m \dotproduct{A_i}{\x} \e_i
 \]
 Let $\x \in \R^d$, $\w \in \R^m$, and define the following notation for vectors in $\R^{d+m}$:
 \begin{align*}
@@ -39,144 +43,269 @@ Let $\x \in \R^d$, $\w \in \R^m$, and define the following notation for vectors 
                   w_{k-d} & d+1 \leq k \leq d+m
     \end{cases}
 \end{align*}
-Let $\sigma$ denote the sign function, i.e:
-\[ \sigma(x) = \begin{cases} 1 & x > 0 \\ 0 & x = 0 \\ -1 & x < 0 \end{cases} \]
+
 \hrule \bigskip
 
 \subsection {Definitions}
 
-\begin{definition}{
-  Let $\mdef{A}{m}{d}$, then define $\CH(A) = \hcone{A}$.
+\begin{definition}[H-Cone]{
+  Let $\mdef{A}{m}{d}$, then define 
+  \[\CH(A) = \hcone{A}\]
 } \end{definition}
 
-\begin{definition}{
-  Let $\mdef{V}{d}{n}$, then define $\CV(V) = \vcone{V}$.
+\begin{definition}[V-Cone]{
+  Let $\mdef{V}{d}{n}$, then define 
+  \[\CV(V) = \vcone{V}\]
+  A vector of the form $V\t$, where $\t \geq \vec{0}$ is called a ``conical combination of V''.
 } \end{definition}
 
-\begin{definition}{
-  Let $H_{k}^{n} \subseteq \R^n$ be defined as $\hplane{n}{k}$.
+\begin{definition}[Hyperplane]{
+  Let $\a \in \R^n, b \in \R$.  Then the set
+  \[ \{\x \in \R^n \suchthat \dotproduct{\a}{\x} = b\} \]
+  Is known as a hyperplane.  Let $H_{k}^{n} \subseteq \R^n$ denote the hyperplane defined by:
+  \[H_{k}^{n} = \hplane{n}{k}\]
 } \end{definition}
 
-\begin{definition}{
-  Let $[n] = \bset{1,2,\dots,n}$ $K = \bset{k_1,k_2,\dots,k_l} \subseteq [n]$.  Define $\pi^K : \R^n \to \R^{n-l}$ as follows.  Let $J = [n] \setminus K = \bset{j_1 < j_2 < \dots < j_{n-l}}$. Then
-  \[ \pi^K(x_1,x_2,\dots,x_n) = (x_{j_1},x_{j_2},\dots,x_{j_{n-l}})\]
+\begin{definition}[Projection]{
+  Let $\x\in\R^d$.  The vector $\x'\in\R^{d-k}$ formed by omitting $k$ coordinates of $\x$ is called a projection of $\x$.  In particular, let $\x\in\R^d, \w\in\R^m$, and $\smallstack{\x}{\w} \in \R^{d+m}$, and define ${\pi_{\x} : \R^{d+m} \to \R^{d}}$ as:
+  \[ \pi_{\x} \svec{\x}{\w} = \x \]
+  Then $\pi_{\x}$ is a projection onto the first d-coordinates.
 } \end{definition}
 
-\begin{definition}{
-Let $A \subseteq \R^d$, $B \subseteq \R^{d+n}$.  Then
-   \[ A \simeq B \Leftrightarrow \exists K \subseteq [d+n] : A = \pi^K(B) \]
-} \end{definition}
+\paragraph{Remarks:}  In the following sections it will be proved that every \textbf{H-Cone} is a \textbf{V-Cone}, and every \textbf{V-Cone} is an \textbf{H-Cone}.  This shows that these are two fundamentally different descriptions of the same object.  Each has its own power and purpose, which will be discussed later.
+
+Let $A \subseteq \R^n$.  Then $A \cap H_k^n$ is simply all of the points of $A$ who have the $k$-th coordinate $0$.  Let $\pi^k$ be the projection that omits the $k$-th coordinate.  Then $\pi^k(A \cap H_k^n)$ are all the points of $A$ whose $k$-th coordinate is $0$, but without that $0$ coordinate.  If projections are thought of as ``forgetting useless information,'' and intersections as ``capturing only the useful information,'' then the sequence of projection and intersection is ``capturing the useful information, and forgetting the useless information.''
 
 \subsection {H-Cone $\to$ V-Cone}
 
 \begin{thm}{\label{thm:htov}
-  Let $\mdef{A}{m}{d}$, then for the set $\CH(A)$, there exists a ${\mdef{V}{(d+m)}{n}}$ such that 
-  \[\CH(A) \simeq \CV(V)\]
+  Let $\mdef{A}{m}{d}$, then for the set $\CH(A)$, there exists a ${\mdef{V}{d}{n}}$ such that 
+  \[\CH(A) = \CV(V)\]
 } \end{thm}
-
-The proof of this theorem follows from the following claims:
+\hrule
 \begin{claim}{\label{claim:htovlift}
-  Let $\mdef{A}{m}{d}$.  Then there exists a $\mdef{V}{(d+m)}{(2d+m)}$ such that 
-  \[\CH(A) \simeq \CV(V) \bigcap_{k=d+1}^{d+m} H_k^{d+m}\]
+  Let $\mdef{A}{m}{d}$.  Then there exists a $\mdef{V'}{(d+m)}{(2d+m)}$ such that 
+  \[\CH(A) =  \left\{ \x \in \R^d \Suchthat 
+              \svec{\x}{\vec{0}} \in \CV(V') \right\}
+  \]
+} \end{claim}
+
+\begin{claim}{\label{claim:htovproject}
+  \[  \left\{ \x \in \R^d \Suchthat 
+              \svec{\x}{\vec{0}} \in \CV(V') \right\}
+           = \pi_{\x} \left(\CV(V') \bigcap_{k=d+1}^{d+m} H_k^{d+m}\right)\]
 } \end{claim}
 
 \begin{claim}{\label{claim:htovdrop}
-  Let $\mdef{V}{d}{n}$, then there exists a set $\mdef{V'}{d}{n'}$ such that
- \[ \CV(V) \cap H_{k}^{d} = \CV(V') \]
+  Let $\mdef{V'_{in}}{(d+m)}{n_{in}}$, then there exists a set $\mdef{V'_{out}}{(d+m)}{n_{out}}$ such that
+ \[ \CV(V'_{in}) \cap H_{k}^{d+m} = \CV(V'_{out}) \]
+\paragraph{Note:} $V'_{in}$ and $V'_{out}$ are intended to represent ``input'' and ``output'' sets - this claim is true by the existence of an algorithm shown later.
+} \end{claim}
+
+\begin{claim}{\label{claim:htovcvproject}
+  Let $\mdef{V'}{(d+m)}{n}$, then 
+ \[ \pi_{\x}(\CV(V') = \CV(\pi_{\x}(V')) \]
 } \end{claim}
 
 \bigskip \hrule
 
-\begin{proof}[Proof of \textnormal{\textbf{Claim \ref{claim:htovlift}}}]
-Define $V$:
-\[ V = \bset{\pm\svec{\e_j}{A^j}, \svec{\vec{0}}{\e_i} \Suchthat 1\leq j \leq d, 1 \leq i \leq m} \]
-Let $\x \in \CH(A)$.  Then it is to be shown that:
-\[ \svec{\x}{\vec{0}} \in \CV(V) \bigcap_{k=d+1}^{d+m} H_k^{d+m} \]
-Consider the vector:
-\[ \svec{\x}{A\x} = \sum_{j=1}^{d} x_j \svec{\e_j}{A^j} = 
-   \sum_{j=1}^{d} |x_j| \sigma(x_j) \svec{\e_j}{A^j} \in \CV(V) \]
-Membership follows from $|x_j| \geq 0$.  We now need a vector from $\CV(V)$ to add to this vector to make the ``bottom'' $\vec{0}$.  Note that $\forall i \dotproduct{A_i}{\x} \leq 0$.  Now consider the vector:
-\[ \svec{\vec{0}}{-A\x} = 
-   \sum_{i=1}^{m} -\dotproduct{A_i}{\x}\svec{\vec{0}}{\e_i} \in \CV(V)
+\begin{proof}[Proof of \textnormal{\textbf{Theorem \ref{thm:htov}}}]
+Theorem \ref{thm:htov} follows from the claims as follows.  First, apply claim \ref{claim:htovlift} to $A$ to get a set $V'$ of vectors in $\R^{d+m}$.  Claim \ref{claim:htovproject} shows us that the set $\CH(A)$ can be formed by first taking a finite number of intersections of $\CV(V')$ with hyperplanes of the form $H_k^{d+m}$, then projecting this set onto $\x$.  Claim \ref{claim:htovdrop} gives us a method to eliminate all of the intersections in the form given by claim \ref{claim:htovproject}, and end up with a set $V''$ with the following useful property:
+\[  \CV(V'') \bigcap_{k=d+1}^{d+m} H_k^{d+m} = \CV(V'') \]
+Claim \ref{claim:htovcvproject}, along with the set $V''$, allows the following calculation:
+\[ \CH(A) = \pi_{\x} \left(\CV(V'') \bigcap_{k=d+1}^{d+m} H_k^{d+m}\right)
+          = \pi_{\x} (\CV(V'')) = \CV(\pi_{\x}(V''))
 \]
-We now have:
-\[ \svec{\x}{\vec{0}} = \svec{\x}{A\x} + \svec{\vec{0}}{-A\x} =
-   \sum_{j=1}^{d} |x_j| \sigma(x_j) \svec{\e_j}{A^j} + 
-   \sum_{i=1}^{m} -\dotproduct{A_i}{\x}\svec{\vec{0}}{\e_i} \in \CV(V)
-\]
-We have shown that 
-\[ A\x \leq \vec{0} \Rightarrow \svec{\x}{\vec{0}} 
-      \in \CV(V) \bigcap_{k=d+1}^{d+m} H_k^{d+m} \]
+Letting $V = \pi_{\x}(V'')$, we then have 
+\[ \CH(A) = \CV(V) \]
+\end{proof}
+\paragraph{Remarks:}  Discussing ``what is hard'' is helpful for understanding the proof and why it is formed the way it is.  Claim \ref{claim:htovlift} is not terribly difficult, it mostly just takes a clever idea and attention to detail.  It is reminiscent of techniques common to linear programming.  Claims \ref{claim:htovproject} and \ref{claim:htovcvproject} are very straightforward, they exist primarily to make the proofs of the other claims less cluttered.  Claim \ref{claim:htovdrop} is really the ``main'' idea that needs proving.  This is because intersecting a V-Cone with a set of the form $H_k^{d+m}$ requires determining all vectors of the V-Cone $\CV(V')$ that have a $0$ in the $k$-th coordinate.  Only conical combinations of $V'$ of a special form will have this property, determining this form is the heart of the proof.  Using the language from the above remark, ``forgetting the useless information is easy, capturing the important information is hard, and representing the information in a different way is tricky.''
 
-Now let $\svec{\x}{\vec{0}} \in \CV(V)$.  The task is to show that $A\x \leq 0$.  We have:
+\bigskip \hrule
+\bigskip
+\textbf{Claim \ref{claim:htovlift}:} \textit{ Let $\mdef{A}{m}{d}$.  Then there exists a $\mdef{V'}{(d+m)}{(2d+m)}$ such that}
+  \[\CH(A) =  \left\{ \x \in \R^d \Suchthat 
+              \svec{\x}{\vec{0}} \in \CV(V') \right\}
+  \]
+
+\begin{proof}[Proof of \textnormal{\textbf{Claim \ref{claim:htovlift}}}(tricky)]
+Define $V'$:
+\[ V' = \bset{\pm\svec{\e_j}{A^j}, \svec{\vec{0}}{\e_i} \Suchthat 1\leq j \leq d, 1 \leq i \leq m} \]
+Let $\x \in \CH(A)$.  Then it is to be shown that:
+\[ A\x \leq \vec{0} \Rightarrow \svec{\x}{\vec{0}} \in \CV(V') \]
+The task is to find a $t_j^+,t_j^-,w_i \geq 0$ such that:
+ \[ \svec{\x}{\vec{0}} = \sum_{j=1}^{d} t_j^+ \svec{\e_j}{A^j} -
+                        \sum_{j=1}^{d} t_j^- \svec{\e_j}{A^j} +
+                        \sum_{i=1}^{m} w_i \svec{\vec{0}}{\e_j} \]
+Consider the following assignments:
+\begin{align*}
+  t_j^+ &= \begin{cases} x_j & x_j \geq 0 \\ 0   & x_j < 0 \end{cases} \\
+  t_j^- &= \begin{cases} 0   & x_j \geq 0 \\ -x_j & x_j < 0 \end{cases} \\
+  w_i   &= -\dotproduct{A_i}{\x}
+\end{align*}
+By the way we've defined $t_j^+$ and $t_j^-$, $x_j = t_j^+ - t_j^-$.  Then:
+\begin{align*} \sum_{j=1}^{d} t_j^+ \svec{\e_j}{A^j} -
+                 \sum_{j=1}^{d} t_j^- \svec{\e_j}{A^j} =
+               \sum_{j=1}^{d} (t_j^+ - t_j^-) \svec{\e_j}{A^j} = 
+               \sum_{j=1}^{d} x_j \svec{\e_j}{A^j} =
+               \svec{\x}{A\x}
+\end{align*}
+Furthermore:
+\[ \sum_{i=1}^{m} w_i \svec{\vec{0}}{\e_i} 
+      = -\sum_{i=1}^{m} \dotproduct{A_i}{\x} \svec{\vec{0}}{\e_i} 
+      = \svec{\vec{0}}{-A\x} \]
+It is clear that $t_j^+,t_j^- \geq 0$, and $w_i \geq 0$ follows from $A\x \leq \vec{0}$.  It follows that:
+\begin{align*} &\sum_{j=1}^{d} t_j^+ \svec{\e_j}{A^j} -
+                 \sum_{j=1}^{d} t_j^- \svec{\e_j}{A^j} +
+                 \sum_{i=1}^{m} w_i \svec{\vec{0}}{\e_i} \in \CV(V')
+\end{align*}
+Combining results, we have:
+ \[ \sum_{j=1}^{d} t_j^+ \svec{\e_j}{A^j} -
+      \sum_{j=1}^{d} t_j^- \svec{\e_j}{A^j} +
+      \sum_{i=1}^{m} w_i \svec{\vec{0}}{\e_j} =
+    \svec{\x}{A\x} + \svec{\vec{0}}{-A\x}  = \svec{\x}{\vec{0}} \]
+And we conclude that $\svec{\x}{\vec{0}} \in \CV(V')$.
+
+Now let $\svec{\x}{\vec{0}} \in \CV(V')$.  The task is to show that $A\x \leq 0$.  We have:
 \begin{align*} 
-   \svec{\x}{\vec{0}} = &\sum_{j=1}^{d} t_j^+ \svec{\e_j}{A^j} +
-                        \sum_{j=1}^{d} t_j^- -\svec{\e_j}{A^j} +
+   \svec{\x}{\vec{0}} = &\sum_{j=1}^{d} t_j^+ \svec{\e_j}{A^j} -
+                        \sum_{j=1}^{d} t_j^- \svec{\e_j}{A^j} +
                         \sum_{i=1}^{m} w_i \svec{\vec{0}}{\e_j} =&\Suchthat
                         t_j^+,t_j^-,w_i \geq 0 \\
+                        &\sum_{j=1}^{d} (t_j^+-t_j^-) \svec{\e_j}{A^j} +
+                        \sum_{i=1}^{m} w_i \svec{\vec{0}}{\e_j} &\Suchthat
+                        t_j^+,t_j^-,w_i \geq 0
+\end{align*} 
+Since the only contribution to the coordinate of $x_j$ is $t_j^+ - t_j^-$, we may conclude that $x_j = t_j^+ - t_j^-$.  Continuing the string of equalities:
+\begin{align*} 
                         &\sum_{j=1}^{d} (t_j^+-t_j^-) \svec{\e_j}{A^j} +
                         \sum_{i=1}^{m} w_i \svec{\vec{0}}{\e_j} =&\Suchthat
                         t_j^+,t_j^-,w_i \geq 0 \\
                         &\sum_{j=1}^{d} x_j \svec{\e_j}{A^j} +
                         \sum_{i=1}^{m} w_i \svec{\vec{0}}{\e_j} =&\Suchthat
                         w_i \geq 0, x_j \in \R \\
-                        &\svec{\x}{A\x} + \svec{\vec{0}}{\w}    =&\Suchthat
+                        &\svec{\x}{A\x} + \svec{\vec{0}}{\w} = 
+                            \svec{\x}{\vec{0}}
+                                                                 &\Suchthat
                         \w \geq \vec{0}, \x \in \R^d
 \end{align*} 
-This last line implies that $A\x + \w = \vec{0} \Rightarrow A\x = -\w \leq \vec{0}$.  Thus,
-\[ \svec{\x}{\vec{0}} \in \CV(V) \bigcap_{k=d+1}^{d+m} H_k^{d+m} \Rightarrow
-      A\x \leq \vec{0} \]
-To complete the proof, take $K = \bset{d+1,d+2,\dots,d+m}$, and observe that 
-  \[\pi^K\svec{\x}{\vec{0}} = \x \]
-It follows that
-  \[\pi^K\left(\CV(V) \bigcap_{k=d+1}^{d+m} H_k^{d+m}\right) = \CH(A) \]
+This last line implies that $A\x + \w = \vec{0} \Rightarrow A\x = -\w \leq \vec{0}$.
 \end{proof}
 \bigskip \hrule \bigskip
-\begin{proof}[Proof of \textnormal{\textbf{Claim \ref{claim:htovdrop}}}]
-Define:
-\begin{align*}
-  &P = \u \in V \suchthat u_k > 0 \\
-  &N = \v \in V \suchthat v_k < 0 \\
-  &Z = \w \in V \suchthat w_k = 0
-\end{align*}
-Next, let
-\[ V' = Z \cup \bset{u_k \v - v_k \u \suchthat \u \in P,\, \v \in N} \]
-That $\CV(V') \subseteq \CV(V)$ follows from the fact that every vector in $\CV(V')$ is a positive linear combination of vectors from $V$.  In detail, say $\x \in \CV(V')$, then
-\begin{align*}
-\x &= \uvsum t_{uv}(u_k\v -v_k\u) + \sum_{\w\in Z} t_w\w  \\
-   &= \uvsum t_{uv}u_k\v + \uvsum -t_{uv}v_k\u + \sum_{\w\in Z} t_w\w  \\
-   &= \sum_{\v\in N}\left(\sum_{\u\in P} t_{uv}u_k\right)\v +
-      \sum_{\u\in P}\left(\sum_{\v\in N} -t_{uv}v_k\right)\u +
-      \sum_{\w\in Z} t_w\w
-\end{align*}
-This last line witness $\x \in \CV(V)$.
 
-Next, say $\x \in \CV(V) \cap H^d_k$.  Then $x_k = 0$, and
+\textbf{Claim \ref{claim:htovproject}:}
+  \[  \left\{ \x \in \R^d \Suchthat 
+              \svec{\x}{\vec{0}} \in \CV(V') \right\}
+           = \pi_{\x} \left(\CV(V') \bigcap_{k=d+1}^{d+m} H_k^{d+m}\right)\]
+\begin{proof}[Proof of \textnormal{\textbf{Claim \ref{claim:htovproject}}}(easy)]
 \begin{align*}
-\x &= \sum_{\v\in P}t_v\v + \sum_{\u\in N} t_u\u + \sum_{\w\in Z} t_w\w \Rightarrow \\
- 0 &= \sum_{\v\in P}t_v v_k + \sum_{\u\in N} t_u u_k + \sum_{\w\in Z} t_w w_k \\
-   &= \sum_{\v\in P}t_v v_k + \sum_{\u\in N} t_u u_k
+  \CV(V') \bigcap_{k=d+1}^{d+m} H_k^{d+m}
+    &= \left\{ \z \in \CV(V') \Suchthat z_k = 0 : d+1 \leq k \leq d+m \right\} \\
+    &= \left\{ \svec{\x}{\w} \in \CV(V') \Suchthat 
+          \x \in \R^d, \w \in \R^m, w_k = 0 : 1 \leq k \leq m \right\} \\
+    &= \left\{ \svec{\x}{\w} \in \CV(V') \Suchthat 
+          \x \in \R^d, \w \in \R^m, \w = \vec{0} \right\} \\
+    &= \left\{ \svec{\x}{\vec{0}} \in \CV(V') \Suchthat \x \in \R^d \right\}
+\end{align*}
+Then
+  \[ \pi_{\x}\left(\CV(V') \bigcap_{k=d+1}^{d+m} H_k^{d+m}\right) 
+      = \left\{ \x \in \R^d \Suchthat \svec{\x}{\vec{0}} \in \CV(V') \right\} \]
+      
+\end{proof}
+
+\bigskip \hrule \bigskip
+
+The following lemma will be useful in the upcoming proof.
+\begin{lemma}[Subcone]{\label{lemma:subcone}
+  $U \subseteq \CV(V) \Rightarrow \CV(U) \subseteq \CV(V)$
+} \end{lemma}
+\begin{proof}
+For any $\u^i \in U$ we have $\u^i = \sum_j t_{ij} \v^j$.  Then, for any conical combination of $\u^i$ we have:
+\[ \sum\nolimits_i s_i\u^i 
+        = \sum\nolimits_i s_i\left(\sum\nolimits_j t_{ij} \v^j\right)
+        = \sum\nolimits_j \left(\sum\nolimits_i s_i t_{ij}\right) \v^j
+\]
+Since $s_i, t_{ij} \geq 0$, the final expression is a conical combination of $V$.
+\end{proof}
+
+\bigskip \hrule \bigskip
+
+\textbf{Claim \ref{claim:htovdrop}:} \textit{Let $\mdef{V'_{in}}{(d+m)}{n_{in}}$, then there exists a set $\mdef{V'_{out}}{(d+m)}{n_{out}}$ such that}
+ \[ \CV(V'_{in}) \cap H_{k}^{d+m} = \CV(V'_{out}) \]
+\begin{proof}[Proof of \textnormal{\textbf{Claim \ref{claim:htovdrop}}}(hard)]
+Suppose that the vectors of $V_{in}$ are indexed by a set $I$.  We partition the vectors of $V_{in}$ based on their value at coordinate $k$.
+\begin{align*}
+  P = i \in I &\suchthat v_k^i > 0 \\
+  N = j \in I &\suchthat v_k^j < 0 \\
+  Z = l \in I &\suchthat v_k^l = 0
+\end{align*}
+Here, we've used different indices $i,j,l$.  This is purely for convenience, and in what follows we'll follow the convention that $i\in P$, $j \in N$, and $l \in Z$.
+Next, let
+\[ V_{out} = \{ \v^l \suchthat l \in Z\} \cup 
+      \{v^i_k \v^j - v^j_k \v^i \suchthat i \in P, j \in N \} \]
+There are two critical properties of the set $V_{out}$. First, every $\v \in V_{out}$ is formed by taking conical combinations of vectors from $V_{in}$.  Also, for any $\v \in V_{out}$, we have that $v_k = 0$.  These two properties, along with lemma \ref{lemma:subcone} gives 
+\[ \CV(V_{out}) \subseteq \CV(V_{in}) \cap H^{d+m}_k \]
+
+Next, say $\x \in \CV(V_{in}) \cap H^{d+m}_k$, then:
+\begin{align*}
+\x &= \sum_{i \in P}t_i\v^i + \sum_{j \in N} t_j\v^j + \sum_{l \in Z} t_l\v^l
+\end{align*}
+Because $x_k = 0$, and $v^l_k = 0$ for each $l \in Z$, we have
+\begin{align*}
+ 0 &= \sum_{i \in P}t_i v^i_k + \sum_{j \in N} t_j v^j_k + \sum_{l \in Z} t_l v^l_k \\
+   &= \sum_{i \in P}t_i v^i_k + \sum_{j \in N} t_j v^j_k
 \end{align*}
 This final line implies that the sums have opposite values.  Denote this value by $\tau$, that is
-\[ \tau = \sum_{\v\in P}t_v v_k = -\sum_{\u\in N} t_u u_k \]
-Because of the way $N$ and $P$ are defined, we have that $0 \leq \tau$.  We can now rewrite $\x$ as
-\begin{align*}
-\x &= \sum_{\v\in P}t_v\v + \sum_{\u\in N} t_u\u + \sum_{\w\in Z} t_w\w = \\
-   &=   \frac{-1}{\tau}\sum_{\u\in N}t_u u_k \sum_{\v\in P}t_v \v + 
-        \frac{1}{\tau}\sum_{\v\in P}t_v v_k\sum_{\u\in N} t_u \u + 
-        \sum_{\w\in Z} t_w \w \\
-   &=   \frac{-1}{\tau}\uvsum t_u t_v u_k \v + 
-        \frac{1}{\tau}\uvsum t_u t_v v_k \u + 
-        \sum_{\w\in Z} t_w \w \\
-   &=  \uvsum \frac{t_u t_v}{\tau}(v_k\u - u_k\v) +
-        \sum_{\w\in Z} t_w \w
+\[ \tau = \sum_{i \in P}t_i v^i_k = -\sum_{j \in N} t_j v^j_k \]
+If $\tau = 0$, then each $t_i,t_j = 0$ and $\x$ is a conical combination of vectors from $\v^l : l \in Z$, and therefore $\x \in \CV(V_{out})$.  Suppose that $\tau > 0$.  Then we have
+\begin{align*} 
+ &\sum_{i \in P}t_i \v^i 
+   = \frac{-1}{\tau}\sum_{j \in N}t_j v^j_k \sum_{i \in P}t_i \v^i 
+   = -\uvsum \frac{t_i t_j}{\tau} v^j_k \v^i \\[1em]
+ &\sum_{j \in N}t_j \v^j 
+   = \,\frac{1}{\tau}\sum_{i \in N}t_i v^i_k \sum_{j \in P}t_j \v^j 
+   = \quad\uvsum \frac{t_i t_j}{\tau} v^i_k \v^j
 \end{align*}
-This last line witnesses $\x \in \CV(V')$.
+Combining these results, we have:
+\begin{align*}
+   \sum_{i \in P}t_i \v^i + \sum_{j \in N}t_j \v^j 
+   &= \uvsum \frac{t_i t_j}{\tau} v^i_k \v^j 
+      - \uvsum \frac{t_i t_j}{\tau} v^j_k \v^i \\
+   &=  \uvsum \frac{t_i t_j}{\tau}(v^i_k\v^j - v^j_k\v^i)
+\end{align*}
+Because $\tau > 0, t_i,t_j \geq 0$, it follows that $\frac{t_i t_j}{\tau} \geq 0$.  This shows that the sum above can be written as a conical combination of vectors from $V_{out}$.  We can now rewrite $\x$:
+\begin{align*}
+\x &= \sum_{i\in P}t_i\v^i + \sum_{j\in N} t_j\v^j + \sum_{l\in Z} t_l\v^l \\
+   &=  \uvsum \frac{t_i t_j}{\tau}(v^i_k\v^j - v^j_k\v^i) +
+        \sum_{l \in Z} t_l \v^l
+\end{align*}
+This shows $\x$ is a conical combination of vectors from $V_{out}$, so 
+\[ \CV(V_{in}) \cap H^{d+m}_k \subseteq \CV(V_{out}) \]
 \end{proof}
 
-\begin{proof}[Proof of \textnormal{\textbf{Theorem \ref{thm:htov}}}]
-Theorem \ref{thm:htov} follows by first applying claim \ref{claim:htovlift} to $A$, then successively applying claim \ref{claim:htovdrop} to each $H_k^{d+m}$ for $d+1\leq k \leq d+m$ to eliminate the intersection terms.
+\bigskip \hrule \bigskip
+
+\textbf{Claim \ref{claim:htovcvproject}:}
+  \textit{Let $\mdef{V'}{(d+m)}{n}$, then }
+ \[ \pi_{\x}(\CV(V') = \CV(\pi_{\x}(V')) \]
+\begin{proof}[Proof of \textnormal{\textbf{Claim \ref{claim:htovcvproject}}}(easy)]
+This follows from the fact that projections are linear transformations.  Take the projection:
+\[ \pi_{\x}\svec{\x}{\w} = \x\]
+Then
+\[ \pi_{\x}\left( \alpha \svec{\x}{\w} + \svec{\y}{\z}\right) = 
+    \pi_{\x}\svec{\alpha \x + \y}{\alpha \w + \z} = \alpha \x + \y =
+    \alpha \pi_{\x}\svec{\x}{\w} + \pi_{\x}\svec{\y}{\z} \]
+Let $J$ index the vectors of $V'$.  Say $\v \in \CV(V')$, then
+\[ \pi_{\x}(\v) = \pi_{\x}\left(\sum_{j\in J}t_j\v^j\right) = 
+      \sum_{j\in J}t_j\pi_{\x}(\v^j) \]
+This is apparently a conical combination of vectors from $\pi_{\x}(V')$, so $\v \in \CV(\pi_{\x}(V'))$.
+
+Similarly, say $\u \in \CV(\pi_{\x}(V'))$, then
+\[ \u = \sum_{j\in J}t_j\pi_{\x}(\v^j) = 
+      \pi_{\x}\left(\sum_{j\in J}t_j\v^j\right)\]
+So $\u \in \pi_{\x}(\CV(V'))$.
 \end{proof}
+
 %
 %\section{Introduction}
 %\input{mwt_introduction}
