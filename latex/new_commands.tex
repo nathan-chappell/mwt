@@ -60,3 +60,21 @@
 \newcommand{\fjoink}{\overset{\F_k}{*}}
 \DeclareMathOperator{\conv}{conv}
 \DeclareMathOperator{\cone}{cone}
+
+% The new stuff
+\newtheorem{thm}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{definition}{Definition}
+
+\newcommand{\bset}[1]{\left\{#1\right\}}
+\newcommand{\hcone}[1]{\bset{\x \in \R^d \suchthat #1\x \leq \vec{0}}}
+\newcommand{\vcone}[1]{\bset{\x \in \R^d \suchthat 
+                            \exists \t \in\R^n\geq \vec{0},\, \x = #1\t}}
+\newcommand{\mdef}[3]{#1 \in \R^{#2 \times #3}}
+\newcommand{\hplane}[2]{\bset{\x \in \R^{#1} \suchthat x_{#2} = 0}}
+\newcommand{\svec}[2]{\begin{pmatrix*}[c] #1 \\ #2 \end{pmatrix*}}
+
+\newcommand{\uvsum}{\sum_{\substack{ i \in P \\ j \in N }}}
+
+
