@@ -18,8 +18,7 @@ template <
           typename DropFunctor,
           typename Rep 
           >
-auto lift_and_drop(const Rep &rep) 
-    -> decltype(DropFunctor{}(LiftFunctor{}(rep))) {
+auto lift_and_drop(const Rep &rep) {
   auto &&altRep = LiftFunctor{}(rep);
   return DropFunctor{}(altRep);
 }
@@ -35,13 +34,7 @@ template <
           typename RestrictFunctor,
           typename Rep
           >
-auto relax_lift_drop_restrict(const Rep &rep) ->
-          decltype(
-            RestrictFunctor{}(
-              DropFunctor{}(
-                LiftFunctor{}(
-                  RelaxFunctor{}(rep))))
-    ) {
+auto relax_lift_drop_restrict(const Rep &rep) {
   auto &&relaxed = RelaxFunctor{}(rep);
   auto &&alt = lift_and_drop<LiftFunctor,DropFunctor>(relaxed);
   return RestrictFunctor{}(alt);

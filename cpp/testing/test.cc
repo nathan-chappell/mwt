@@ -8,31 +8,37 @@ using namespace std;
 const string line_break(40,'-');
 
 HCone hcone;
+HPolyhedron hpoly;
 
 void generic() {
+  /*
+  cout << "hcone: \n" << hcone << flush;
   cout << "HC -> VC" << endl;
   cout << lift_and_drop<
                       F_lift_HCone, 
                       F_drop_LiftedHCone
                       >(hcone);
   cout << line_break << endl;
-/*
   cout << "HC -> VC" << endl;
   VCone vc       = lift_and_drop<
                       F_lift_HCone, 
                       F_drop_LiftedHCone
                       >(hcone);
   cout << line_break << endl;
-
+  */
+  cout << "hpoly:" << endl;
+  cout << hpoly << endl;
   cout << "HP -> VP" << endl;
   VPolyhedron vp = relax_lift_drop_restrict<
                       F_relax_HPolyhedron, 
                       F_lift_HCone, 
                       F_drop_LiftedHCone,
                       F_restrict_VCone
-                      >(HPolyhedron{});
+                      >(hpoly);
+  cout << vp << endl;
   cout << line_break << endl;
 
+/*
   cout << "VC -> HC" << endl;
   HCone hc       = lift_and_drop<
                       F_lift_VCone, 
@@ -52,6 +58,9 @@ void generic() {
 }
 
 int main(int argc, char *argv[]) {
-  hcone.read_interactive();
+  //hcone.read_interactive();
+  //hcone.read_in(cin, nullptr);
+  //hpoly.read_interactive();
+  hpoly.read_in(cin, nullptr);
   generic();
 }

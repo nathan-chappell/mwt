@@ -2,6 +2,7 @@
 #pragma once
 
 #include "generics.h"
+#include "fourier_motzkin.h"
 #include "polyhedra.h"
 
 #include <set>
@@ -35,13 +36,7 @@ VPolyhedron restrict (const VCone &);
 math_vector  relax_constraint  (const constraint_vector&);
 math_vectors relax_constraints (const constraint_vectors&);
 
-math_vector  fjoink_v    (const math_vector&, const math_vector&);
-math_vector  project_K_v (const math_vector&, const std::vector<size_t>&);
-math_vectors fjoin_k     (math_vectors, const size_t&);
-math_vectors fjoin       (math_vectors, const std::vector<size_t>&);
 math_vectors normalize_k (math_vectors, const size_t&);
-math_vectors project_K   (const math_vectors&, std::vector<size_t>);
-
 
 /*
  * The following functors just wrap the above functions.

@@ -3,7 +3,7 @@ HEADERS_DIR = include
 SOURCE_DIR  = src
 TEST_DIR    = testing
 CPPFLAGS    = -Wall -g -Og -I$(HEADERS_DIR)
-OBJS_       = polyhedra polyhedra_common cone_base \
+OBJS_       = polyhedra polyhedra_common fourier_motzkin cone_base \
                 hcone vcone vpolyhedron hpolyhedron mwt
 OBJS        = $(OBJS_:%=$(SOURCE_DIR)/%.o)
 TEST        = test.o

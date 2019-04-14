@@ -49,7 +49,6 @@ math_vector read_math_vector(istream &is, int d, ostream *o) {
   if (is.fail()) {
     throw READ_ERROR(error_message::read_math_vector);
   }
-  cerr << "mv read: " << v << endl;
   return v;
 }
 

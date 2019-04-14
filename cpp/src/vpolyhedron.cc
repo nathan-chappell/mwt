@@ -47,6 +47,6 @@ void VPolyhedron::read_in(std::istream &is, std::ostream *o) {
 
 string VPolyhedron::to_string() const {
   ostringstream o;
-  o << d << "\n" << U << "V\n" << V << "\n";
+  o << d << "\nU\n" << U << "V\n" << V << "\n";
   return o.str();
 }
