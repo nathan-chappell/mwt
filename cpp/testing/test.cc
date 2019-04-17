@@ -7,8 +7,10 @@ using namespace std;
 
 const string line_break(40,'-');
 
-HCone hcone;
+HCone       hcone;
 HPolyhedron hpoly;
+VCone       vcone;
+VPolyhedron vpoly;
 
 void generic() {
   /*
@@ -26,6 +28,7 @@ void generic() {
                       >(hcone);
   cout << line_break << endl;
   */
+  /*
   cout << "hpoly:" << endl;
   cout << hpoly << endl;
   cout << "HP -> VP" << endl;
@@ -37,14 +40,17 @@ void generic() {
                       >(hpoly);
   cout << vp << endl;
   cout << line_break << endl;
-
-/*
+  */
+  /*
   cout << "VC -> HC" << endl;
   HCone hc       = lift_and_drop<
                       F_lift_VCone, 
                       F_drop_LiftedVCone
-                      >(VCone{});
+                      >(vcone);
+  cout << "hc" << endl;
+  cout << hc << endl;
   cout << line_break << endl;
+  */
 
   cout << "VP -> HP" << endl;
   HPolyhedron hp = relax_lift_drop_restrict<
@@ -52,15 +58,21 @@ void generic() {
                       F_lift_VCone, 
                       F_drop_LiftedVCone,
                       F_restrict_HCone
-                      >(VPolyhedron{});
+                      >(vpoly);
+  cout << hp << endl;
+  cout << "size: " << hp.get_constraint_vectors().size() << endl;
   cout << line_break << endl;
-  */
 }
 
 int main(int argc, char *argv[]) {
   //hcone.read_interactive();
   //hcone.read_in(cin, nullptr);
   //hpoly.read_interactive();
-  hpoly.read_in(cin, nullptr);
+  //hpoly.read_in(cin, nullptr);
+  //vcone.read_interactive();
+  //vcone.read_in(cin, nullptr);
+  //vpoly.read_interactive();
+  vpoly.read_in(cin, nullptr);
+  cout << "vpoly: " << vpoly << endl;
   generic();
 }

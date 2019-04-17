@@ -20,6 +20,7 @@ public:
   ~cone_base() override { clear(); }
   cone_base(math_vectors &&);
   const math_vectors &get_math_vectors() const { return A; }
+  const size_t get_d() const { return d; }
   //serial_base overrides
   virtual void read_in(std::istream &, std::ostream*) override;
   std::string to_string() const override;

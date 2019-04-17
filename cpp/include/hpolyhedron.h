@@ -14,6 +14,7 @@ protected:
 
 public:
   HPolyhedron() { clear(); }
+  HPolyhedron(constraint_vectors &&);
   ~HPolyhedron() override { clear(); }
 
   const constraint_vectors &get_constraint_vectors() const { return A; }

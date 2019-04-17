@@ -4,6 +4,10 @@
 
 using namespace std;
 
+HPolyhedron::HPolyhedron(constraint_vectors &&cvs) : A{move(cvs)} {
+  d = A.empty() ? -1 : A.front().size();
+}
+
 void HPolyhedron::read_in(istream &is, ostream *o) {
   clear();
   conditional_log(o,"input hpolyhedron (q or eof to quit)");

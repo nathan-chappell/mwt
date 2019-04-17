@@ -9,11 +9,11 @@ HCone::HCone(math_vectors &&mvs) : cone_base{move(mvs)} {}
  * (A^j)
  */
 math_vector get_ej_Aj(const math_vectors &A, const size_t &j, bool positive) {
-  const size_t &m{A.size()};
-  const size_t &n{A.front().size()};
+  const size_t m{A.size()};
+  const size_t n{A.front().size()};
   math_vector result(m + n);
   result[j] = 1;
-  size_t row{};
+  size_t row{0};
   for (auto &&col : A) {
     result[n+row++] = col[j];
   }
@@ -46,7 +46,6 @@ void push_0_ID(math_vectors &result, const math_vectors &A) {
 /*                    n  n m
  *                   (I -I 0) n
  * {Ax <= 0} -> cone (A -A I) m
- *
  */
 math_vectors HCone::lift() const {
   if (A.empty()) return {};

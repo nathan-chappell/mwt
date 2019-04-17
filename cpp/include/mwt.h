@@ -13,14 +13,18 @@
  * functors.  These are for use with the generic algorithms from generics.h
  */
 
-struct LiftedVCone { /* TODO */ };
-
-
-class LiftedHCone : public HCone { 
+class LiftedCone : public cone_base { 
   std::vector<size_t> lifted_dimensions;
 public:
-  LiftedHCone(math_vectors &&mvs, size_t);
+  LiftedCone(math_vectors &&mvs, size_t);
   std::vector<size_t> get_dimensions() const { return lifted_dimensions; }
+};
+
+struct LiftedVCone : public LiftedCone {
+  LiftedVCone(math_vectors &&mvs, size_t);
+};
+struct LiftedHCone : public LiftedCone {
+  LiftedHCone(math_vectors &&mvs, size_t);
 };
 
 VCone       relax    (const VPolyhedron &);
@@ -33,8 +37,11 @@ LiftedHCone lift     (const HCone &);
 VCone       drop     (const LiftedHCone &);
 VPolyhedron restrict (const VCone &);
 
+math_vector  prepend_value     (const math_vector &, math_vector::value_type);
 math_vector  relax_constraint  (const constraint_vector&);
 math_vectors relax_constraints (const constraint_vectors&);
+constraint_vector  reconstrain (const math_vector&);
+constraint_vectors reconstrain (const math_vectors&);
 
 math_vectors normalize_k (math_vectors, const size_t&);
 
