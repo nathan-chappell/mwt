@@ -1,6 +1,7 @@
 CC = g++ -std=c++14
 CPPFLAGS = -g -Og -Wall
-OBJS = mwt.o fourier_motzkin.o common.o main.o
+OBJS = fourier_motzkin.o common.o
 
-all : $(OBJS)
-	$(CC) $(CPPFLAGS) $(OBJS) -o main
+vcone_to_hcone : $(OBJS)
+	$(CC) $(CPPFLAGS) $(OBJS) $@.cpp -o $@
+
