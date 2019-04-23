@@ -55,8 +55,7 @@ Matrix project_hcone(Matrix &&M) {
   for (size_t i = d; i < d+p; ++i) {
     result = fourier_motzkin(move(result), i);
   }
-  result = project_matrix(result);
-  return result;
+  return project_matrix(result);
 }
 
 } //namespace
@@ -65,11 +64,8 @@ Matrix vcone_to_hcone(const Matrix &M) {
   if (check_empty_matrix(M)) {
     throw logic_error{"empty vcone"};
   }
-  Matrix result;
   p = M.size();
-  result = VCone::lift_vcone(M);
-  result = VCone::project_hcone(move(result));
-  return result;
+  return VCone::project_hcone(VCone::lift_vcone(M));
 }
 
 int main() {
