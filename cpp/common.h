@@ -9,7 +9,8 @@
 using Vector = std::valarray<double>;
 using Matrix = std::vector<Vector>;
 
-//global variable used to control reading vector from stdin
+// global variable used to control reading vector from stdin
+// also used in fourier_motzkin
 extern size_t d;
 
 Matrix transpose(const Matrix &M);

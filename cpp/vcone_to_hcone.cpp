@@ -23,9 +23,9 @@ const size_t &p{::p};
 // d |U| -> d| I -U|
 //          d|-I  U|
 //
-Matrix lift_vcone(const Matrix &M) {
+Matrix lift_vcone(const Matrix &vcone) {
   Matrix result;
-  Matrix m_t = transpose(M);
+  Matrix m_t = transpose(vcone);
   //| 0 -I|
   for (size_t i = 0; i < p; ++i) {
     result.emplace_back(d+p);
@@ -50,8 +50,8 @@ Matrix lift_vcone(const Matrix &M) {
 }
 
 // project away d+1 to p
-Matrix project_hcone(Matrix &&M) {
-  Matrix result = move(M);
+Matrix project_hcone(Matrix &&hcone) {
+  Matrix result = move(hcone);
   for (size_t i = d; i < d+p; ++i) {
     result = fourier_motzkin(move(result), i);
   }
@@ -60,17 +60,16 @@ Matrix project_hcone(Matrix &&M) {
 
 } //namespace
 
-Matrix vcone_to_hcone(const Matrix &M) {
-  if (check_empty_matrix(M)) {
+Matrix vcone_to_hcone(const Matrix &vcone) {
+  if (check_empty_matrix(vcone)) {
     throw logic_error{"empty vcone"};
   }
-  p = M.size();
-  return VCone::project_hcone(VCone::lift_vcone(M));
+  p = vcone.size();
+  return VCone::project_hcone(VCone::lift_vcone(vcone));
 }
 
 int main() {
   Matrix vcone;
   cin >> vcone;
-  Matrix hcone = vcone_to_hcone(vcone);
-  cout << hcone;
+  cout << vcone_to_hcone(vcone);
 }

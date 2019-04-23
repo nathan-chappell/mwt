@@ -9,6 +9,7 @@
 using namespace std;
 
 // keep only the first d elements of each vector
+// (get d from common.h)
 Matrix project_matrix(const Matrix &M) {
   Matrix result;
   for (auto &&row : M) {

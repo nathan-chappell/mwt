@@ -1,4 +1,4 @@
-//hcone_to_hone.cpp
+//hcone_to_hcone.cpp
 
 #include "common.h"
 #include "fourier_motzkin.h"
@@ -17,14 +17,14 @@ namespace HCone {
 const size_t &d{::d};
 const size_t &m{::m};
 
-// represent hone as projection of hcone
+// represent hcone as projection of hcone
 //           d  d m
 //   d     d|I -I 0|
 // m|A| -> m|A -A I|
 //
-Matrix lift_hcone(const Matrix &M) {
+Matrix lift_hcone(const Matrix &hcone) {
   Matrix result;
-  Matrix m_t = transpose(M);
+  Matrix m_t = transpose(hcone);
   //|I|
   //|A|
   size_t k{0};
@@ -52,8 +52,8 @@ Matrix lift_hcone(const Matrix &M) {
 }
 
 // intersect vcone with {x_k = 0 | d+1 <= k <= d+m}
-Matrix intersect_vcone(Matrix &&M) {
-  Matrix result = move(M);
+Matrix intersect_vcone(Matrix &&vcone) {
+  Matrix result = move(vcone);
   for (size_t i = d; i < d+m; ++i) {
     result = fourier_motzkin(move(result), i);
   }
@@ -62,18 +62,17 @@ Matrix intersect_vcone(Matrix &&M) {
 
 } //namespace
 
-Matrix hone_to_vcone(const Matrix &M) {
-  if (check_empty_matrix(M)) {
-    throw logic_error{"empty hone"};
+Matrix hcone_to_vcone(const Matrix &hcone) {
+  if (check_empty_matrix(hcone)) {
+    throw logic_error{"empty hcone"};
   }
   Matrix result;
-  m = M.size();
-  return HCone::intersect_vcone(HCone::lift_hcone(M));
+  m = hcone.size();
+  return HCone::intersect_vcone(HCone::lift_hcone(hcone));
 }
 
 int main() {
-  Matrix hone;
-  cin >> hone;
-  Matrix hcone = hone_to_vcone(hone);
-  cout << hcone;
+  Matrix hcone;
+  cin >> hcone;
+  cout << hcone_to_vcone(hcone);
 }
