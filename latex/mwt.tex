@@ -1,53 +1,461 @@
-\documentclass[a4,fleqn]{article}
-\usepackage{amsmath, amsthm}
-\usepackage{mathtools}
-\usepackage{color}
-\usepackage{svgcolor}
-\usepackage{amsfonts}
-\usepackage{tikz}
-\usetikzlibrary{arrows,backgrounds}
+\documentclass[fleqn]{article}
+\usepackage{amsmath,amsfonts,amsthm}
+\usepackage{mathtools, bm}
+\usepackage{listings}
 
-\input{new_commands}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\DeclareMathOperator{\cone}{cone}
+\DeclareMathOperator{\conv}{conv}
+\newcommand{\ip}[2]{\left\langle #1, #2 \right\rangle}
+
+%special letters
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\0}{\vec{0}}
+\newcommand{\x}{\vec{x}}
+\newcommand{\y}{\vec{y}}
+\newcommand{\e}{\vec{e}}
+\newcommand{\w}{\vec{w}}
+\renewcommand{\t}{\vec{t}}
+\renewcommand{\v}{\vec{v}}
+\renewcommand{\b}{\vec{b}}
+\newcommand{\faij}{\forall i\in P,\forall j \in N}
+
+%symbols
+\newcommand{\st}{\;|\;}
+\newcommand{\St}{\;\Big|\;}
+
+%constants
+\newcommand{\Udim}{p}
+\newcommand{\Vdim}{n}
+\newcommand{\Adim}{m}
+\newcommand{\mspaceA}{\R^{{\Adim}\times d}}
+\newcommand{\mspaceB}{\R^{m_1\times (d+\Udim)}}
+\newcommand{\mspaceC}{\R^{m_2\times (d+\Udim)}}
+
+%matrices and vectors with domain
+\newcommand{\bv}{\b \in \R^{\Adim}}
+\newcommand{\tv}{\t \in \R^{\Udim}}
+\renewcommand{\l}{\bm{\lambda}}
+\newcommand{\lv}{\l \in \R^{\Vdim}}
+\newcommand{\xv}{\x \in \R^d}
+\newcommand{\mV}{V \in \R^{d\times \Vdim}}
+\newcommand{\mU}{U \in \R^{d\times \Udim}}
+\newcommand{\mA}{A \in \mspaceA}
+\newcommand{\mB}{B \in \mspaceB}
+\newcommand{\mC}{B' \in \mspaceC}
+\newcommand{\xt}{\begin{pmatrix*}\x\\ \t\end{pmatrix*}}
+\newcommand{\xw}{\begin{pmatrix*}\x\\ \w\end{pmatrix*}}
+\newcommand{\xAx}{\begin{pmatrix*}\x\\ A\x\end{pmatrix*}}
+\newcommand{\xz}{\begin{pmatrix*}\x\\ \0\end{pmatrix*}}
+\newcommand{\zw}{\begin{pmatrix*}\0\\ \w\end{pmatrix*}}
+\newcommand{\eAj}{\begin{pmatrix*}\e_j\\ A^j\end{pmatrix*}}
+\newcommand{\neAj}{\begin{pmatrix*}[r]-\e_j\\ -A^j\end{pmatrix*}}
+\newcommand{\ee}{\begin{pmatrix*} \0 \\ 1 \end{pmatrix*}}
+\newcommand{\zei}{\begin{pmatrix*} \0 \\ \e_i \end{pmatrix*}}
+\newcommand{\xjp}{x_j^+}
+\newcommand{\xjm}{x_j^-}
+\newcommand{\Yi}{Y^i_{k}}
+\newcommand{\Yj}{Y^j_{k}}
+\newcommand{\Yl}{Y^l_{k}}
+
+%sums
+\newcommand{\tusum}{\sum_{1\leq j \leq \Udim}t_j U^j}
+\newcommand{\lvsum}{\sum_{1\leq j \leq \Vdim}\lambda_j V^j}
+\newcommand{\lsum}{\sum_{1\leq j \leq \Vdim}\lambda_j}
+\newcommand{\jsum}{\sum_{1\leq j \leq d}}
+\newcommand{\isum}{\sum_{1\leq i \leq n}}
+\newcommand{\Psum}{\sum_{i\in P}}
+\newcommand{\Nsum}{\sum_{j\in N}}
+\newcommand{\Zsum}{\sum_{k\in Z}}
+\newcommand{\NPsum}{\sum_{\substack{i\in P \\ j\in N}}}
+\newcommand{\isconv}{\lambda_j \geq 0 \lsum = 1}
+
+\newtheorem{Def}{Definition}
+\newtheorem{Thm}{Theorem}
+\newtheorem{Prop}{Proposition}
+
+%text macros
+\newcommand{\MWT}{Minkowski-Weyl Theorem }
 
 \begin{document}
 
-\input{mwt__algebraic}
-\input{mwt__preliminaries}
+%Given a matrix $\mA$, let $A_i$ denote the $i$-th row of $A$, and $A^j$ the j-th column.  The expression $A\x\leq \0$ means that $(\forall i) \ip{A_i}{\x} \leq 0$.
 
-\input{mwt__hcone_to_vcone}
-\input{mwt__vcone_to_hcone}
+\begin{Def}[non-negative linear combination]{
+  Let $\mU$, $\tv, \t \geq \0$, then \( \tusum \) is called a \textbf{non-negative linear combination} of $U$.
+}\end{Def}
 
-\section{Main Theorem}
-\begin{theorem}[Minkowski-Weyl Theorem]{\label{theorem:mwtc}
+\begin{Def}[V-Cone]{
+  Let $\mU$.  The set of all non-negative linear combinations of $U$ is denoted $\cone(U)$.  Such a set is called a \textbf{V-Cone}.
+}\end{Def} 
+
+\begin{Def}[convex combination]{
+  Let $\mV$, $\lv, \l \geq\0, \lsum = 1$, then \( \lvsum \) is called a \textbf{convex combination} of V.  The set of all convex combinations of $V$ is denoted $\conv(V)$.
+}\end{Def}
+
+\begin{Def}[V-Polyhedron]{
+  Let $\mV$, $\mU$.  Then the set
+  %\[ \set{\tusum + \lvsum\St\,t_j \geq 0,\isconv} \]
+  \[ \set{\x + \y \st \x \in \cone(U),\, \y \in \conv(V)} \]
+  is called a \em{V-Polyhedron}.
+}\end{Def}
+
+\begin{Def}[H-Polyhedron]{
+  Let $\mA$, $\bv$.  Then the set
+  \[ \set{\xv \St A\x \leq \b} \]
+  is called an \em{H-Polyhedron}.
+}\end{Def}
+
+\begin{Def}[H-Cone]{
+  Let $\mA$. Then the set
+  \[ \set{\xv \St A\x \leq \0} \]
+  is called an \em{H-Cone}.
+}\end{Def}
+
+The following theorem is the basic result to be proved in this thesis, which states that V-Polyhedra and H-Polyhedra are two different representations of the same objects.
+
+\begin{Thm}[\MWT]{
+  Every V-Polyhedron is an H-Polyhedron, and every H-Polyhedron is a V-Polyhedron.
+}\end{Thm}
+
+The proof proceeds by first showing that V-Cones are representable as H-Cones, and H-Cones are representable as V-Cones.  Then it is shown that the case of polyhedra can be reduced to cones.
+
+\begin{Thm}[\MWT for Cones]{
   Every V-Cone is an H-Cone, and every H-Cone is a V-Cone.
-} \end{theorem}
+}\end{Thm}
 
-\input{mwt__polyhedra}
+\newcommand{\Vcomp}{(V1)}
+\newcommand{\Vproj}{(V2)}
 
-%
-%\section{Introduction}
-%\input{mwt_introduction}
-%
-%\section{Definitions}
-%\input{mwt_definitions}
-%
-%\input{mwt_notation}
-%
-%\section{Proof of the \MWT}
-%\input{mwt_proof}
-%
-%\section{Program}
-%
-%% overview
-%% design principles
-%% details
-%% correctness
-%% complexity
-%
-%\section{Discussion}
-%\input{mwt_discussion}
-%% representations / polymorphism
-%% algorithms
-%% other proofs
-%
+\section{Every V-Cone is an H-Cone}
+
+\begin{Def}[Coordinate Projection]{
+  Let $I$ be the identity matrix.  Then the matrix $I'$ formed by deleting some rows from $I$ is called a \textbf{coordinate-projection}.
+}\end{Def}
+
+  The proof rests on the following two propostions:
+  \begin{itemize}
+  \item[\Vcomp] Every V-Cone is a coordinate-projections of an H-Cone.
+  \item[\Vproj] Every coordinate-projection of an H-Cone is an H-Cone.
+  \end{itemize}
+\begin{proof}
+  Given {\Vcomp} and {\Vproj}, the proof follows simply.  Given a V-Cone, we use {\Vcomp}, to get a description involving coordinate-projection of an H-Cone.  Then we can apply {\Vproj} in order to get an H-Cone.
+\end{proof}
+
+\begin{proof}[Proof of {\Vcomp}]
+  We prove that every V-Cone is a coordinate-projection of an H-Cone, by giving an explicit formula.  Let ${\mU}$, and observe that
+  \[ \cone(U) = \set{U\t \st \t \in \R^{\Udim},\, \t \geq \0} = 
+    \set{\xv \st (\exists \tv)\,\x = U\t,\, \t \geq \0} \]
+  We will collect $\t$ and $\x$ on the left side of the inequality, treating $\t$ as a variable and expressing its contraints as linear inequalities, then project away the coordinates corresponding to $\t$.  The following expression takes one step:
+  \begin{equation}\label{eq:tleqz}
+  \t \geq \0 \Leftrightarrow -I\t \leq \0
+  \end{equation}
+  And using the equality: $a = 0 \Leftrightarrow a \leq 0 \land -a \leq 0$, and block matrix notation, we take the second step.
+  \begin{equation}\label{eq:xeqt}
+   \x = U\t \Leftrightarrow \x - U\t = \0 \Leftrightarrow
+    \begin{pmatrix*}[r] I & -U \\ -I & U \end{pmatrix*} \xt \leq \0
+  \end{equation}
+  Comparing \eqref{eq:tleqz} and \eqref{eq:xeqt}, we define a new matrix $A' \in \R^{(\Udim+2d)\times(d+\Udim)}$:
+  \[A' = \begin{pmatrix*}[r] \0 & -I \\ I & -U \\ -I & U \end{pmatrix*} \]
+  then we can rewrite $\cone(U)$:
+  \begin{equation*}
+     \cone(U) = \set{ \xv \St A'\xt \leq \0}
+  \end{equation*}
+  Let $\Pi \in \set{0,1}^{d\times(d+\Udim)}$ be the identity matrix in $\R^{(d+\Udim)\times(d+\Udim)}$, but with the last $\Udim$-rows deleted.  Then $\Pi$ is a coordinate projection, and the above expression can be written:
+  \begin{equation}\label{eq:vconelift}
+    \cone(U) = \Pi\left(\set{ \y \in \R^{d+\Udim} \st A'\y \leq \0}\right)
+  \end{equation}
+  This is a coordinate projection of an H-Cone, and {\Vcomp} is shown.
+\end{proof}
+To prove {\Vproj}, we use two separate propositions.
+\begin{Prop}{\label{prop:hconezero}
+  Let $B\in\R^{m'\times(d+\Udim)}$, $B'$ be $B$ with the last $\Udim$ columns deleted, and $\Pi$ the identity matrix with the last $\Udim$ rows deleted (i.e. $B' = \Pi B$).  Furthermore, suppose that the last $\Udim$ columns of $B$ are $\0$.  Then
+  \[ \Pi\left(\set{\y \in \R^{d+\Udim} \st B\y \leq \0}\right) = 
+              \set{\x\in\R^d\st B'\x\leq\0} \]
+}\end{Prop}
+\begin{proof}
+  Recall that $B\y \leq \0$ means that $(\forall i)\ip{B_i}{\y} \leq 0$.  By the way we've defined $B$, any row $B_i$ of $B$ can be written $(B'_i,\0)$, with $\0 \in \R^\Udim$.  Rewriting $\y\in\R^{d+\Udim}$ as $(\x,\w)$ with $\x\in\R^d,\w\in\R^\Udim$, so that $\x = \Pi(\y)$.  Then
+  \[ \ip{B}{\y} = \ip{(B'_i,\0)}{(\x,\w)} = \ip{B'_i}{\x} = \ip{B'_i}{\Pi(\y)} \]
+  It follows that
+  \[ \ip{B_i}{\y} \leq 0 \Leftrightarrow \ip{B'_i}{\Pi(\y)} \leq 0 \]
+  Since $B_i$ is an arbitrary row of $B$, the proposition is shown.
+\end{proof}
+
+In order to use the above proposition, we need a matrix with $\0$ columns.  The next proposition shows us how to do so, one column at a time.
+
+\begin{Prop}{\label{prop:hconeproj}
+Let $\mB$, $1 \leq k \leq p$, and $\x = \sum_{i\neq k}x_i \e_i$.  Then there exists a matrix $\mC$ with the following properties:
+  \begin{enumerate}
+    \item Every row of $B'$ is a postive linear combination of rows of $B$.
+    \item $m_2$ is finite.
+    \item The $k$-th column of $B'$ is $\0$.
+    \item \((\exists t)B(\x + t\e_k) \leq \0 \Leftrightarrow B'\x \leq \0\)
+  \end{enumerate}
+}\end{Prop}
+\newcommand{\Bik}{B^k_i}
+\newcommand{\Bjk}{B^k_j}
+\newcommand{\Blk}{B^k_l}
+\begin{proof}
+  Partition the rows of $B$ as follows:
+  \begin{alignat*}{3}
+  &P &&= i &\st &\Bik > 0 \\
+  &N &&= j &\st &\Bjk < 0 \\
+  &Z &&= l &\st &\Blk = 0
+  \end{alignat*}
+  Then let $B'$ be a matrix with rows of the following forms:
+  \begin{alignat*}{3}
+    &C_l    &&= B_l &\st &l \in Z \\
+    &C_{ij} &&= \Bik B_j - \Bjk B_i &\st &i \in P, j \in N
+  \end{alignat*}
+  \textit{1} and \textit{2} are clear.  \textit{3} can be seen from:
+  \[ \ip{C_l}{\e_k} = 0 \]
+  \begin{equation}\label{eq:vdropZrows}
+  \ip{C_{ij}}{\e_k} = \ip{\Bik B_j - \Bjk B_i}{\e_k} = \Bik \Bjk - \Bjk \Bik = 0
+  \end{equation}
+  The right direction of \textit{4} is shown in the following calculations.  Because $\Blk = 0$:
+  \[ \ip{B_l}{\x+t\e_k} = \ip{B_l}{\x} + t\Blk = \ip{B_l}{\x} = \ip{C_l}{\x} \]
+  So:
+  \[ \ip{B_l}{\x+t\e_k} \leq 0 \Rightarrow \ip{C_l}{\x} \leq 0 \]
+  For rows indexed by $P,N$, we observe \eqref{eq:vdropZrows}, and have:
+  \[ \ip{\Bik B_j - \Bjk B_i}{\x + t\e_k} = \ip{\Bik B_j - \Bjk B_i}{\x} \]
+  Now, we use property \textit{1}:
+  \[ \ip{B_i}{\x+t\e_k} \leq 0,\; \ip{B_j}{\x+t\e_k} \leq 0 \Rightarrow 
+     \ip{\Bik B_j - \Bjk B_i}{\x + t\e_k} \leq 0\]
+  Therefore 
+  \[ \ip{\Bik B_j - \Bjk B_i}{\x} \leq 0 \]
+     
+  Now suppose that $B'\x \leq \0$.  The task is to find a $t$ so that $B\x \leq \0$.  Looking at \eqref{eq:vdropZrows}, any choice of $t$ we make will be okay for rows indexed by $Z$.  So the task is to find a $t$ so that the inequality holds for rows indexed by $P$ and $N$.  Observe
+\begin{align*}
+  \faij&\quad \ip{\Bik B_j - \Bjk B_i}{\x} \leq 0 \Leftrightarrow
+\end{align*}
+\vspace{-2.5em}
+\begin{alignat*}{4}
+  \faij&\quad \ip{\Bik B_j}{\x} &&\leq\; \ip{\Bjk B_i}{\x} &\Leftrightarrow \\
+  \faij&\quad \ip{B_j/\Bjk}{\x} &&\geq\; \ip{B_i/\Bik}{\x} &\;\Leftrightarrow 
+\end{alignat*}
+\vspace{-2em}
+\begin{align*}
+   \quad\min_{j\in N}  \ip{B_j/\Bjk}{\x} \,\geq\, \max_{i\in P} \ip{B_i/\Bik}{\x}
+\end{align*}
+Note that the third inequality changes directions because $\Bjk < 0$.  Now we choose $t$ to lie in this last interval, and show that we can use it to satisfy all of the constraints given by $ B$.  So, we have a $t$ such that
+\[ \min_{j\in N}  \ip{B_j/\Bjk}{\x} \geq t 
+          \geq \max_{i\in P} \ip{B_i/\Bik}{\x} \]
+In particular,
+\begin{alignat*}{2}
+ (\forall j\in N)\quad & \ip{B_j/\Bjk}{\x}     \;&\geq&\; t \Rightarrow \\
+ (\forall j\in N)\quad & \ip{B_j}{\x} - \Bjk t \;&\leq&\; 0
+\end{alignat*}
+Again, the inequality changes directions because $\Bjk < 0$.  Now consider a row $ B_j$ from $ B$:
+\[ \ip{B_j}{\x-t\e_k} =  B_j {\x} - \Bjk t \leq 0 \]
+Similarly,
+\begin{alignat*}{3}
+ (\forall i\in P)\quad & t \;&\geq&\;  B_i/\Bik {\x} &\Rightarrow \\
+ (\forall i\in P)\quad & 0 \;&\geq&\;  B_i {\x} - \Bik t &
+\end{alignat*}
+Now consider a row $ B_i$ from $ B$:
+\[ \ip{B_i}{\x-t\e_k} =  B_i {\x} - \Bik t \leq 0 \]
+So, we've demonstrated that $\x-t\e_k$ satisfies all the constraints from $B$, and the left implication is shown.  So \textit{4} holds.
+\end{proof}
+Now to prove:
+\begin{enumerate}
+  \item[\Vproj] Every coordinate-projection of an H-Cone is an H-Cone.
+\end{enumerate}
+
+\begin{proof}[proof of \Vproj]
+  Here we prove the case that the coordinate projection is onto the first $d$ of $d+p$ coordinates.  Let $\set{\y\in\R^{d+\Udim}:A'\y \leq \0}$ be the H-Cone we need to project, and $\Pi$ the coordinate-projection we need to apply (the identity matrix with the last p columns deleted).  For each $1 \leq k \leq p$ we can use proposition \ref{prop:hconeproj} in an incremental manner, starting with $A'$.
+\begin{align*}
+  &\text{let } B_0 := A'\\
+  &\text{for } 1 \leq k \leq p \\
+  &\quad \text{let } B_k := 
+         \text{result of proposition 2 applied to $B_{k-1}$, $\e_{d+k}$} \\
+  &\text{endfor} \\
+  &\text{return } B_p
+\end{align*}
+
+
+Consider the resulting $B$.  Property \textit{2} holds throughout, so $B$ is finite.  After each iteration, property \textit{3} holds for $k$, so the $k$-th column is $\0$.  Since each iteration only results from non-negative combinations of the result of the previous iteration (property \textit{1}), once a column is $\0$ it remains so.  Therefore, at the end of the process, the last $p$ columns of $B$ are all $\0$.  Then, by proposition \ref{prop:hconezero}, we can apply $\Pi$ to $B$ by simply deleting the last $p$ columns of $B$.  Denote this resulting matrix $A$.  We still need to check:
+\begin{equation}\label{V2seteqright}
+   A'\y \leq \0 \Leftrightarrow A(\Pi(\y)) \leq \0 
+\end{equation}
+\begin{equation}\label{V2seteqleft}
+  (\exists t_1)\dots(\exists t_p) A'(\x+t_1\e_{d+1}+\cdots+t_p\e_{d+p}) \leq \0
+          \Leftrightarrow A\x \leq \0
+\end{equation}
+Then, using \eqref{V2seteqright} and \eqref{V2seteqleft}, it is easy to see that:
+\begin{equation}\label{eq:V2equal}
+   \Pi\set{\y\in\R^{d+\Udim}\st A'\y\leq\0} = \set{\x\in\R^{d}\st A\x\leq\0} 
+\end{equation}
+The key observation of this verification utilizes property \textit{4} of proposition \ref{prop:hconeproj}:
+  \[ (\exists t)B(\x + t\e_k) \leq \0 \Leftrightarrow B'\x \leq \0 \]
+In what follows, let $\x = \sum_{1 \leq j \leq d}x_j\e_j$.  The above property is applied sequentially to the sets $B_k$ as follows:
+\begin{alignat*}{2}
+  (\exists t_p)(\exists t_{p-1})\dots(\exists t_1)&\quad 
+                B_0(\x + t_1\e_{p} + t_2\e_{p-1} + \dots + t_p\e_{d}) \leq \0\;&
+                   \Leftrightarrow \\
+               (\exists t_p)\dots(\exists t_2)&\quad 
+                B_1(\x + t_2\e_{d+2} + \dots + t_p\e_{d+p}) 
+                    \leq \0 &\Leftrightarrow \\
+           \vdots \hspace{1.3em} & \hspace{5em}\vdots & \vdots\hspace{0.4em} \\
+   (\exists t_p)&\quad B_{p-1}(\x + t_p\e_{d+p})  \leq \0 & \Leftrightarrow \\
+           &\quad B_{p}\x  \leq \0 & \Leftrightarrow
+\end{alignat*}
+Because $A' = B_0$, and $A$ is $B_p$ with the last $p$ columns deleted, \eqref{V2seteqright} and \eqref{V2seteqleft} hold, therefore \eqref{eq:V2equal} holds, and the proof of {\Vproj} is complete, and we've shown that a coordinate projection of an H-Cone is again an H-Cone.
+\end{proof}
+
+With {\Vcomp} and {\Vproj} proven, we are now certain that any V-Cone is also an H-Cone.
+
+\section{Every H-Cone is a V-Cone}
+
+\begin{Def}[Coordinate Hyperplane]{
+  A set of the form
+  \[ \set{\x \in \R^{d+\Adim} \st \ip{\x}{\e_k} = 0} = 
+     \set{\x \in \R^{d+\Adim} \st x_k = 0}
+  \]
+  is called a \em{coordinate-hyperplane}.
+}\end{Def}
+
+We will use coordinate-hyperplanes in the following way.  We consider a V-Cone intersected with some coordinate hyperplanes, and write it in the following way:
+\begin{equation}\label{eq:coneintform1}
+   \set{\xv \St (\exists \t \geq 0) \xz = U'\t}
+\end{equation}
+If we suppose that $U' \subset \R^{d+\Adim}$, and $\Pi$ is the identity matrix with the last $\Adim$ rows deleted, then this is just a convenient way of writing:
+\begin{equation}\label{eq:coneintform2}
+  \Pi\big(\cone(U') \cap \set{x_{d+1} = 0} 
+                        \cap \dots \cap \set{x_{d+\Adim} = 0}\big)
+\end{equation}
+\newcommand{\Hlift}{\textit{H1}}
+\newcommand{\Hint}{\textit{H2}}
+\newcommand{\Hproj}{\textit{H3}}
+  The proof rests on the following three propostions:
+  \begin{itemize}
+  \item[\Hlift] Every H-Cone is a coordinate-projection of a V-Cone intersected with some coordinate hyperplanes.
+  \item[\Hint] Every V-Cone intersected with a coordinate-hyperplane is a V-Cone
+  \item[\Hproj] Every coordinate-projection of a V-Cone is an V-Cone.
+  \end{itemize}
+\begin{proof}
+  Given {\Hlift}, {\Hint}, and {\Hproj}, the proof follows simply.  Given an H-Cone, we use {\Hlift} to get a description involving the coordinate-projection of a V-Cone intersected with some coordinate-hyperplanes.  We apply {\Hint} as many times as necessary to elimintate the intersections, then we can apply {\Hproj} in order to get a V-Cone.
+\end{proof}
+
+\begin{proof}[Proof of {\Hlift}]
+Let $\mA$, we now show that the H-Cone 
+  \[\set{\xv \st A\x \leq \0}\]
+can be written as the projection of a V-Cone intersected with some hyperplanes.  Define $U'$:
+  \[ U' = \set{\eAj, \neAj, \zei, 1 \leq j \leq d,\, 1 \leq i \leq m} \]
+  Then we claim:
+\begin{equation}\label{eq:hliftform}
+   \set{\xv \st A\x \leq \0} = \set{\xv \St (\exists \t \geq 0) \xz = U'\t}
+\end{equation}
+  First, considering \eqref{eq:coneintform1} and \eqref{eq:coneintform2}, observe that this is a coordinate-projection of a V-Cone intersected with some coordinate-hyperplanes.
+Next, we note that
+  \[ \xAx = \jsum x_j \eAj \]
+We can write this as a sum with all positive coefficients if we split up the $x_j$ as follows:
+\[
+   \xjp = \begin{cases} x_j & x_j \geq 0 \\ 0 & x_j < 0 \end{cases} \quad\quad\quad
+   \xjm = \begin{cases} 0 & x_j \geq 0 \\ -x_j & x_j < 0 \end{cases}
+\]
+Then we have
+\begin{equation} \label{eq:xAx}
+  \xAx = \jsum \xjp \eAj + \jsum \xjm \neAj
+\end{equation}
+where $\xjp, \xjm \geq 0$.  Also observe that
+  \[ A\x \leq \0 \Leftrightarrow (\exists \w \geq \0) \st A\x + \w = \0 \]
+This can also be written
+\begin{equation} \label{eq:Axz}
+  A\x \leq \0 \Leftrightarrow (\exists \w \geq \0) \st \xAx + \zw = \xz
+\end{equation}
+\eqref{eq:xAx} and \eqref{eq:Axz} together show
+\[ A\x \leq \0 \Rightarrow (\exists \t \geq 0) \xz = U'\t \]
+Conversely, suppose
+\[ (\exists \t \geq 0) \xz = U'\t \]
+We would like to show that $A\x \leq \0$.  Let $\xjp,\xjm,w_i$ take the values of $\t$ that are coefficients of $\eAj$, $\neAj$, and $\zei$ respectively, and denote $x_j = \xjp - \xjm$.  Then we have
+\begin{align*} 
+\xz &= \jsum \xjp \eAj + \jsum \xjm \neAj + \isum w_i\zei\\
+    &= \jsum x_j \eAj + \isum w_i\zei \\
+    &= \xAx + \zw
+\end{align*}
+where $\w \geq \0$.  By \eqref{eq:Axz} we have $A\x \leq \0$.  So \eqref{eq:hliftform} holds.
+\end{proof}
+
+The proof of {\Hint} relies upon the following proposition.
+\begin{Prop}{\label{Hintset}
+Let $Y \in \R^{(d+m)\times n_1}$, $1 \leq k \leq m$, and $\x$ satisfy $x_k = 0$.  Then there exists a matrix $Y' \in \R{(d+m)\times n_2}$ with the following properties:
+  \begin{enumerate}
+    \item Every column of $Y'$ is a postive linear combination of rows of $B$.
+    \item $n_2$ is finite.
+    \item The $k$-th row of $Y'$ is $\0$.
+    \item \((\exists \t\geq\0)\x = Y\t \Leftrightarrow (\exists \t' \geq \0)\x = Y'\t'\)
+  \end{enumerate}
+}\end{Prop}
+Recall that $ Y^i$ is the $i$-th column of $ Y$, and $\Yi$ is the element of $ Y$ in the $i$-th column and $k$-th row.  
+\begin{proof}
+We partition the columns of $ Y$:
+  \begin{alignat*}{3}
+  &P &&= i \;&\st &\Yi > 0 \\
+  &N &&= j \;&\st &\Yj < 0 \\
+  &Z &&= l \;&\st &\Yl = 0
+  \end{alignat*}
+We then define $ Y'$:
+\[  Y' = \set{ Y^l \st l \in Z} \cup 
+          \set{\Yi Y^j - \Yj Y^i \st i \in P,\, j\in N} \]
+\textit{1} and \textit{2} are clear.  \textit{3} can be seen from:
+  \[ \ip{Y'^l}{\e^k} = 0 \]
+  \begin{equation}\label{eq:vdropZrows}
+  \ip{Y'^{ij}}{\e^k} = \ip{\Yi Y^j - \Yj Y^i}{\e^k} = \Yi \Yj - \Yj \Yi = 0
+  \end{equation}
+
+Before moving on to the proof, we first note how to write our vectors.
+\[  Y\t = \Zsum t_k  Y^k + \Psum t_i  Y^i + \Nsum t_j  Y^j \]
+\[  Y'\t = \Zsum t_k  Y^k + \NPsum t_{ij} (\Yi Y^j - \Yj Y^i) \]
+Then, to show that the proposition is true, we need only show that, given any $t_i, t_j \geq 0$ ($t_{ij} \geq 0)$, there exists $t_{ij} \geq 0$ ($t_i, t_j \geq 0$) such that
+\begin{equation} \label{eq:coneEq}
+  \Psum t_i  Y^i + \Nsum t_j  Y^j = \NPsum t_{ij} (\Yi Y^j - \Yj Y^i)
+\end{equation}
+\begin{Prop}{
+  Suppose that 
+  \[ \Psum t_i  Y^i_{d+1} + \Nsum t_j  Y^j_{d+1} = 0\quad\quad \Yj < 0 < \Yi \]
+  Then the following holds
+\begin{alignat*}{2} 
+(t_i, t_j \geq 0)& \Rightarrow (\exists t_{ij} \geq 0)
+                       && \mathrm{\;such\; that\; \eqref{eq:coneEq}\; holds}  \\
+(t_{ij} \geq 0)& \Rightarrow (\exists t_i, t_j \geq 0)
+                       && \mathrm{\;such\; that\; \eqref{eq:coneEq}\; holds}
+\end{alignat*}
+}\end{Prop}
+\begin{proof}
+First note that if all $t_i = 0,t_j = 0$, then choosing $t_{ij} = 0$ satisfies \eqref{eq:coneEq}, likewise if all $t_{ij} = 0$, then $t_i = 0, t_j = 0$ satisfies \eqref{eq:coneEq}.  So suppose that some $t_i \neq 0, t_j \neq 0, t_{ij} \neq 0$.
+
+The right hand side of \eqref{eq:coneEq} can be written
+\[ \Nsum \left(\Psum t_{ij}\Yi\right) Y^j + 
+   \Psum \left(-\Nsum t_{ij}\Yj\right) Y^i \]
+This means, given $t_{ij} \geq 0$, we can choose $t_j = \Psum t_{ij}\Yi$, and $t_i = -\Nsum t_{ij}\Yj$, both of which are greater than $0$.
+
+Now suppose we have been given $t_i \geq 0, t_j \geq 0$.  First observe:
+\[ 0 = \Psum t_i\Yi + \Nsum t_j\Yj \Rightarrow \Psum t_i\Yi = -\Nsum t_j\Yj\]
+Denote the value in this equality as $\sigma$, and note that $\sigma > 0$.  Then
+\begin{alignat*}{3} 
+\Psum t_i Y^i &= &\frac{-\Nsum t_j \Yj}{\sigma}\Psum t_i Y^i &= 
+                     \NPsum -\frac{t_i t_j}{\sigma}\Yj Y^i \\
+\Nsum t_j Y^j &= &\frac{\Psum t_i \Yi}{\sigma}\Nsum t_j Y^j &= 
+                     \NPsum \frac{t_i t_j}{\sigma}\Yi Y^j
+\end{alignat*}
+Combining these results, we have
+\[ \Psum t_i Y^i + \Nsum t_j Y^j = 
+                     \NPsum \frac{t_i t_j}{\sigma}(\Yi Y^j - \Yj Y^i) \]
+\end{proof}
+Finally, we can conclude that, given $\t \geq \0$, if $ Y\t$ has a $0$ in the final coordinate, then we can write it as $ Y'\t'$ where $\t' \geq \0$, and any non-negative linear combination of vectors from $Y'$ can be written as a non-negative linear combination of vetors from $Y$, and will necessarily have the $k$-th coordinate be $0$ by property \textit{3}.  So property \textit{4} holds.
+\end{proof}
+
+\begin{proof}[Proof of {\Hint}]
+In proposition \ref{Hintset}, the assumption that $x_k = 0$ in property \textit{4} creates the set $\cone(Y) \cap \set{\x \st x_k = 0}$.  This set, by property \textit{4}, is $\cone(Y')$.
+\end{proof}
+
+\begin{proof}[Proof of {\Hproj}]
+  We shall prove that the coordinate-projection of a V-Cone is again a V-Cone.  Let $\Pi$ be the relevant projection, then we have:
+  \[ \Pi\set{U\t \st \t \geq \0} = \set{\Pi(U\t) \st \t \geq \0} = 
+        \set{\Pi(U)\t \st \t \geq \0} \]
+The last equality follows from associativity of matrix multiplication.  Therefore,
+  \[ \Pi\big(\cone(U)\big) = \cone\big(\Pi(U)\big) \]
+\end{proof}
+
 \end{document}
