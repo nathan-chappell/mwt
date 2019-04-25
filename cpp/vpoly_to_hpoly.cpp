@@ -1,14 +1,17 @@
-//vcone_to_hcone.cpp
+//vpoly_to_hpoly.cpp
 
 #include "transforms.h"
+
+#include <algorithm>
 #include <iostream>
+
 using namespace std;
 
 int main(int argc, char **argv) {
   if (argc > 1) {
     return usage();
   }
-  Matrix vcone;
-  cin >> vcone;
-  cout << vcone_to_hcone(move(vcone));
+  VPoly vpoly;
+  cin >> vpoly;
+  cout << vpoly_to_hpoly(move(vpoly));
 }
