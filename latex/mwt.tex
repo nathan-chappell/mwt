@@ -587,4 +587,78 @@ So (2) holds.  Finally,
 \[ \sigma_P/\sigma_i = \Psum t_i U^i / \sigma_i = \Psum (t_i \Uiz/\sigma_i)(U^i/\Uiz) \]
 Since $\Psum (t_i \Uiz/\sigma_i) = \sigma_i / \sigma_i = 1$, it follows that $\sigma_P / \sigma_i \in \conv(V)$.
 
+\section{C++ Implementation}
+The above transformation have been implemented in C++.  There are four programs:
+\begin{itemize}
+	\item \texttt{hcone\_to\_vcone.cpp}
+	\item \texttt{hpoly\_to\_vpoly.cpp}
+	\item \texttt{vcone\_to\_hcone.cpp}
+	\item \texttt{vpoly\_to\_hpoly.cpp}
+\end{itemize}
+They all run the indicated transformations.  They read the description of the object from standard input, and write the result to standard output.  They take no arguments, however if any arguments are passed then they display the following usage information, which also includes the input format:
+\begin{verbatim}
+usage: (vcone_to_hcone | vpoly_to_hpoly | hcone_to_vcone |hpoly_to_vpoly)
+input is read on stdin,transformed object written on stdout
+input format is as follows:
+ 
+hcone, vcone:= dimension   (vector)*
+       hpoly:= dimension+1 (vector constraint)*
+       vpoly:= dimension   (vector)* 'U' (vector)*
+
+dimension   is a positive integer
+vector      is (dimension) doubles separated by whitespace
+constraint  is a double (the value b_i in <A_i,x> <= b_i)
+hvector     is (dimension) doubles separated by whitespace
+'U'         is the literal character 'U'
+\end{verbatim}
+
+The files pertaining to the implementation will be discussed in the following subsections, but here is a table showing the include dependencies followed by a short summary of the files. \\
+
+\begin{tabular}{|l|p{10em}|}
+\hline
+file & includes \\
+\hline
+\texttt{common.cpp} &  \texttt{common.h} \\
+\texttt{fourier\_motzkin.cpp} &  \texttt{fourier\_motzkin.h} \\
+\texttt{hcone.cpp} &  \texttt{fourier\_motzkin.h}\hfill \texttt{hcone.h} \\
+\texttt{poly\_to\_cone.cpp} &  \texttt{fourier\_motzkin.h}\hfill \texttt{poly\_to\_cone.h} \\
+\texttt{transforms.cpp} &  \texttt{hcone.h}\hfill \texttt{poly\_to\_cone.h}\hfill \texttt{transforms.h}\hfill \texttt{vcone.h} \\
+\texttt{vcone.cpp} &  \texttt{fourier\_motzkin.h}\hfill \texttt{vcone.h} \\
+\hline
+\texttt{fourier\_motzkin.h} &  \texttt{common.h} \\
+\texttt{hcone.h} &  \texttt{common.h} \\
+\texttt{poly\_to\_cone.h} &  \texttt{common.h} \\
+\texttt{transforms.h} &  \texttt{common.h} \\
+\texttt{vcone.h} &  \texttt{common.h} \\
+\hline
+\end{tabular}\\
+
+\vspace{1em}
+
+Here is a very brief summary of the files mentioned in the above table, more details are given in subsequent sections.
+
+\begin{itemize}
+  \item \texttt{common.\{cpp,h\}}\\
+    Types, matrix transpose, IO used by all other components.
+  \item \texttt{fourier\_motzkin.\{cpp,h\}}\\
+    Operations specific to Fourier Motzkin elimination.
+  \item \texttt{hcone.\{cpp,h\}}\\
+    Functions to transform H-Cone $\to$ V-Cone.
+  \item \texttt{poly\_to\_cone.\{cpp,h\}}\\
+    Transforms between polytopes and polyhedra.
+  \item \texttt{transforms.\{cpp,h\}}\\
+    All transformations.
+  \item \texttt{vcone.\{cpp,h\}}\\
+    Functions to transform V-Cone $\to$ H-Cone.
+\end{itemize}
+
+Since all interesting implementation details are located in the \texttt{*.cpp} files, only these files will be examined below.
+
+\subsection{\texttt{src/common.cpp}}
+\subsection{\texttt{src/fourier\_motzkin.cpp}}
+\subsection{\texttt{src/hcone.cpp}}
+\subsection{\texttt{src/poly\_to\_cone.cpp}}
+\subsection{\texttt{src/transforms.cpp}}
+\subsection{\texttt{src/vcone.cpp}}
+
 \end{document}
