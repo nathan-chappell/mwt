@@ -6,8 +6,16 @@ This repository contains the files relevant to my work on a proof of the Minkows
 ## Latex
 * mwt.tex            - the proof
 
+## cpp (src,include)
+* common.{cpp,h}            Types, matrix transpose, IO used by all other components.
+* fourier_motzkin.{cpp,h}   Operations specific to Fourier Motzkin elimination.
+* hcone.{cpp,h}             Functions to transform H-Cone $to$ V-Cone.
+* poly_to_cone.{cpp,h}      Transforms between polytopes and polyhedra.
+* transforms.{cpp,h}        All transformations.
+* vcone.{cpp,h}             Functions to transform V-Cone $to$ H-Cone.
+
 ## cpp
-* common.{cpp,h}            -Vector/Matrix ops common to all
-* fourier_motzkin.{cpp,h}   -the basic algorithm
-* hcone_to_vcone.cpp        -main program
-* vcone_to_hcone.cpp        -main program
+* vcone_to_hcone
+* vpoly_to_hpoly
+* hcone_to_vcone
+* hpoly_to_vpoly
