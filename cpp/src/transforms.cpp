@@ -26,8 +26,6 @@ Matrix vcone_to_hcone(Matrix vcone) {
   return VCone::project_hcone(VCone::lift_vcone(vcone));
 }
 
-// TODO implement these guys too
-
 // fourier motzkin for polyhedra
 VPoly  hpoly_to_vpoly (Matrix hpoly) {
   return vcone_to_vpoly(hcone_to_vcone(hpoly_to_hcone(move(hpoly))));

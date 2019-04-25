@@ -42,20 +42,22 @@ Matrix hpoly_to_hcone(Matrix hpoly) {
 
 // HC -> HP
 // -b|A -> A|b 
-Matrix hcone_to_hpoly(Matrix hpoly) {
-  transform(hpoly.begin(), hpoly.end(), hpoly.begin(),
+Matrix hcone_to_hpoly(Matrix hcone) {
+  transform(hcone.begin(), hcone.end(), hcone.begin(),
       [](const Vector &v) { 
         auto tmp = v.cshift(1); 
         tmp[tmp.size()-1] *= -1;
         return tmp;
       });
-  return hpoly;
+  return hcone;
 }
 
 // VP -> VC
 // U -> |0 1|
 //      |U V|
 Matrix vpoly_to_vcone(VPoly vpoly) {
+  //requires increase in dimension
+  ++d;
   Matrix result;
   for (auto &&v : vpoly.U) {
     result.emplace_back(v.size()+1);
@@ -64,7 +66,7 @@ Matrix vpoly_to_vcone(VPoly vpoly) {
   }
   for (auto &&v : vpoly.V) {
     result.emplace_back(v.size()+1);
-    result.back()[0] = 0;
+    result.back()[0] = 1;
     copy(begin(v), end(v), next(begin(result.back())));
   }
   return result;
