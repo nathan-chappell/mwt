@@ -21,8 +21,10 @@ This repository contains the files relevant to my work on a proof of the Minkows
 * hpoly_to_vpoly
 
 ## usage
-object         | definition
----------------|---------
+The executables above read an object from stdin and writes the transformed object to stdout.<br/>
+
+The objects are:<br/>
+
 hcone, vcone:= |dimension   (vector)*
        hpoly:= |dimension+1 (vector constraint)*
        vpoly:= |dimension   (vector)* 'U' (vector)*
