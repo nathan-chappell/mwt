@@ -25,12 +25,12 @@ The objects are:<br/>
 
 hcone, vcone := dimension   (vector)\* <br/>
        hpoly := dimension+1 (vector constraint)\* <br/>
-       vpoly := dimension   (vector)\* 'U' (vector)\* <br/>
+       vpoly := dimension   (vector)\* 'V' (vector)\* <br/>
 
 item        | description
 ------------|------------
 dimension   |is a positive integer
 vector      |is (dimension) doubles separated by whitespace
 constraint  |is a double (the value b_i in <A_i,x> <= b_i)
-'U'         |is the literal character 'U'
+'V'         |is the literal character 'V'
 
