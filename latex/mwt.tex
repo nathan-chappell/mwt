@@ -1,7 +1,7 @@
 \documentclass[fleqn]{article}
 \usepackage{amsmath,amsfonts,amsthm}
 \usepackage{mathtools, bm}
-\usepackage{listings}
+\usepackage{listings, color}
 
 \renewcommand{\vec}[1]{\mathbf{#1}}
 \newcommand{\set}[1]{\left\{#1\right\}}
@@ -652,9 +652,19 @@ Here is a very brief summary of the files mentioned in the above table, more det
     Functions to transform V-Cone $\to$ H-Cone.
 \end{itemize}
 
-Since all interesting implementation details are located in the \texttt{*.cpp} files, only these files will be examined below.
+%Since all interesting implementation details are located in the \texttt{*.cpp} files, only these files will be examined below.
 
+\lstset{
+  language=C++,
+  backgroundcolor=\color[rgb]{.9,.9,.9},
+  basicstyle=\small,
+  keywordstyle=\color[rgb]{0,.2,1},
+  commentstyle=\color[rgb]{0,.7,.1},
+  numbers=left
+}
 \subsection{\texttt{src/common.cpp}}
+\lstinputlisting[firstline=9, firstnumber=9]{../cpp/include/common.h}
+
 \subsection{\texttt{src/fourier\_motzkin.cpp}}
 \subsection{\texttt{src/hcone.cpp}}
 \subsection{\texttt{src/poly\_to\_cone.cpp}}
