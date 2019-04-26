@@ -4,7 +4,6 @@
 //Fourier Motzkin Elimination
 
 #include <algorithm>
-#include <iostream>
 
 using namespace std;
 
@@ -32,7 +31,10 @@ Matrix fourier_motzkin(Matrix M, size_t k) {
   // convolute vectors from P,N
   for (auto p_it = z_end; p_it != p_end; ++p_it) {
     for (auto z_it = p_end; z_it != M.end(); ++z_it) {
-      result.push_back( (*p_it)[k]*(*z_it) - (*z_it)[k]*(*p_it) );
-    } } return result;
+      result.push_back( 
+        (*p_it)[k]*(*z_it) - (*z_it)[k]*(*p_it));
+    } 
+  } 
+  return result;
 }
 

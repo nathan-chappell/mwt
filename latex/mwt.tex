@@ -407,7 +407,7 @@ where $\w \geq \0$.  By \eqref{eq:Axz} we have $A\x \leq \0$.  So \eqref{eq:hlif
 \end{proof}
 
 The proof of {\Hint} relies upon the following proposition.
-\begin{Prop}{\label{Hintset}
+\begin{Prop}{\label{prop:Hintset}
 Let $Y \in \R^{(d+m)\times n_1}$, $1 \leq k \leq m$, and $\x$ satisfy $x_k = 0$.  Then there exists a matrix $Y' \in \R^{(d+m)\times n_2}$ with the following properties:
   \begin{enumerate}
     \item Every column of $Y'$ is a postive linear combination of rows of $B$.
@@ -476,7 +476,7 @@ Finally, we can conclude that, given $\t \geq \0$, if $ Y\t$ has a $0$ in the fi
 \end{proof}
 
 \begin{proof}[Proof of {\Hint}]
-In proposition \ref{Hintset}, the assumption that $x_k = 0$ in property \textit{4} creates the set $\cone(Y) \cap \set{\x \st x_k = 0}$.  This set, by property \textit{4}, is $\cone(Y')$.
+In proposition \ref{prop:Hintset}, the assumption that $x_k = 0$ in property \textit{4} creates the set $\cone(Y) \cap \set{\x \st x_k = 0}$.  This set, by property \textit{4}, is $\cone(Y')$.
 \end{proof}
 
 \begin{proof}[Proof of {\Hproj}]
@@ -657,15 +657,55 @@ Here is a very brief summary of the files mentioned in the above table, more det
 \lstset{
   language=C++,
   backgroundcolor=\color[rgb]{.9,.9,.9},
-  basicstyle=\small,
+  basicstyle=\small\tt,
   keywordstyle=\color[rgb]{0,.2,1},
-  commentstyle=\color[rgb]{0,.7,.1},
+  commentstyle=\color[rgb]{0,.6,.2},
   numbers=left
 }
-\subsection{\texttt{src/common.cpp}}
-\lstinputlisting[firstline=9, firstnumber=9]{../cpp/include/common.h}
+
+\subsection{\texttt{src/common.h}}
+\lstinputlisting[firstline=9, firstnumber=9, lastline=10]{../cpp/include/common.h} 
+The types \lstinline{Vector} and \lstinline{Matrix} are used for representing the polyhedra.  The \lstinline{std::valarray} template is used because it has built-in vector-space operations (sum and scaling).  \lstinline{std::vector}, is used, however other sequence containers could be used.
+
+\lstinputlisting[firstline=12, firstnumber=12, lastline=15]{../cpp/include/common.h} 
+Because a V-Polyhedron needs two matrices two represent it, a the simple struct \lstinline{VPoly} is defined.
+
+\lstinputlisting[firstline=19, firstnumber=19, lastline=22]{../cpp/include/common.h} 
+\lstinline{d} is a global variable denoting ``dimension'' used by some operations (i.e. reading vectors and projections).  \lstinline{transpose} is used in Fourier-Motzkin elimination when creating the alternate representations.  \lstinline{check_empty_matrix}  returns true if there are either no \lstinline{Vector}s, or the first \lstinline{Vector} is empty.
+
+\lstinputlisting[firstline=24, firstnumber=24, lastline=32]{../cpp/include/common.h} 
+The stream input and output \lstinline{operator>>} and \lstinline{operator<<} are defined to handle input and output as described in \textit{usage}.  The input operators may throw an exception of type \lstinline{input_error} if the input dimension is not positive, or if there is an invalid number of values following the dimension.
+
+\lstinputlisting[firstline=38, firstnumber=38, lastline=38]{../cpp/include/common.h} 
+Outputs the usage message above.
 
 \subsection{\texttt{src/fourier\_motzkin.cpp}}
+\lstinputlisting[firstline=12, firstnumber=12, lastline=19]{../cpp/src/fourier_motzkin.cpp} 
+\lstinline{project_matrix} is used to take only only the first \lstinline{d} entries of each vector in the \lstinline{Matrix}.
+
+\lstinputlisting[firstline=22, firstnumber=22, lastline=39]{../cpp/src/fourier_motzkin.cpp} 
+\lstinline{fourier_motzkin} takes a \lstinline{Matrix M} and a coordinate \lstinline{k} and creates the set which either corresponds to a projection of an H-Cone (without actually doing the projection), or the intersection of a V-Cone with a coordinate-hyperplane.  Lines 22 - 28 partion \lstinline{M} into the sets:\\
+
+\begin{tabular}{|l|l|l|}
+  \hline
+set & range & property \\
+  \hline
+  $Z$ & [\lstinline|M.begin()|, \lstinline|z_end| $)$ & 
+      \lstinline|it| $\in Z \Leftrightarrow$ \lstinline|(*it)[k]| $ = 0$ \\
+  \hline
+  $P$ & [\lstinline|z_end|, \lstinline|p_end| ) & 
+      \lstinline|it| $\in P \Leftrightarrow$ \lstinline|(*it)[k]| $ > 0$ \\
+  \hline
+  $N$ & [\lstinline|p_end|, \lstinline|M.end()|) & 
+      \lstinline|it| $\in N \Leftrightarrow$ \lstinline|(*it)[k]| $ < 0$ \\
+  \hline
+\end{tabular}\\
+
+Line 30 moves $Z$ into the result:
+\lstinputlisting[firstline=30, firstnumber=30, lastline=30]{../cpp/src/fourier_motzkin.cpp}
+
+Then lines 32-36 convolute the vectors in the way described in Propositions \ref{prop:hconeproj} and \ref{prop:Hintset} (concerning projecting an H-Cone and intersecting a V-Cone with a coordinate-hyperplane), and push them into the result \lstinline{Matrix}.\\
+
 \subsection{\texttt{src/hcone.cpp}}
 \subsection{\texttt{src/poly\_to\_cone.cpp}}
 \subsection{\texttt{src/transforms.cpp}}
