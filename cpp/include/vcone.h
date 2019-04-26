@@ -15,3 +15,5 @@ Matrix lift_vcone(const Matrix &vcone);
 Matrix project_hcone(Matrix &&hcone);
 
 } //namespace
+
+Matrix vcone_to_hcone (Matrix vcone);

@@ -1,7 +1,9 @@
 //vcone_to_hcone.cpp
 
-#include "transforms.h"
+#include "vcone.h"
+
 #include <iostream>
+
 using namespace std;
 
 int main(int argc, char **argv) {

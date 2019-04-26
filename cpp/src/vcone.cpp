@@ -59,3 +59,11 @@ Matrix project_hcone(Matrix &&hcone) {
 }
 
 } //namespace
+
+Matrix vcone_to_hcone(Matrix vcone) {
+  if (check_empty_matrix(vcone)) {
+    throw logic_error{"empty vcone"};
+  }
+  p = vcone.size();
+  return VCone::project_hcone(VCone::lift_vcone(vcone));
+}

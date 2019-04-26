@@ -7,11 +7,9 @@ This repository contains the files relevant to my work on a proof of the Minkows
 * mwt.tex            - the proof
 
 ## cpp (src,include)
-* common.{cpp,h}            Types, matrix transpose, IO used by all other components.
-* fourier_motzkin.{cpp,h}   Operations specific to Fourier Motzkin elimination.
+* common.{cpp,h}            Types, IO, and Fourier Motzkin elimination.
 * hcone.{cpp,h}             Functions to transform H-Cone $to$ V-Cone.
-* poly_to_cone.{cpp,h}      Transforms between polytopes and polyhedra.
-* transforms.{cpp,h}        All transformations.
+* polyhedra.{cpp,h}         Transforms between polytopes and polyhedra.
 * vcone.{cpp,h}             Functions to transform V-Cone $to$ H-Cone.
 
 # Executable programs
@@ -25,15 +23,9 @@ The executables above read an object from stdin and writes the transformed objec
 
 The objects are:<br/>
 
-<<<<<<< HEAD
 hcone, vcone := dimension   (vector)\* <br/>
        hpoly := dimension+1 (vector constraint)\* <br/>
        vpoly := dimension   (vector)\* 'U' (vector)\* <br/>
-=======
-hcone, vcone := dimension   (vector)\*<br/>
-       hpoly := dimension+1 (vector constraint)\*<br/>
-       vpoly := dimension   (vector)\* 'U' (vector)\*<br/>
->>>>>>> fc6af6a4098706808f7e0555b53eb30e22e2ab91
 
 item        | description
 ------------|------------

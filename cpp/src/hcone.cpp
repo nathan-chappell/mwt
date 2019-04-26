@@ -61,3 +61,13 @@ Matrix intersect_vcone(Matrix &&vcone) {
 }
 
 } //namespace
+
+Matrix hcone_to_vcone(Matrix hcone) {
+  if (check_empty_matrix(hcone)) {
+    throw logic_error{"empty hcone"};
+  }
+  Matrix result;
+  m = hcone.size();
+  return HCone::intersect_vcone(HCone::lift_hcone(hcone));
+}
+

@@ -614,21 +614,17 @@ hvector     is (dimension) doubles separated by whitespace
 
 The files pertaining to the implementation will be discussed in the following subsections, but here is a table showing the include dependencies followed by a short summary of the files. \\
 
-\begin{tabular}{|l|p{10em}|}
+\begin{tabular}{|l|p{9em}|}
 \hline
 file & includes \\
 \hline
 \texttt{common.cpp} &  \texttt{common.h} \\
-\texttt{fourier\_motzkin.cpp} &  \texttt{fourier\_motzkin.h} \\
-\texttt{hcone.cpp} &  \texttt{fourier\_motzkin.h}\hfill \texttt{hcone.h} \\
-\texttt{poly\_to\_cone.cpp} &  \texttt{fourier\_motzkin.h}\hfill \texttt{poly\_to\_cone.h} \\
-\texttt{transforms.cpp} &  \texttt{hcone.h}\hfill \texttt{poly\_to\_cone.h}\hfill \texttt{transforms.h}\hfill \texttt{vcone.h} \\
-\texttt{vcone.cpp} &  \texttt{fourier\_motzkin.h}\hfill \texttt{vcone.h} \\
+\texttt{hcone.cpp} &  \texttt{hcone.h} \\
+\texttt{polyhedra.cpp} &   \texttt{hcone.h}\hfill \texttt{polyhedra.h} \hfill\hspace{2em} \texttt{vcone.h} \\
+\texttt{vcone.cpp} &  \texttt{vcone.h} \\
 \hline
-\texttt{fourier\_motzkin.h} &  \texttt{common.h} \\
 \texttt{hcone.h} &  \texttt{common.h} \\
-\texttt{poly\_to\_cone.h} &  \texttt{common.h} \\
-\texttt{transforms.h} &  \texttt{common.h} \\
+\texttt{polyhedra.h} &  \texttt{common.h} \\
 \texttt{vcone.h} &  \texttt{common.h} \\
 \hline
 \end{tabular}\\
@@ -639,15 +635,11 @@ Here is a very brief summary of the files mentioned in the above table, more det
 
 \begin{itemize}
   \item \texttt{common.\{cpp,h\}}\\
-    Types, matrix transpose, IO used by all other components.
-  \item \texttt{fourier\_motzkin.\{cpp,h\}}\\
-    Operations specific to Fourier Motzkin elimination.
+    Types, IO, and Fourier Motzkin elimination.
   \item \texttt{hcone.\{cpp,h\}}\\
     Functions to transform H-Cone $\to$ V-Cone.
-  \item \texttt{poly\_to\_cone.\{cpp,h\}}\\
+  \item \texttt{polyhedra.\{cpp,h\}}\\
     Transforms between polytopes and polyhedra.
-  \item \texttt{transforms.\{cpp,h\}}\\
-    All transformations.
   \item \texttt{vcone.\{cpp,h\}}\\
     Functions to transform V-Cone $\to$ H-Cone.
 \end{itemize}
@@ -670,20 +662,22 @@ The types \lstinline{Vector} and \lstinline{Matrix} are used for representing th
 \lstinputlisting[firstline=12, firstnumber=12, lastline=15]{../cpp/include/common.h} 
 Because a V-Polyhedron needs two matrices two represent it, a the simple struct \lstinline{VPoly} is defined.
 
-\lstinputlisting[firstline=19, firstnumber=19, lastline=22]{../cpp/include/common.h} 
+\lstinputlisting[firstline=19, firstnumber=19, lastline=19]{../cpp/include/common.h} 
 \lstinline{d} is a global variable denoting ``dimension'' used by some operations (i.e. reading vectors and projections).  \lstinline{transpose} is used in Fourier-Motzkin elimination when creating the alternate representations.  \lstinline{check_empty_matrix}  returns true if there are either no \lstinline{Vector}s, or the first \lstinline{Vector} is empty.
 
-\lstinputlisting[firstline=24, firstnumber=24, lastline=32]{../cpp/include/common.h} 
+\lstinputlisting[firstline=21, firstnumber=21, lastline=27]{../cpp/include/common.h} 
 The stream input and output \lstinline{operator>>} and \lstinline{operator<<} are defined to handle input and output as described in \textit{usage}.  The input operators may throw an exception of type \lstinline{input_error} if the input dimension is not positive, or if there is an invalid number of values following the dimension.
 
 \lstinputlisting[firstline=38, firstnumber=38, lastline=38]{../cpp/include/common.h} 
 Outputs the usage message above.
 
-\subsection{\texttt{src/fourier\_motzkin.cpp}}
-\lstinputlisting[firstline=12, firstnumber=12, lastline=19]{../cpp/src/fourier_motzkin.cpp} 
+\lstinputlisting[firstline=129, firstnumber=129, lastline=131]{../cpp/src/common.cpp} 
+\lstinline{check_empty_matrix} checks for the corner case of \lstinline{Matrix} operations.
+
+\lstinputlisting[firstline=156, firstnumber=156, lastline=163]{../cpp/src/common.cpp} 
 \lstinline{project_matrix} is used to take only only the first \lstinline{d} entries of each vector in the \lstinline{Matrix}.
 
-\lstinputlisting[firstline=22, firstnumber=22, lastline=39]{../cpp/src/fourier_motzkin.cpp} 
+\lstinputlisting[firstline=166, firstnumber=166, lastline=183]{../cpp/src/common.cpp} 
 \lstinline{fourier_motzkin} takes a \lstinline{Matrix M} and a coordinate \lstinline{k} and creates the set which either corresponds to a projection of an H-Cone (without actually doing the projection), or the intersection of a V-Cone with a coordinate-hyperplane.  Lines 22 - 28 partion \lstinline{M} into the sets:\\
 
 \begin{tabular}{|l|l|l|}
@@ -702,13 +696,12 @@ set & range & property \\
 \end{tabular}\\
 
 Line 30 moves $Z$ into the result:
-\lstinputlisting[firstline=30, firstnumber=30, lastline=30]{../cpp/src/fourier_motzkin.cpp}
+\lstinputlisting[firstline=30, firstnumber=30, lastline=30]{../cpp/src/common.cpp}
 
 Then lines 32-36 convolute the vectors in the way described in Propositions \ref{prop:hconeproj} and \ref{prop:Hintset} (concerning projecting an H-Cone and intersecting a V-Cone with a coordinate-hyperplane), and push them into the result \lstinline{Matrix}.\\
 
 \subsection{\texttt{src/hcone.cpp}}
-\subsection{\texttt{src/poly\_to\_cone.cpp}}
-\subsection{\texttt{src/transforms.cpp}}
+\subsection{\texttt{src/polyhedra.cpp}}
 \subsection{\texttt{src/vcone.cpp}}
 
 \end{document}

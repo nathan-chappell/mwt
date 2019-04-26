@@ -18,9 +18,6 @@ struct VPoly {
 // also used in fourier_motzkin
 extern size_t d;
 
-Matrix transpose(const Matrix &M);
-bool check_empty_matrix(const Matrix &M);
-
 std::istream& operator>>(std::istream&, Vector&);
 std::istream& operator>>(std::istream&, Matrix&);
 std::istream& operator>>(std::istream&, VPoly&);
@@ -36,3 +33,14 @@ public:
 };
 
 int usage();
+
+// Fourier Motzkin Elimination
+
+bool check_empty_matrix(const Matrix &M);
+Matrix transpose(const Matrix &M);
+
+// keep only the first d elements of each vector
+Matrix project_matrix(const Matrix &M);
+
+// Fourier Motzkin Elimation on index k
+Matrix fourier_motzkin(Matrix M, size_t k);

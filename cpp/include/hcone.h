@@ -15,3 +15,5 @@ Matrix lift_hcone(const Matrix &hcone);
 Matrix intersect_vcone(Matrix &&vcone);
 
 } //namespace
+
+Matrix hcone_to_vcone (Matrix hcone);

@@ -1,7 +1,9 @@
 //hcone_to_hcone.cpp
 
-#include "transforms.h"
+#include "hcone.h"
+
 #include <iostream>
+
 using namespace std;
 
 int main(int argc, char **argv) {

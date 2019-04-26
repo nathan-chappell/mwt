@@ -1,6 +1,6 @@
 CC = g++ -std=c++14
 CPPFLAGS = -g -Og -Wall -Iinclude
-OBJS_ = transforms poly_to_cone vcone hcone fourier_motzkin common
+OBJS_ = polyhedra vcone hcone common
 OBJS = $(OBJS_:%=src/%.o)
 
 all : vcone_to_hcone hcone_to_vcone vpoly_to_hpoly hpoly_to_vpoly

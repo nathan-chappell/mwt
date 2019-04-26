@@ -1,8 +1,7 @@
 //hpoly_to_vpoly.cpp
 
-#include "transforms.h"
+#include "polyhedra.h"
 
-#include <algorithm>
 #include <iostream> 
 
 using namespace std;
