@@ -25,9 +25,9 @@ The executables above read an object from stdin and writes the transformed objec
 
 The objects are:<br/>
 
-hcone, vcone:= |dimension   (vector)\*<br/>
-       hpoly:= |dimension+1 (vector constraint)\*<br/>
-       vpoly:= |dimension   (vector)\* 'U' (vector)\*<br/>
+hcone, vcone := dimension   (vector)\*<br/>
+       hpoly := dimension+1 (vector constraint)\*<br/>
+       vpoly := dimension   (vector)\* 'U' (vector)\*<br/>
 
 item        | description
 ------------|------------
