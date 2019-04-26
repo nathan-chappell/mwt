@@ -1,10 +1,8 @@
 //hcone.cpp
 
 #include "hcone.h"
-#include "fourier_motzkin.h"
 
 #include <algorithm>
-#include <iostream>
 
 using namespace std;
 
