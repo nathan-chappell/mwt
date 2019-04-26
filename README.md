@@ -21,10 +21,11 @@ This repository contains the files relevant to my work on a proof of the Minkows
 * hpoly_to_vpoly
 
 ## usage
-------------|---|---------
-hcone, vcone|:= |dimension   (vector)*
-       hpoly|:= |dimension+1 (vector constraint)*
-       vpoly|:= |dimension   (vector)* 'U' (vector)*
+object         | definition
+---------------|---------
+hcone, vcone:= |dimension   (vector)*
+       hpoly:= |dimension+1 (vector constraint)*
+       vpoly:= |dimension   (vector)* 'U' (vector)*
 
 item        | description
 ------------|------------
