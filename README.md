@@ -32,6 +32,5 @@ item        | description
 dimension   |is a positive integer
 vector      |is (dimension) doubles separated by whitespace
 constraint  |is a double (the value b_i in <A_i,x> <= b_i)
-hvector     |is (dimension) doubles separated by whitespace
 'U'         |is the literal character 'U'
 
