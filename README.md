@@ -21,13 +21,17 @@ This repository contains the files relevant to my work on a proof of the Minkows
 * hpoly_to_vpoly
 
 ## usage
-hcone, vcone:= dimension   (vector)*
-       hpoly:= dimension+1 (vector constraint)*
-       vpoly:= dimension   (vector)* 'U' (vector)*
+input       |   | definition
+------------|---|-----------
+hcone, vcone|:= |dimension   (vector)*
+       hpoly|:= |dimension+1 (vector constraint)*
+       vpoly|:= |dimension   (vector)* 'U' (vector)*
 
-dimension   is a positive integer
-vector      is (dimension) doubles separated by whitespace
-constraint  is a double (the value b_i in <A_i,x> <= b_i)
-hvector     is (dimension) doubles separated by whitespace
-'U'         is the literal character 'U'
+item        | description
+------------|------------
+dimension   |is a positive integer
+vector      |is (dimension) doubles separated by whitespace
+constraint  |is a double (the value b_i in <A_i,x> <= b_i)
+hvector     |is (dimension) doubles separated by whitespace
+'U'         |is the literal character 'U'
 
