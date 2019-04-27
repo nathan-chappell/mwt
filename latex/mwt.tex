@@ -3,6 +3,8 @@
 \usepackage{mathtools, bm}
 \usepackage{listings, color}
 
+\input{listingcommands.tex}
+
 \renewcommand{\vec}[1]{\mathbf{#1}}
 \newcommand{\set}[1]{\left\{#1\right\}}
 \DeclareMathOperator{\cone}{cone}
@@ -655,30 +657,40 @@ Here is a very brief summary of the files mentioned in the above table, more det
   numbers=left
 }
 
-\subsection{\texttt{src/common.h}}
-\lstinputlisting[firstline=9, firstnumber=9, lastline=10]{../cpp/include/common.h} 
+\subsection{\texttt{include/common.h}, \texttt{src/common.cpp}}
+\lstVecMat
 The types \lstinline{Vector} and \lstinline{Matrix} are used for representing the polyhedra.  The \lstinline{std::valarray} template is used because it has built-in vector-space operations (sum and scaling).  \lstinline{std::vector}, is used, however other sequence containers could be used.
 
-\lstinputlisting[firstline=12, firstnumber=12, lastline=15]{../cpp/include/common.h} 
+\lstVPoly
 Because a V-Polyhedron needs two matrices two represent it, a the simple struct \lstinline{VPoly} is defined.
 
-\lstinputlisting[firstline=19, firstnumber=19, lastline=19]{../cpp/include/common.h} 
+\lstD
 \lstinline{d} is a global variable denoting ``dimension'' used by some operations (i.e. reading vectors and projections).  \lstinline{transpose} is used in Fourier-Motzkin elimination when creating the alternate representations.  \lstinline{check_empty_matrix}  returns true if there are either no \lstinline{Vector}s, or the first \lstinline{Vector} is empty.
 
-\lstinputlisting[firstline=21, firstnumber=21, lastline=27]{../cpp/include/common.h} 
-The stream input and output \lstinline{operator>>} and \lstinline{operator<<} are defined to handle input and output as described in \textit{usage}.  The input operators may throw an exception of type \lstinline{input_error} if the input dimension is not positive, or if there is an invalid number of values following the dimension.
+\lstIstream
+\lstOstream
+The stream input and output \lstinline{operator>>} and \lstinline{operator<<} are defined to handle input and output as described in \textit{usage}.  
 
-\lstinputlisting[firstline=38, firstnumber=38, lastline=38]{../cpp/include/common.h} 
+\lstInputError
+The input operators may throw an exception of type \lstinline{input_error} if the input dimension is not positive, or if there is an invalid number of values following the dimension.
+
+\lstUsage
 Outputs the usage message above.
 
-\lstinputlisting[firstline=129, firstnumber=129, lastline=131]{../cpp/src/common.cpp} 
-\lstinline{check_empty_matrix} checks for the corner case of \lstinline{Matrix} operations.
+\lstCheckEmpty
+\lstinline{check_empty_matrix} checks for the corner case of \lstinline{Matrix} operations.  It return \lstinline{true} if either the \lstinline{Matrix} has no rows (columns) or the first row (column) is empty.
 
-\lstinputlisting[firstline=156, firstnumber=156, lastline=163]{../cpp/src/common.cpp} 
+\lstTranspose
+\lstinline{transpose} transposes the matrix.
+
+\lstProjectM
 \lstinline{project_matrix} is used to take only only the first \lstinline{d} entries of each vector in the \lstinline{Matrix}.
 
-\lstinputlisting[firstline=166, firstnumber=166, lastline=183]{../cpp/src/common.cpp} 
-\lstinline{fourier_motzkin} takes a \lstinline{Matrix M} and a coordinate \lstinline{k} and creates the set which either corresponds to a projection of an H-Cone (without actually doing the projection), or the intersection of a V-Cone with a coordinate-hyperplane.  Lines 22 - 28 partion \lstinline{M} into the sets:\\
+\lstFourierMotzkin
+\lstinline{fourier_motzkin} takes a \lstinline{Matrix M} and a coordinate \lstinline{k} and creates the set which either corresponds to a projection of an H-Cone (without actually doing the projection), or the intersection of a V-Cone with a coordinate-hyperplane.
+
+\lstFourierMotzkinPart
+Partitions \lstinline{M} into logical sets $Z,P,N$ that satisfy the following:\\
 
 \begin{tabular}{|l|l|l|}
   \hline
@@ -695,12 +707,28 @@ set & range & property \\
   \hline
 \end{tabular}\\
 
-Line 30 moves $Z$ into the result:
-\lstinputlisting[firstline=30, firstnumber=30, lastline=30]{../cpp/src/common.cpp}
+\lstFourierMotzkinMove
+Moves $Z$ into the result.
 
-Then lines 32-36 convolute the vectors in the way described in Propositions \ref{prop:hconeproj} and \ref{prop:Hintset} (concerning projecting an H-Cone and intersecting a V-Cone with a coordinate-hyperplane), and push them into the result \lstinline{Matrix}.\\
+\lstFourierMotzkinConvolute
+Convolutes the vectors in the way described in Propositions \ref{prop:hconeproj} and \ref{prop:Hintset} (concerning projecting an H-Cone and intersecting a V-Cone with a coordinate-hyperplane), and push them into the result \lstinline{Matrix}.  In particular, it creates the sets which correspond to
+\[ \Bik B_j - \Bjk B_i \st i \in P,\, j \in N \\ \]
 
-\subsection{\texttt{src/hcone.cpp}}
+\subsection{\texttt{include/hcone.h}, \texttt{src/hcone.cpp}}
+\lstinputlisting{../cpp/include/hcone.h}
+\texttt{hcone.h} and \texttt{hcone.cpp} implement the transformation from H-Cone to V-Cone.
+
+\lstLiftHcone
+Takes a \texttt{Matrix} representing an H-Cone and creates the new matrix
+  \[ \set{\eAj, \neAj, \zei, 1 \leq j \leq d,\, 1 \leq i \leq m} \]
+where $A$ represents \texttt{hcone}.  This operation is justified by {\Hlift}.
+
+\lstIntersectVCone
+Here the tools from \texttt{common.h} are used to implement the algorithm described in proposition \ref{prop:Hintset}, where a V-Cone is sequentially intersected with coordinate-hyperplanes.  The result of these intersections is the projected to the original space.  These operations are justified by {\Hint} and {\Hproj}.
+
+\lstHconeToVcone
+This function does a sanity check and then return the transformed \texttt{hcone}.\\
+
 \subsection{\texttt{src/polyhedra.cpp}}
 \subsection{\texttt{src/vcone.cpp}}
 

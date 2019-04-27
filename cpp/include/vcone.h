@@ -2,9 +2,6 @@
 
 #include "common.h"
 
-//number of generators in cone
-extern size_t p;
-
 // V-Cone -> H-Cone operations
 namespace VCone {
 

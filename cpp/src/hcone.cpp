@@ -15,12 +15,12 @@ namespace HCone {
 const size_t &d{::d};
 const size_t &m{::m};
 
-// represent hcone as projection of hcone
+// represent hcone as projection of vcone
 //           d  d m
 //   d     d|I -I 0|
 // m|A| -> m|A -A I|
 //
-Matrix lift_hcone(const Matrix &hcone) {
+Matrix lift_hcone(Matrix hcone) {
   Matrix result;
   Matrix m_t = transpose(hcone);
   //|I|
@@ -50,7 +50,7 @@ Matrix lift_hcone(const Matrix &hcone) {
 }
 
 // intersect vcone with {x_k = 0 | d+1 <= k <= d+m}
-Matrix intersect_vcone(Matrix &&vcone) {
+Matrix intersect_vcone(Matrix vcone) {
   Matrix result = move(vcone);
   for (size_t i = d; i < d+m; ++i) {
     result = fourier_motzkin(move(result), i);
@@ -64,7 +64,6 @@ Matrix hcone_to_vcone(Matrix hcone) {
   if (check_empty_matrix(hcone)) {
     throw logic_error{"empty hcone"};
   }
-  Matrix result;
   m = hcone.size();
   return HCone::intersect_vcone(HCone::lift_hcone(hcone));
 }
