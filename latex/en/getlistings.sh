@@ -1,6 +1,7 @@
 #!/bin/bash
 
 LISTING=""
+CPP_DIR="../../cpp"
 
 # $1 range, $2 file
 get_listing() {
@@ -17,13 +18,13 @@ make_command() {
 close_brace="^}"
 blank_line="^$"
 
-common_h="../cpp/include/common.h"
-common_cpp="../cpp/src/common.cpp"
-hcone_h="../cpp/include/hcone.h"
-hcone_cpp="../cpp/src/hcone.cpp"
-vcone_h="../cpp/include/vcone.h"
-vcone_cpp="../cpp/src/vcone.cpp"
-poly_cpp="../cpp/src/polyhedra.cpp"
+common_h="$CPP_DIR/include/common.h"
+common_cpp="$CPP_DIR/src/common.cpp"
+hcone_h="$CPP_DIR/include/hcone.h"
+hcone_cpp="$CPP_DIR/src/hcone.cpp"
+vcone_h="$CPP_DIR/include/vcone.h"
+vcone_cpp="$CPP_DIR/src/vcone.cpp"
+poly_cpp="$CPP_DIR/src/polyhedra.cpp"
 
 make_command "lstVecMat"     "/using Vector/,/using Matrix/" "$common_h"
 make_command "lstVPoly"      "/struct VPoly/,/$close_brace/" "$common_h"

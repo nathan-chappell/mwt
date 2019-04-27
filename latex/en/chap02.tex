@@ -1,163 +1,4 @@
-\documentclass[fleqn]{article}
-\usepackage{amsmath,amsfonts,amsthm}
-\usepackage{mathtools, bm}
-\usepackage{listings, color}
-
-\input{listingcommands.tex}
-
-\renewcommand{\vec}[1]{\mathbf{#1}}
-\newcommand{\set}[1]{\left\{#1\right\}}
-\DeclareMathOperator{\cone}{cone}
-\DeclareMathOperator{\conv}{conv}
-\newcommand{\ip}[2]{\left\langle #1, #2 \right\rangle}
-
-%special letters
-\newcommand{\R}{\mathbb{R}}
-\newcommand{\0}{\vec{0}}
-\newcommand{\x}{\vec{x}}
-\newcommand{\y}{\vec{y}}
-\newcommand{\z}{\vec{z}}
-\newcommand{\e}{\vec{e}}
-\newcommand{\w}{\vec{w}}
-\renewcommand{\t}{\vec{t}}
-\renewcommand{\v}{\vec{v}}
-\renewcommand{\b}{\vec{b}}
-\newcommand{\faij}{\forall i\in P,\forall j \in N}
-
-%symbols
-\newcommand{\st}{\;|\;}
-\newcommand{\St}{\;\Big|\;}
-
-%constants
-\newcommand{\Udim}{p}
-\newcommand{\Vdim}{n}
-\newcommand{\Adim}{m}
-\newcommand{\mspaceA}{\R^{{\Adim}\times d}}
-\newcommand{\mspaceB}{\R^{m_1\times (d+\Udim)}}
-\newcommand{\mspaceC}{\R^{m_2\times (d+\Udim)}}
-
-%matrices and vectors with domain
-\newcommand{\bv}{\b \in \R^{\Adim}}
-\newcommand{\tv}{\t \in \R^{\Udim}}
-\renewcommand{\l}{\bm{\lambda}}
-\newcommand{\lv}{\l \in \R^{\Vdim}}
-\newcommand{\yv}{\y \in \R^{d+1}}
-\newcommand{\xv}{\x \in \R^d}
-\newcommand{\mV}{V \in \R^{d\times \Vdim}}
-\newcommand{\mU}{U \in \R^{d\times \Udim}}
-\newcommand{\mA}{A \in \mspaceA}
-\newcommand{\mB}{B \in \mspaceB}
-\newcommand{\mC}{B' \in \mspaceC}
-\newcommand{\xt}{\begin{pmatrix*}\x\\ \t\end{pmatrix*}}
-\newcommand{\xw}{\begin{pmatrix*}\x\\ \w\end{pmatrix*}}
-\newcommand{\xAx}{\begin{pmatrix*}\x\\ A\x\end{pmatrix*}}
-\newcommand{\xz}{\begin{pmatrix*}\x\\ \0\end{pmatrix*}}
-\newcommand{\xx}{\begin{pmatrix*}x_0\\ \x\end{pmatrix*}}
-\newcommand{\onex}{\begin{pmatrix*} 1\\ \x\end{pmatrix*}}
-\newcommand{\zw}{\begin{pmatrix*}\0\\ \w\end{pmatrix*}}
-\newcommand{\eAj}{\begin{pmatrix*}\e_j\\ A^j\end{pmatrix*}}
-\newcommand{\neAj}{\begin{pmatrix*}[r]-\e_j\\ -A^j\end{pmatrix*}}
-\newcommand{\ee}{\begin{pmatrix*} \0 \\ 1 \end{pmatrix*}}
-\newcommand{\zei}{\begin{pmatrix*} \0 \\ \e_i \end{pmatrix*}}
-\newcommand{\lcone}{\begin{pmatrix*} \0 & \vec{1} \\ U & V \end{pmatrix*}}
-\newcommand{\xjp}{x_j^+}
-\newcommand{\xjm}{x_j^-}
-\newcommand{\Yi}{Y^i_{k}}
-\newcommand{\Yj}{Y^j_{k}}
-\newcommand{\Yl}{Y^l_{k}}
-\newcommand{\Uiz}{U^i_{0}}
-\newcommand{\Ujz}{U^j_{0}}
-\newcommand{\Ulz}{U^l_{0}}
-
-%sums
-\newcommand{\tusum}{\sum_{1\leq j \leq \Udim}t_j U^j}
-\newcommand{\lvsum}{\sum_{1\leq j \leq \Vdim}\lambda_j V^j}
-\newcommand{\lsum}{\sum_{1\leq j \leq \Vdim}\lambda_j}
-\newcommand{\jsum}{\sum_{1\leq j \leq d}}
-\newcommand{\isum}{\sum_{1\leq i \leq n}}
-\newcommand{\Psum}{\sum_{i\in P}}
-\newcommand{\Nsum}{\sum_{j\in N}}
-\newcommand{\Zsum}{\sum_{l\in Z}}
-\newcommand{\NPsum}{\sum_{\substack{i\in P \\ j\in N}}}
-\newcommand{\isconv}{\lambda_j \geq 0 \lsum = 1}
-\newcommand{\sumi}{\sum\nolimits_i}
-
-\newtheorem{Def}{Definition}
-\newtheorem{Thm}{Theorem}
-\newtheorem{Prop}{Proposition}
-
-%text macros
-\newcommand{\MWT}{Minkowski-Weyl Theorem }
-
-\begin{document}
-
-\section{\MWT}
-
-\begin{Def}[non-negative linear combination]{
-  Let $\mU$, $\tv, \t \geq \0$, then \( \tusum = U\t\) is called a \textbf{non-negative linear combination} of $U$.
-}\end{Def}
-
-\begin{Def}[V-Cone]{
-  Let $\mU$.  The set of all non-negative linear combinations of $U$ is denoted $\cone(U)$.  Such a set is called a \textbf{V-Cone}.
-}\end{Def} 
-
-\begin{Def}[convex combination]{
-  Let $\mV$, $\lv, \l \geq\0, \lsum = 1$, then \( \lvsum \) is called a \textbf{convex combination} of V.  The set of all convex combinations of $V$ is denoted $\conv(V)$.
-}\end{Def}
-
-\begin{Def}[V-Polyhedron]{
-  Let $\mV$, $\mU$.  Then the set
-  %\[ \set{\tusum + \lvsum\St\,t_j \geq 0,\isconv} \]
-  \[ \set{\x + \y \st \x \in \cone(U),\, \y \in \conv(V)} \]
-  is called a \em{V-Polyhedron}.
-}\end{Def}
-
-\begin{Def}[H-Polyhedron]{
-  Let $\mA$, $\bv$.  Then the set
-  \[ \set{\xv \St A\x \leq \b} \]
-  is called an \em{H-Polyhedron}.
-}\end{Def}
-
-\begin{Def}[H-Cone]{
-  Let $\mA$. Then the set
-  \[ \set{\xv \St A\x \leq \0} \]
-  is called an \em{H-Cone}.
-}\end{Def}
-
-The following theorem is the basic result to be proved in this thesis, which states that V-Polyhedra and H-Polyhedra are two different representations of the same objects.
-
-\begin{Thm}[\MWT]{
-  Every V-Polyhedron is an H-Polyhedron, and every H-Polyhedron is a V-Polyhedron.
-}\end{Thm}
-
-The proof proceeds by first showing that V-Cones are representable as H-Cones, and H-Cones are representable as V-Cones.  Then it is shown that the case of polyhedra can be reduced to cones.
-
-\begin{Thm}[\MWT for Cones]{
-  Every V-Cone is an H-Cone, and every H-Cone is a V-Cone.
-}\end{Thm}
-
-A simple but useful property of cones is that they are closed under addition and positive scaling.
-
-\begin{Prop}\label{prop:closure}
-  Let $C$ be either an H-Cone or a V-Cone, for each $i$ $\x^i \in C$, and $c_i \geq 0$.  Then:
-  \[ \sumi c_i \x^i \in C \]
-\end{Prop}
-
-\begin{proof}
-  First we prove Proposition \ref{prop:closure} for H-Cones, then for V-Cones.
-  If, for each $i$, $A\x^i \leq \0$, then $A(c_i\x^i) = t_iA\x^i \leq \0$, and
-  \[ A\left(\sumi c_i\x^i\right) = \sumi A (c_i\x^i) = 
-            \sumi c_i A\x^i \leq \sumi \0 \leq \0 \]
-  So, $\sumi c_i\x^i \in C$ when $C$ is an H-Cone.  Next, suppose that $C = \cone(U)$, and for each $i$, $\exists \t_i \geq \0: \x^i = U\t_i$.  Then $c_i\t_i \geq \0$, and $\sumi c_i\t_i \geq \0$.  Therefore
-  \[ \sumi c_i\x^i = \sumi c_i U\t_i = \sumi U(c_i\t_i) 
-                   = U\left(\sumi c_i\t_i\right) \]
-  So, $\sumi c_i\x^i \in C$ when $C$ is a V-Cone.
-\end{proof}
-
-This proposition will be used in the following way: if we wish to show that $\sumi c_i\x^i$ in a member of some cone $C$, it suffices to show that, for each $i$, $c_i \geq 0$ and $\x^i \in C$.
-
-\newcommand{\Vlift}{(V1)}
-\newcommand{\Vproj}{(V2)}
+\chapter{Proof of the \MWT}
 
 \section{Every V-Cone is an H-Cone}
 
@@ -224,9 +65,6 @@ Let $\mB$, $1 \leq k \leq p$, and $\x = \sum_{i\neq k}x_i \e_i$.  Then there exi
     \item \((\exists t)B(\x + t\e_k) \leq \0 \Leftrightarrow B'\x \leq \0\)
   \end{enumerate}
 }\end{Prop}
-\newcommand{\Bik}{B^k_i}
-\newcommand{\Bjk}{B^k_j}
-\newcommand{\Blk}{B^k_l}
 \begin{proof}
   Partition the rows of $B$ as follows:
   \begin{alignat*}{3}
@@ -355,9 +193,6 @@ If we suppose that $U' \subset \R^{d+\Adim}$, and $\Pi$ is the identity matrix w
   \Pi\big(\cone(U') \cap \set{x_{d+1} = 0} 
                         \cap \dots \cap \set{x_{d+\Adim} = 0}\big)
 \end{equation}
-\newcommand{\Hlift}{\textit{H1}}
-\newcommand{\Hint}{\textit{H2}}
-\newcommand{\Hproj}{\textit{H3}}
   The proof rests on the following three propostions:
   \begin{itemize}
   \item[\Hlift] Every H-Cone is a coordinate-projection of a V-Cone intersected with some coordinate hyperplanes.
@@ -589,189 +424,54 @@ So (2) holds.  Finally,
 \[ \sigma_P/\sigma_i = \Psum t_i U^i / \sigma_i = \Psum (t_i \Uiz/\sigma_i)(U^i/\Uiz) \]
 Since $\Psum (t_i \Uiz/\sigma_i) = \sigma_i / \sigma_i = 1$, it follows that $\sigma_P / \sigma_i \in \conv(V)$.
 
-\section{C++ Implementation}
-The above transformation have been implemented in C++.  There are four programs:
-\begin{itemize}
-	\item \texttt{hcone\_to\_vcone.cpp}
-	\item \texttt{hpoly\_to\_vpoly.cpp}
-	\item \texttt{vcone\_to\_hcone.cpp}
-	\item \texttt{vpoly\_to\_hpoly.cpp}
-\end{itemize}
-They all run the indicated transformations.  They read the description of the object from standard input, and write the result to standard output.  They take no arguments, however if any arguments are passed then they display the following usage information, which also includes the input format:
-\begin{verbatim}
-usage: (vcone_to_hcone | vpoly_to_hpoly | hcone_to_vcone |hpoly_to_vpoly)
-input is read on stdin,transformed object written on stdout
-input format is as follows:
- 
-hcone, vcone:= dimension   (vector)*
-       hpoly:= dimension+1 (vector constraint)*
-       vpoly:= dimension   (vector)* 'U' (vector)*
+\section{Picture of the Proof}
+Here we show a diagram that represent the proof of the {\MWT}.
 
-dimension   is a positive integer
-vector      is (dimension) doubles separated by whitespace
-constraint  is a double (the value b_i in <A_i,x> <= b_i)
-hvector     is (dimension) doubles separated by whitespace
-'U'         is the literal character 'U'
-\end{verbatim}
+\newcommand{\vtohcolor}{green}
+\newcommand{\liftcolor}{blue}
+\newcommand{\dropcolor}{red}
+\newcommand{\dpos}{-2}
+\newcommand{\mhpos}{\numexpr \dpos+1}
+\newcommand{\mlpos}{\numexpr \dpos-1}
+\newcommand{\PHdesc}{A\x \leq \b}
+\newcommand{\CHdesc}{[-\b|A]\smallstack{x_0}{\x} \leq \vec{0}}
+\newcommand{\CVpdesc}{\cone\{\pm\smallstack{\e_i}{A^i}\cup\smallstack{0}{\e_j}\}}
+\newcommand{\CHpdesc}{\begin{pmatrix*}[r] \0 & -I \\ I & -U \\ -I & U \end{pmatrix*}\x \leq \0}
+\newcommand{\CVdesc}{\cone\{\smallstack{\vec{0}}{U'}\cup\smallstack{\vec{1}}{V'}\}}
+\newcommand{\PVdesc}{\cone(U)\oplus\conv(V)}
+\begin{figure}[H]
+\begin{centering}
+\begin{tikzpicture}[>=triangle 45]
+  \node (PH) at (-1,0) {\framebox{$\PHdesc$}};
+  \node (CH) at (0,\dpos) {\framebox{$\CHdesc$}};
+  \node (PV) at (9,0) {\framebox{$\PVdesc$}};
+  \node (CV) at (8,\dpos) {\framebox{$\CVdesc$}};
+  \node (CVp) at (4,\mhpos) {\framebox{$\CVpdesc$}};
+  \node (CHp) at (4,\mlpos) {\framebox{$\CHpdesc$}};
+  \draw[<->,bend right=10, color=\vtohcolor] 
+      (PH) to (CH);
+  \draw[<->,bend right=10,color=\vtohcolor]
+      (CV) to (PV);
+  \draw[->,bend left=15]
+      (CH) to
+      node[above left,color=\liftcolor]{lift}
+      (CVp);
+  \draw[->,bend left=15]
+      (CVp) to
+      node[above right,color=\dropcolor]{$\bigcap$}
+      (CV);
+  \draw[->,bend left=15]
+      (CV) to
+      node[below right,color=\liftcolor]{lift}
+      (CHp);
+  \draw[->,bend left=15]
+      (CHp) to
+      node[below left,color=\dropcolor]{$\Pi$}
+      (CH);
+\end{tikzpicture}
+\caption{Diagram of the proof $P_H \leftrightarrow P_V$}
+\label{fig:h_to_v}
+\end{centering}
+\end{figure}
 
-The files pertaining to the implementation will be discussed in the following subsections, but here is a table showing the include dependencies followed by a short summary of the files. \\
-
-\begin{tabular}{|l|p{9em}|}
-\hline
-file & includes \\
-\hline
-\texttt{common.cpp} &  \texttt{common.h} \\
-\texttt{hcone.cpp} &  \texttt{hcone.h} \\
-\texttt{polyhedra.cpp} &   \texttt{hcone.h}\hfill \texttt{polyhedra.h} \hfill\hspace{2em} \texttt{vcone.h} \\
-\texttt{vcone.cpp} &  \texttt{vcone.h} \\
-\hline
-\texttt{hcone.h} &  \texttt{common.h} \\
-\texttt{polyhedra.h} &  \texttt{common.h} \\
-\texttt{vcone.h} &  \texttt{common.h} \\
-\hline
-\end{tabular}\\
-
-\vspace{1em}
-
-Here is a very brief summary of the files mentioned in the above table, more details are given in subsequent sections.
-
-\begin{itemize}
-  \item \texttt{common.\{cpp,h\}}\\
-    Types, IO, and Fourier Motzkin elimination.
-  \item \texttt{hcone.\{cpp,h\}}\\
-    Functions to transform H-Cone $\to$ V-Cone.
-  \item \texttt{polyhedra.\{cpp,h\}}\\
-    Transforms between polytopes and polyhedra.
-  \item \texttt{vcone.\{cpp,h\}}\\
-    Functions to transform V-Cone $\to$ H-Cone.
-\end{itemize}
-
-%Since all interesting implementation details are located in the \texttt{*.cpp} files, only these files will be examined below.
-
-\lstset{
-  language=C++,
-  backgroundcolor=\color[rgb]{.9,.9,.9},
-  basicstyle=\small\tt,
-  keywordstyle=\color[rgb]{0,.2,1},
-  commentstyle=\color[rgb]{0,.6,.2},
-  numbers=left
-}
-
-\subsection{\texttt{include/common.h, src/common.cpp}}
-\lstVecMat
-The types \lstinline{Vector} and \lstinline{Matrix} are used for representing the polyhedra.  The \lstinline{std::valarray} template is used because it has built-in vector-space operations (sum and scaling).  \lstinline{std::vector}, is used, however other sequence containers could be used.
-
-\lstVPoly
-Because a V-Polyhedron needs two matrices two represent it, a the simple struct \lstinline{VPoly} is defined.
-
-\lstD
-\lstinline{d} is a global variable denoting ``dimension'' used by some operations (i.e. reading vectors and projections).  \lstinline{transpose} is used in Fourier-Motzkin elimination when creating the alternate representations.  \lstinline{check_empty_matrix}  returns true if there are either no \lstinline{Vector}s, or the first \lstinline{Vector} is empty.
-
-\lstIstream
-\lstOstream
-The stream input and output \lstinline{operator>>} and \lstinline{operator<<} are defined to handle input and output as described in \textit{usage}.  
-
-\lstInputError
-The input operators may throw an exception of type \lstinline{input_error} if the input dimension is not positive, or if there is an invalid number of values following the dimension.
-
-\lstUsage
-Outputs the usage message above.
-
-\lstCheckEmpty
-\lstinline{check_empty_matrix} checks for the corner case of \lstinline{Matrix} operations.  It return \lstinline{true} if either the \lstinline{Matrix} has no rows (columns) or the first row (column) is empty.
-
-\lstTranspose
-\lstinline{transpose} transposes the matrix.
-
-\lstProjectM
-\lstinline{project_matrix} is used to take only only the first \lstinline{d} entries of each vector in the \lstinline{Matrix}.
-
-\lstFME
-\lstinline{fourier_motzkin} takes a \lstinline{Matrix M} and a coordinate \lstinline{k} and creates the set which either corresponds to a projection of an H-Cone (without actually doing the projection), or the intersection of a V-Cone with a coordinate-hyperplane.
-
-\lstFMEPart
-Partitions \lstinline{M} into logical sets $Z,P,N$ that satisfy the following:\\
-
-\begin{tabular}{|l|l|l|}
-  \hline
-set & range & property \\
-  \hline
-  $Z$ & [\lstinline|M.begin()|, \lstinline|z_end| $)$ & 
-      \lstinline|it| $\in Z \Leftrightarrow$ \lstinline|(*it)[k]| $ = 0$ \\
-  \hline
-  $P$ & [\lstinline|z_end|, \lstinline|p_end| ) & 
-      \lstinline|it| $\in P \Leftrightarrow$ \lstinline|(*it)[k]| $ > 0$ \\
-  \hline
-  $N$ & [\lstinline|p_end|, \lstinline|M.end()|) & 
-      \lstinline|it| $\in N \Leftrightarrow$ \lstinline|(*it)[k]| $ < 0$ \\
-  \hline
-\end{tabular}\\
-
-\lstFMEMove
-Moves $Z$ into the result.
-
-\lstFMEConvolute
-Convolutes the vectors in the way described in Propositions \ref{prop:hconeproj} and \ref{prop:Hintset} (concerning projecting an H-Cone and intersecting a V-Cone with a coordinate-hyperplane), and push them into the result \lstinline{Matrix}.  In particular, it creates the sets which correspond to
-\[ \Bik B_j - \Bjk B_i \st i \in P,\, j \in N \\ \]
-
-\subsection{\texttt{include/hcone.h, src/hcone.cpp}}
-\lstinputlisting{../cpp/include/hcone.h}
-\texttt{hcone.h} and \texttt{hcone.cpp} implement the transformation from H-Cone to V-Cone.
-
-\lstLiftHcone
-Takes a \texttt{Matrix} representing an H-Cone and creates the new matrix
-  \[ \set{\eAj, \neAj, \zei, 1 \leq j \leq d,\, 1 \leq i \leq m} \]
-where $A$ represents \texttt{hcone}.  This operation is justified by {\Hlift}.
-
-\lstIntersectVCone
-Here the tools from \texttt{common.h} are used to implement the algorithm described in proposition \ref{prop:Hintset}, where a V-Cone is sequentially intersected with coordinate-hyperplanes.  The result of these intersections is the projected to the original space.  These operations are justified by {\Hint} and {\Hproj}.
-
-\lstHconeToVcone
-This function does a sanity check and then return the transformed \texttt{hcone}.\\
-
-\subsection{\texttt{include/vcone.h, src/vcone.cpp}}
-\lstinputlisting{../cpp/include/vcone.h}
-\texttt{vcone.h} and \texttt{vcone.cpp} implement the transformation from V-Cone to H-Cone.
-
-\lstLiftVcone
-Takes a \texttt{Matrix} representing an V-Cone and creates the new matrix
-  \[\begin{pmatrix*}[r] \0 & -I \\ I & -U \\ -I & U \end{pmatrix*} \]
-where $U$ represents \texttt{vcone}.  This operation is justified by {\Vlift}.
-
-\lstProjectHCone
-Here the tools from \texttt{common.h} are used to implement the algorithm described in proposition \ref{prop:hconeproj}, where an H-Cone is sequentially projected down to coordinate-axis.  This result is then projected to the original space, i.e. the first $d$ coordinates are taken from each \texttt{Vector} in the \texttt{Matrix}.  These operations are justified by {\Vproj} and proposition \ref{prop:hconezero}.
-
-\lstVconeToHcone
-This function does a sanity check and then return the transformed \texttt{hcone}.\\
-
-\subsection{\texttt{include/polyhedra.h, src/polyhedra.cpp}}
-\lstinputlisting{../cpp/include/polyhedra.h}
-\texttt{vcone.h} and \texttt{vcone.cpp} implement the reductions from Polyhedra to Cones.
-
-\lstProjectZero
-Using the \lstinline{std::slice} object, the first coordinate of each \lstinline{Vector} is dropped from the \lstinline{Matrix}.
-
-\lstNormalizeP
-Creates the set $V$ in \eqref{eq:cvtopv}.  Note that the operation $U^i/\Uiz$ is only done if $\Uiz$ is not already $1$
-
-\lstHpolyToHCone
-Each \lstinline{Vector} is supposed to be of the form $(A_i,b)$, expressing the constraint $\ip{A_i}{\x} \leq b$.  $b$ is moved to the first coordinate, and negated to transform 
-\[ [A|b] \to [-b|A] \]
-
-\lstHconeToHPoly
-This is the inverse to \lstinline{hcone_to_hpoly}:
-\[ [-b|A] \to [A|b] \]
-
-\lstVpolyToVCone
-\lstinline{d} must be increased for operations which depend on it to function correctly.  Then conducts the transform:
-\[ \cone(U) + \conv(V) \to \cone\lcone \]
-
-\lstVconeToVPoly
-This implements the tranformation justified by \eqref{eq:cvtopv}, returning the result of 
-\[ \text{\lstinline{vcone}} \cap \set{\x \st \ip{\e_0}{\x} = 1} \]
-
-\lstHpolyToVPoly
-\lstVpolyToHPoly
-Using the other functions in the file, these implement the described transformations.
-
-\end{document}
+Figure \ref{fig:h_to_v} shows the flow from an H-Polyhedron to a V-Polyhedron and back.  The \textcolor{\vtohcolor}{colored arrows} are the transformations back and forth from polyhedra to cones.  The black arrows show the transformation between cones.  V-Cones are \textcolor{\liftcolor}{lifted} to H-Cones which need to be \textcolor{\dropcolor}{projected $(\Pi)$}, and H-Cones are \textcolor{\liftcolor}{lifted} to V-Cones which need to be \textcolor{\dropcolor}{intersected $(\bigcap)$} with some coordinate-hyperplanes then projected.

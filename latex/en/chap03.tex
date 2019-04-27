@@ -1,0 +1,187 @@
+\chapter{C++ Implementation}
+
+The above transformation have been implemented in C++.  There are four programs:
+\begin{itemize}
+	\item \texttt{hcone\_to\_vcone.cpp}
+	\item \texttt{hpoly\_to\_vpoly.cpp}
+	\item \texttt{vcone\_to\_hcone.cpp}
+	\item \texttt{vpoly\_to\_hpoly.cpp}
+\end{itemize}
+They all run the indicated transformations.  They read the description of the object from standard input, and write the result to standard output.  They take no arguments, however if any arguments are passed then they display the following usage information, which also includes the input format:
+\begin{verbatim}
+usage: 
+  (vcone_to_hcone|vpoly_to_hpoly|hcone_to_vcone|hpoly_to_vpoly)
+input is read on stdin,transformed object written on stdout
+input format is as follows:
+ 
+hcone, vcone:= dimension   (vector)*
+       hpoly:= dimension+1 (vector constraint)*
+       vpoly:= dimension   (vector)* 'U' (vector)*
+
+dimension   is a positive integer
+vector      is (dimension) doubles separated by whitespace
+constraint  is a double (the value b_i in <A_i,x> <= b_i)
+hvector     is (dimension) doubles separated by whitespace
+'U'         is the literal character 'U'
+\end{verbatim}
+
+The files pertaining to the implementation will be discussed in the following sections, but here is a table showing the include dependencies followed by a short summary of the files. \\
+
+\begin{tabular}{|l|p{9em}|}
+\hline
+file & includes \\
+\hline
+\texttt{common.cpp} &  \texttt{common.h} \\
+\texttt{hcone.cpp} &  \texttt{hcone.h} \\
+\texttt{polyhedra.cpp} &   \texttt{hcone.h}\hfill \texttt{polyhedra.h} \hfill\hspace{2em} \texttt{vcone.h} \\
+\texttt{vcone.cpp} &  \texttt{vcone.h} \\
+\hline
+\texttt{hcone.h} &  \texttt{common.h} \\
+\texttt{polyhedra.h} &  \texttt{common.h} \\
+\texttt{vcone.h} &  \texttt{common.h} \\
+\hline
+\end{tabular}\\
+
+\vspace{1em}
+
+Here is a very brief summary of the files mentioned in the above table, more details are given in sequent sections.
+
+\begin{itemize}
+  \item \texttt{common.\{cpp,h\}}\\
+    Types, IO, and Fourier Motzkin elimination.
+  \item \texttt{hcone.\{cpp,h\}}\\
+    Functions to transform H-Cone $\to$ V-Cone.
+  \item \texttt{polyhedra.\{cpp,h\}}\\
+    Transforms between polytopes and polyhedra.
+  \item \texttt{vcone.\{cpp,h\}}\\
+    Functions to transform V-Cone $\to$ H-Cone.
+\end{itemize}
+
+%Since all interesting implementation details are located in the \texttt{*.cpp} files, only these files will be examined below.
+
+\lstset{
+  language=C++,
+  backgroundcolor=\color[rgb]{.9,.9,.9},
+  basicstyle=\small\tt,
+  keywordstyle=\color[rgb]{0,.2,1},
+  commentstyle=\color[rgb]{0,.6,.2},
+  numbers=left
+}
+
+\section{\texttt{include/common.h, src/common.cpp}}
+\lstVecMat
+The types \lstinline{Vector} and \lstinline{Matrix} are used for representing the polyhedra.  The \lstinline{std::valarray} template is used because it has built-in vector-space operations (sum and scaling).  \lstinline{std::vector}, is used, however other sequence containers could be used.
+
+\lstVPoly
+Because a V-Polyhedron needs two matrices two represent it, a the simple struct \lstinline{VPoly} is defined.
+
+\lstD
+\lstinline{d} is a global variable denoting ``dimension'' used by some operations (i.e. reading vectors and projections).  \lstinline{transpose} is used in Fourier-Motzkin elimination when creating the alternate representations.  \lstinline{check_empty_matrix}  returns true if there are either no \lstinline{Vector}s, or the first \lstinline{Vector} is empty.
+
+\lstIstream
+\lstOstream
+The stream input and output \lstinline{operator>>} and \lstinline{operator<<} are defined to handle input and output as described in \textit{usage}.  
+
+\lstInputError
+The input operators may throw an exception of type \lstinline{input_error} if the input dimension is not positive, or if there is an invalid number of values following the dimension.
+
+\lstUsage
+Outputs the usage message above.
+
+\lstCheckEmpty
+\lstinline{check_empty_matrix} checks for the corner case of \lstinline{Matrix} operations.  It return \lstinline{true} if either the \lstinline{Matrix} has no rows (columns) or the first row (column) is empty.
+
+\lstTranspose
+\lstinline{transpose} transposes the matrix.
+
+\lstProjectM
+\lstinline{project_matrix} is used to take only only the first \lstinline{d} entries of each vector in the \lstinline{Matrix}.
+
+\lstFME
+\lstinline{fourier_motzkin} takes a \lstinline{Matrix M} and a coordinate \lstinline{k} and creates the set which either corresponds to a projection of an H-Cone (without actually doing the projection), or the intersection of a V-Cone with a coordinate-hyperplane.
+
+\lstFMEPart
+Partitions \lstinline{M} into logical sets $Z,P,N$ that satisfy the following:\\
+
+\begin{tabular}{|l|l|l|}
+  \hline
+set & range & property \\
+  \hline
+  $Z$ & [\lstinline|M.begin()|, \lstinline|z_end| $)$ & 
+      \lstinline|it| $\in Z \Leftrightarrow$ \lstinline|(*it)[k]| $ = 0$ \\
+  \hline
+  $P$ & [\lstinline|z_end|, \lstinline|p_end| ) & 
+      \lstinline|it| $\in P \Leftrightarrow$ \lstinline|(*it)[k]| $ > 0$ \\
+  \hline
+  $N$ & [\lstinline|p_end|, \lstinline|M.end()|) & 
+      \lstinline|it| $\in N \Leftrightarrow$ \lstinline|(*it)[k]| $ < 0$ \\
+  \hline
+\end{tabular}\\
+
+\lstFMEMove
+Moves $Z$ into the result.
+
+\lstFMEConvolute
+Convolutes the vectors in the way described in Propositions \ref{prop:hconeproj} and \ref{prop:Hintset} (concerning projecting an H-Cone and intersecting a V-Cone with a coordinate-hyperplane), and push them into the result \lstinline{Matrix}.  In particular, it creates the sets which correspond to
+\[ \Bik B_j - \Bjk B_i \st i \in P,\, j \in N \\ \]
+
+\section{\texttt{include/hcone.h, src/hcone.cpp}}
+\lstinputlisting{\cppSourceDir/include/hcone.h}
+\texttt{hcone.h} and \texttt{hcone.cpp} implement the transformation from H-Cone to V-Cone.
+
+\lstLiftHcone
+Takes a \texttt{Matrix} representing an H-Cone and creates the new matrix
+  \[ \set{\eAj, \neAj, \zei, 1 \leq j \leq d,\, 1 \leq i \leq m} \]
+where $A$ represents \texttt{hcone}.  This operation is justified by {\Hlift}.
+
+\lstIntersectVCone
+Here the tools from \texttt{common.h} are used to implement the algorithm described in proposition \ref{prop:Hintset}, where a V-Cone is sequentially intersected with coordinate-hyperplanes.  The result of these intersections is the projected to the original space.  These operations are justified by {\Hint} and {\Hproj}.
+
+\lstHconeToVcone
+This function does a sanity check and then return the transformed \texttt{hcone}.\\
+
+\section{\texttt{include/vcone.h, src/vcone.cpp}}
+\lstinputlisting{\cppSourceDir/include/vcone.h}
+\texttt{vcone.h} and \texttt{vcone.cpp} implement the transformation from V-Cone to H-Cone.
+
+\lstLiftVcone
+Takes a \texttt{Matrix} representing an V-Cone and creates the new matrix
+  \[\begin{pmatrix*}[r] \0 & -I \\ I & -U \\ -I & U \end{pmatrix*} \]
+where $U$ represents \texttt{vcone}.  This operation is justified by {\Vlift}.
+
+\lstProjectHCone
+Here the tools from \texttt{common.h} are used to implement the algorithm described in proposition \ref{prop:hconeproj}, where an H-Cone is sequentially projected down to coordinate-axis.  This result is then projected to the original space, i.e. the first $d$ coordinates are taken from each \texttt{Vector} in the \texttt{Matrix}.  These operations are justified by {\Vproj} and proposition \ref{prop:hconezero}.
+
+\lstVconeToHcone
+This function does a sanity check and then return the transformed \texttt{hcone}.\\
+
+\section{\texttt{include/polyhedra.h, src/polyhedra.cpp}}
+\lstinputlisting{\cppSourceDir/include/polyhedra.h}
+\texttt{vcone.h} and \texttt{vcone.cpp} implement the reductions from Polyhedra to Cones.
+
+\lstProjectZero
+Using the \lstinline{std::slice} object, the first coordinate of each \lstinline{Vector} is dropped from the \lstinline{Matrix}.
+
+\lstNormalizeP
+Creates the set $V$ in \eqref{eq:cvtopv}.  Note that the operation $U^i/\Uiz$ is only done if $\Uiz$ is not already $1$
+
+\lstHpolyToHCone
+Each \lstinline{Vector} is supposed to be of the form $(A_i,b)$, expressing the constraint $\ip{A_i}{\x} \leq b$.  $b$ is moved to the first coordinate, and negated to transform 
+\[ [A|b] \to [-b|A] \]
+
+\lstHconeToHPoly
+This is the inverse to \lstinline{hcone_to_hpoly}:
+\[ [-b|A] \to [A|b] \]
+
+\lstVpolyToVCone
+\lstinline{d} must be increased for operations which depend on it to function correctly.  Then conducts the transform:
+\[ \cone(U) + \conv(V) \to \cone\lcone \]
+
+\lstVconeToVPoly
+This implements the tranformation justified by \eqref{eq:cvtopv}, returning the result of 
+\[ \text{\lstinline{vcone}} \cap \set{\x \st \ip{\e_0}{\x} = 1} \]
+
+\lstHpolyToVPoly
+\lstVpolyToHPoly
+Using the other functions in the file, these implement the described transformations.
+

@@ -1,0 +1,70 @@
+\chapter{\MWT}
+
+\section{Polyhedra}
+
+\begin{Def}[Non-negative Linear Combination]{
+  Let $\mU$, $\tv, \t \geq \0$, then \( \tusum = U\t\) is called a \em{non-negative linear combination} of $U$.
+}\end{Def}
+
+\begin{Def}[V-Cone]{
+  Let $\mU$.  The set of all non-negative linear combinations of $U$ is denoted $\cone(U)$.  Such a set is called a \em{V-Cone}.
+}\end{Def} 
+
+\begin{Def}[Convex Combination]{
+  Let $\mV$, $\lv, \l \geq\0, \lsum = 1$, then \( \lvsum \) is called a \em{convex combination} of V.  The set of all convex combinations of $V$ is denoted $\conv(V)$.
+}\end{Def}
+
+\begin{Def}[V-Polyhedron]{
+  Let $\mV$, $\mU$.  Then the set
+  %\[ \set{\tusum + \lvsum\St\,t_j \geq 0,\isconv} \]
+  \[ \set{\x + \y \st \x \in \cone(U),\, \y \in \conv(V)} \]
+  is called a \em{V-Polyhedron}.
+}\end{Def}
+
+\begin{Def}[H-Polyhedron]{
+  Let $\mA$, $\bv$.  Then the set
+  \[ \set{\xv \St A\x \leq \b} \]
+  is called an \em{H-Polyhedron}.
+}\end{Def}
+
+\begin{Def}[H-Cone]{
+  Let $\mA$. Then the set
+  \[ \set{\xv \St A\x \leq \0} \]
+  is called an \em{H-Cone}.
+}\end{Def}
+
+A simple but useful property of cones is that they are closed under addition and positive scaling.
+
+\begin{Prop}\label{prop:closure}
+  Let $C$ be either an H-Cone or a V-Cone, for each $i$ $\x^i \in C$, and $c_i \geq 0$.  Then:
+  \[ \sumi c_i \x^i \in C \]
+\end{Prop}
+
+\begin{proof}
+  First we prove Proposition \ref{prop:closure} for H-Cones, then for V-Cones.
+  If, for each $i$, $A\x^i \leq \0$, then $A(c_i\x^i) = t_iA\x^i \leq \0$, and
+  \[ A\left(\sumi c_i\x^i\right) = \sumi A (c_i\x^i) = 
+            \sumi c_i A\x^i \leq \sumi \0 \leq \0 \]
+  So, $\sumi c_i\x^i \in C$ when $C$ is an H-Cone.  Next, suppose that $C = \cone(U)$, and for each $i$, $\exists \t_i \geq \0: \x^i = U\t_i$.  Then $c_i\t_i \geq \0$, and $\sumi c_i\t_i \geq \0$.  Therefore
+  \[ \sumi c_i\x^i = \sumi c_i U\t_i = \sumi U(c_i\t_i) 
+                   = U\left(\sumi c_i\t_i\right) \]
+  So, $\sumi c_i\x^i \in C$ when $C$ is a V-Cone.
+\end{proof}
+
+This proposition will be used in the following way: if we wish to show that $\sumi c_i\x^i$ in a member of some cone $C$, it suffices to show that, for each $i$, $c_i \geq 0$ and $\x^i \in C$.
+
+
+\section{\MWT}
+
+The following theorem is the basic result to be proved in this thesis, which states that V-Polyhedra and H-Polyhedra are two different representations of the same objects.
+
+\begin{Thm}[{\MWT}]{
+  Every V-Polyhedron is an H-Poly-hedron, and every H-Polyhedron is a V-Polyhedron.
+}\end{Thm}
+
+The proof proceeds by first showing that V-Cones are representable as H-Cones, and H-Cones are representable as V-Cones.  Then it is shown that the case of polyhedra can be reduced to cones.
+
+\begin{Thm}[{\MWT} for Cones]{
+  Every V-Cone is an H-Cone, and every H-Cone is a V-Cone.
+}\end{Thm}
+

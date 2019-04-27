@@ -1,0 +1,41 @@
+%proof_diagram_h_to_v.tex
+
+\renewcommand{\dpos}{-4}
+\renewcommand{\mhpos}{\numexpr \dpos+1}
+\renewcommand{\mlpos}{\numexpr \dpos-1}
+\newcommand{\PHdesc}{A\x \leq \b}
+\newcommand{\CHdesc}{[-\b|A]\smallstack{x_0}{\x} \leq \vec{0}}
+\newcommand{\CVpdesc}{\cone\{\pm\smallstack{\e_i}{A^i}\cup\smallstack{0}{\e_j}\}}
+\newcommand{\CVdesc}{\cone\{\smallstack{\vec{0}}{\U''}\cup\smallstack{\vec{1}}{\V'}\}}
+\newcommand{\PVdesc}{\cone(\U)\oplus\conv(\V)}
+\begin{figure}
+\begin{centering}
+\begin{tikzpicture}[>=triangle 45]
+  \node (PH) at (0,0) {\framebox{$\PHdesc$}};
+  \node (CH) at (0,\dpos) {\framebox{$\CHdesc$}};
+  \node (PV) at (8,0) {\framebox{$\PVdesc$}};
+  \node (CV) at (8,\dpos) {\framebox{$\CVdesc$}};
+  \node (CVp) at (4,\mhpos) {\framebox{$\CVpdesc$}};
+  \draw[->,bend right=10] 
+      (PH) to
+      node[left,color=blue!70]{relax} 
+      (CH);
+  \draw[->,bend right=10]
+      (CV) to
+      node[right, color=blue!70]{restrict} 
+      (PV);
+  \draw[->,bend left=15]
+      (CH) to
+      node[above left,color=black!70]{lift}
+      (CVp);
+  \draw[->,bend left=15, color=red]
+      (CVp) to
+      node[above ]{\Large$\fjoin{}$}
+      (CV);
+\end{tikzpicture}
+\caption{Diagram of the proof ($\PH \to \CH \to \CVp \to \CV \to \PH$)}
+\label{fig:h_to_v}
+\end{centering}
+\end{figure}
+
+
