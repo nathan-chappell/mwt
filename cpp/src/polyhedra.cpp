@@ -93,10 +93,10 @@ VPoly vcone_to_vpoly(Matrix vcone) {
 
 //transformations
 
-VPoly  hpoly_to_vpoly (Matrix hpoly) {
+VPoly hpoly_to_vpoly(Matrix hpoly) {
   return vcone_to_vpoly(hcone_to_vcone(hpoly_to_hcone(move(hpoly))));
 }
 
-Matrix vpoly_to_hpoly (VPoly vpoly) {
+Matrix vpoly_to_hpoly(VPoly vpoly) {
   return hcone_to_hpoly(vcone_to_hcone(vpoly_to_vcone(move(vpoly))));
 }

@@ -156,7 +156,7 @@ A simple but useful property of cones is that they are closed under addition and
 
 This proposition will be used in the following way: if we wish to show that $\sumi c_i\x^i$ in a member of some cone $C$, it suffices to show that, for each $i$, $c_i \geq 0$ and $\x^i \in C$.
 
-\newcommand{\Vcomp}{(V1)}
+\newcommand{\Vlift}{(V1)}
 \newcommand{\Vproj}{(V2)}
 
 \section{Every V-Cone is an H-Cone}
@@ -167,14 +167,14 @@ This proposition will be used in the following way: if we wish to show that $\su
 
   The proof rests on the following two propostions:
   \begin{itemize}
-  \item[\Vcomp] Every V-Cone is a coordinate-projections of an H-Cone.
+  \item[\Vlift] Every V-Cone is a coordinate-projection of an H-Cone.
   \item[\Vproj] Every coordinate-projection of an H-Cone is an H-Cone.
   \end{itemize}
 \begin{proof}
-  Given {\Vcomp} and {\Vproj}, the proof follows simply.  Given a V-Cone, we use {\Vcomp}, to get a description involving coordinate-projection of an H-Cone.  Then we can apply {\Vproj} in order to get an H-Cone.
+  Given {\Vlift} and {\Vproj}, the proof follows simply.  Given a V-Cone, we use {\Vlift}, to get a description involving coordinate-projection of an H-Cone.  Then we can apply {\Vproj} in order to get an H-Cone.
 \end{proof}
 
-\begin{proof}[Proof of {\Vcomp}]
+\begin{proof}[Proof of {\Vlift}]
   We prove that every V-Cone is a coordinate-projection of an H-Cone, by giving an explicit formula.  Let ${\mU}$, and observe that
   \[ \cone(U) = \set{U\t \st \t \in \R^{\Udim},\, \t \geq \0} = 
     \set{\xv \st (\exists \tv)\,\x = U\t,\, \t \geq \0} \]
@@ -197,7 +197,7 @@ This proposition will be used in the following way: if we wish to show that $\su
   \begin{equation}\label{eq:vconelift}
     \cone(U) = \Pi\left(\set{ \y \in \R^{d+\Udim} \st A'\y \leq \0}\right)
   \end{equation}
-  This is a coordinate projection of an H-Cone, and {\Vcomp} is shown.
+  This is a coordinate projection of an H-Cone, and {\Vlift} is shown.
 \end{proof}
 To prove {\Vproj}, we use two separate propositions.
 \begin{Prop}{\label{prop:hconezero}
@@ -334,7 +334,7 @@ In what follows, let $\x = \sum_{1 \leq j \leq d}x_j\e_j$.  The above property i
 Because $A' = B_0$, and $A$ is $B_p$ with the last $p$ columns deleted, \eqref{V2seteqright} and \eqref{V2seteqleft} hold, therefore \eqref{eq:V2equal} holds, and the proof of {\Vproj} is complete, and we've shown that a coordinate projection of an H-Cone is again an H-Cone.
 \end{proof}
 
-With {\Vcomp} and {\Vproj} proven, we are now certain that any V-Cone is also an H-Cone.
+With {\Vlift} and {\Vproj} proven, we are now certain that any V-Cone is also an H-Cone.
 
 \section{Every H-Cone is a V-Cone}
 
@@ -657,7 +657,7 @@ Here is a very brief summary of the files mentioned in the above table, more det
   numbers=left
 }
 
-\subsection{\texttt{include/common.h}, \texttt{src/common.cpp}}
+\subsection{\texttt{include/common.h, src/common.cpp}}
 \lstVecMat
 The types \lstinline{Vector} and \lstinline{Matrix} are used for representing the polyhedra.  The \lstinline{std::valarray} template is used because it has built-in vector-space operations (sum and scaling).  \lstinline{std::vector}, is used, however other sequence containers could be used.
 
@@ -686,10 +686,10 @@ Outputs the usage message above.
 \lstProjectM
 \lstinline{project_matrix} is used to take only only the first \lstinline{d} entries of each vector in the \lstinline{Matrix}.
 
-\lstFourierMotzkin
+\lstFME
 \lstinline{fourier_motzkin} takes a \lstinline{Matrix M} and a coordinate \lstinline{k} and creates the set which either corresponds to a projection of an H-Cone (without actually doing the projection), or the intersection of a V-Cone with a coordinate-hyperplane.
 
-\lstFourierMotzkinPart
+\lstFMEPart
 Partitions \lstinline{M} into logical sets $Z,P,N$ that satisfy the following:\\
 
 \begin{tabular}{|l|l|l|}
@@ -707,14 +707,14 @@ set & range & property \\
   \hline
 \end{tabular}\\
 
-\lstFourierMotzkinMove
+\lstFMEMove
 Moves $Z$ into the result.
 
-\lstFourierMotzkinConvolute
+\lstFMEConvolute
 Convolutes the vectors in the way described in Propositions \ref{prop:hconeproj} and \ref{prop:Hintset} (concerning projecting an H-Cone and intersecting a V-Cone with a coordinate-hyperplane), and push them into the result \lstinline{Matrix}.  In particular, it creates the sets which correspond to
 \[ \Bik B_j - \Bjk B_i \st i \in P,\, j \in N \\ \]
 
-\subsection{\texttt{include/hcone.h}, \texttt{src/hcone.cpp}}
+\subsection{\texttt{include/hcone.h, src/hcone.cpp}}
 \lstinputlisting{../cpp/include/hcone.h}
 \texttt{hcone.h} and \texttt{hcone.cpp} implement the transformation from H-Cone to V-Cone.
 
@@ -729,7 +729,49 @@ Here the tools from \texttt{common.h} are used to implement the algorithm descri
 \lstHconeToVcone
 This function does a sanity check and then return the transformed \texttt{hcone}.\\
 
-\subsection{\texttt{src/polyhedra.cpp}}
-\subsection{\texttt{src/vcone.cpp}}
+\subsection{\texttt{include/vcone.h, src/vcone.cpp}}
+\lstinputlisting{../cpp/include/vcone.h}
+\texttt{vcone.h} and \texttt{vcone.cpp} implement the transformation from V-Cone to H-Cone.
+
+\lstLiftVcone
+Takes a \texttt{Matrix} representing an V-Cone and creates the new matrix
+  \[\begin{pmatrix*}[r] \0 & -I \\ I & -U \\ -I & U \end{pmatrix*} \]
+where $U$ represents \texttt{vcone}.  This operation is justified by {\Vlift}.
+
+\lstProjectHCone
+Here the tools from \texttt{common.h} are used to implement the algorithm described in proposition \ref{prop:hconeproj}, where an H-Cone is sequentially projected down to coordinate-axis.  This result is then projected to the original space, i.e. the first $d$ coordinates are taken from each \texttt{Vector} in the \texttt{Matrix}.  These operations are justified by {\Vproj} and proposition \ref{prop:hconezero}.
+
+\lstVconeToHcone
+This function does a sanity check and then return the transformed \texttt{hcone}.\\
+
+\subsection{\texttt{include/polyhedra.h, src/polyhedra.cpp}}
+\lstinputlisting{../cpp/include/polyhedra.h}
+\texttt{vcone.h} and \texttt{vcone.cpp} implement the reductions from Polyhedra to Cones.
+
+\lstProjectZero
+Using the \lstinline{std::slice} object, the first coordinate of each \lstinline{Vector} is dropped from the \lstinline{Matrix}.
+
+\lstNormalizeP
+Creates the set $V$ in \eqref{eq:cvtopv}.  Note that the operation $U^i/\Uiz$ is only done if $\Uiz$ is not already $1$
+
+\lstHpolyToHCone
+Each \lstinline{Vector} is supposed to be of the form $(A_i,b)$, expressing the constraint $\ip{A_i}{\x} \leq b$.  $b$ is moved to the first coordinate, and negated to transform 
+\[ [A|b] \to [-b|A] \]
+
+\lstHconeToHPoly
+This is the inverse to \lstinline{hcone_to_hpoly}:
+\[ [-b|A] \to [A|b] \]
+
+\lstVpolyToVCone
+\lstinline{d} must be increased for operations which depend on it to function correctly.  Then conducts the transform:
+\[ \cone(U) + \conv(V) \to \cone\lcone \]
+
+\lstVconeToVPoly
+This implements the tranformation justified by \eqref{eq:cvtopv}, returning the result of 
+\[ \text{\lstinline{vcone}} \cap \set{\x \st \ip{\e_0}{\x} = 1} \]
+
+\lstHpolyToVPoly
+\lstVpolyToHPoly
+Using the other functions in the file, these implement the described transformations.
 
 \end{document}

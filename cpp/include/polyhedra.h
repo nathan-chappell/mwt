@@ -20,5 +20,5 @@ Matrix vpoly_to_vcone(VPoly vpoly);
 VPoly vcone_to_vpoly(Matrix vcone);
 
 // transformations
-VPoly  hpoly_to_vpoly (Matrix hpoly);
-Matrix vpoly_to_hpoly (VPoly vpoly);
+VPoly  hpoly_to_vpoly(Matrix hpoly);
+Matrix vpoly_to_hpoly(VPoly vpoly);
