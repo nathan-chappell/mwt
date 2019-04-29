@@ -16,3 +16,6 @@ vpoly_to_hpoly : $(OBJS) vpoly_to_hpoly.cpp
 
 hpoly_to_vpoly : $(OBJS) hpoly_to_vpoly.cpp
 	$(CC) $@.cpp $(CPPFLAGS) $(OBJS) -o $@
+
+clean:
+	rm $(OBJS)
