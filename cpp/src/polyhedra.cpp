@@ -1,8 +1,6 @@
 //polyhedra.cpp
 
 #include "polyhedra.h"
-#include "hcone.h"
-#include "vcone.h"
 
 #include <algorithm>
 
@@ -53,13 +51,13 @@ Matrix normalized_P(Matrix M) {
   if (M.d <= 1) {
     throw std::logic_error{"can't normalize M!"};
   }
-  std::slice s{1,d,1};
+  std::slice s{1,M.d,1};
   Matrix result{s.size()}; // s.size() == d-1
   for (auto &&v : M) {
     // select the vectors with positive 0-th coordinate
     if (v[0] > 0) {
       // normalize the selected vectors,
-      result.push_back(v[0] == 1 ? v[s] : v[s] /= v[0]);
+      result.push_back(v[0] == 1 ? v[s] : (v / v[0])[s]);
     }
   }
   return result;
@@ -68,8 +66,8 @@ Matrix normalized_P(Matrix M) {
 // U -> {Z \cup P*N, P'}
 // V -> normalized_P
 VPoly vcone_to_vpoly(Matrix vcone) {
-  VPoly result;
-  result.U = sliced_fourier_motzkin(vcone, slice(1,U.d,1));
+  VPoly result{vcone.d-1};
+  result.U = sliced_fourier_motzkin(vcone, slice(1,vcone.d,1));
   result.V = normalized_P(vcone);
   return result;
 }

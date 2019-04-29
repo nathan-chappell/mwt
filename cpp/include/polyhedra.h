@@ -1,6 +1,7 @@
 //polyhedra.h
+#pragma once
 
-#include "common.h"
+#include "fourier_motzkin.h"
 
 // HP -> HC
 // A|b -> -b|A
