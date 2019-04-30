@@ -13,13 +13,17 @@ using Vectors = std::vector<Vector>;
 // invariant: d >= 0
 // invariant: (forall valid i) vectors[i].size() == d
 struct Matrix {
+public:
+  const size_t d; // size of all Vectors
+private:
   Vectors vectors;
 public:
   // needed for back_insert_iterator
   using value_type = Vector;
-  const size_t d; // size of all Vectors
 
   Matrix(size_t d);
+  Matrix(std::initializer_list<Vector>&&);
+  bool check() const; // checks each Vector has size d
 
   //defaults don't work because of const member
   Matrix(const Matrix&);
@@ -49,6 +53,8 @@ struct VPoly {
   Matrix V; // points
 
   VPoly(size_t d) : d{d}, U{d}, V{d} {}
+  VPoly(std::initializer_list<Vector>&&, std::initializer_list<Vector>&&);
+  bool check() const;
 
   static VPoly read_VPoly(std::istream&);
 };

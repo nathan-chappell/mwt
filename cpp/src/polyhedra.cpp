@@ -47,18 +47,17 @@ Matrix vpoly_to_vcone(VPoly vpoly) {
 
 //  ?    1
 //  U -> V
-Matrix normalized_P(Matrix M) {
-  if (M.d <= 1) {
-    throw std::logic_error{"can't normalize M!"};
+Matrix normalized_P(const Matrix &U) {
+  if (U.d <= 1) {
+    throw std::logic_error{"can't normalize U!"};
   }
-  std::slice s{1,M.d,1};
-  Matrix result{s.size()}; // s.size() == d-1
-  for (auto &&v : M) {
-    // select the vectors with positive 0-th coordinate
-    if (v[0] > 0) {
-      // normalize the selected vectors,
-      result.push_back(v[0] == 1 ? v[s] : (v / v[0])[s]);
-    }
+  Matrix result{U.d-1};
+  std::slice s{1,result.d,1};
+  for (auto &&v : U) {
+    // select the vectors with positive 0-th coordinate (can't use transform)
+    if (v[0] <= 0) { continue; }
+    // normalize the selected vectors,
+    result.push_back(v[0] == 1 ? v[s] : (v / v[0])[s]);
   }
   return result;
 }
@@ -67,7 +66,7 @@ Matrix normalized_P(Matrix M) {
 // V -> normalized_P
 VPoly vcone_to_vpoly(Matrix vcone) {
   VPoly result{vcone.d-1};
-  result.U = sliced_fourier_motzkin(vcone, slice(1,vcone.d,1));
+  result.U = sliced_fourier_motzkin(vcone, slice(1,vcone.d-1,1));
   result.V = normalized_P(vcone);
   return result;
 }

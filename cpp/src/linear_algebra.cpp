@@ -11,13 +11,23 @@ Matrix::Matrix(size_t d) : d{d} {
   if (d == 0) throw std::logic_error{"no 0-d matrices!"};
 }
 
-Matrix::Matrix(const Matrix &m) : vectors{m.vectors}, d{m.d} {}
+Matrix::Matrix(std::initializer_list<Vector> &&il) 
+    : d{il.begin()->size()}, vectors{move(il)} {
+  if (!check()) throw std::logic_error{"Matrix: bad init-list"};
+}
 
-Matrix::Matrix(Matrix &&m) : vectors{move(m.vectors)}, d{m.d} {}
+bool Matrix::check() const {
+  return all_of(vectors.begin(), vectors.end(), 
+      [this](const Vector &v) { return v.size() == d; });
+}
+
+Matrix::Matrix(const Matrix &m) : d{m.d}, vectors{m.vectors} {}
+
+Matrix::Matrix(Matrix &&m) : d{m.d}, vectors{move(m.vectors)} {}
 
 Matrix &Matrix::operator=(const Matrix &m) {
   if (d != m.d) {
-    throw std::logic_error{"Matrix copy asignment: unmatched d"};
+    throw std::logic_error{"Matrix copy assignment: unmatched d"};
   }
   vectors = m.vectors;
   return *this;
@@ -25,7 +35,7 @@ Matrix &Matrix::operator=(const Matrix &m) {
 
 Matrix &Matrix::operator=(Matrix &&m) {
   if (d != m.d) {
-    throw std::logic_error{"Matrix copy asignment: unmatched d"};
+    throw std::logic_error{"Matrix copy assignment: unmatched d"};
   }
   vectors = move(m.vectors);
   return *this;
@@ -138,6 +148,19 @@ size_t read_dimension(std::istream &i) {
   return static_cast<size_t>(d);
 }
 
+VPoly::VPoly(std::initializer_list<Vector>&& Uil, 
+             std::initializer_list<Vector>&& Vil) 
+    : d{Uil.begin()->size()}, U{move(Uil)}, V{move(Vil)} {
+  if (!check()) throw std::logic_error{"VPoly: bad init-list"};
+}
+
+bool VPoly::check() const {
+  return all_of(U.begin(), U.end(), 
+          [this](const Vector &v) { return v.size() == d; }) &&
+         all_of(U.begin(), U.end(), 
+          [this](const Vector &v) { return v.size() == d; });
+}
+
 // factory needed because const member must be set for operator>> to work
 Matrix Matrix::read_Matrix(std::istream& i) {
   Matrix result{read_dimension(i)};
@@ -155,7 +178,7 @@ VPoly VPoly::read_VPoly(std::istream& i) {
 // If I had to write that one more time I'd templatize it...
 
 int usage() {
-  cerr << ifstream{"../usage.md"}.rdbuf();
+  cerr << ifstream{"../usage.txt"}.rdbuf();
   return 0;
 }
 
@@ -207,7 +230,7 @@ Matrix transpose(Matrix M) {
 // slice each vector in M with s
 Matrix slice_matrix(const Matrix &M, const std::slice &s) {
   Matrix result{s.size()};
-  transform(M.begin(), M.end(), result.begin(),
+  transform(M.begin(), M.end(), back_inserter(result),
     [s](const Vector &v) { return v[s]; });
   return result;
 }
