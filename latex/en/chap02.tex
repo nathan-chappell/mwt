@@ -29,7 +29,9 @@
     \begin{pmatrix*}[r] I & -U \\ -I & U \end{pmatrix*} \xt \leq \0
   \end{equation}
   Comparing \eqref{eq:tleqz} and \eqref{eq:xeqt}, we define a new matrix $A' \in \R^{(\Udim+2d)\times(d+\Udim)}$:
-  \[A' = \begin{pmatrix*}[r] \0 & -I \\ I & -U \\ -I & U \end{pmatrix*} \]
+\begin{equation}\label{eq:Alift}
+  A' = \begin{pmatrix*}[r] \0 & -I \\ I & -U \\ -I & U \end{pmatrix*} 
+\end{equation}
   then we can rewrite $\cone(U)$:
   \begin{equation*}
      \cone(U) = \set{ \xv \St A'\xt \leq \0}
@@ -207,7 +209,7 @@ If we suppose that $U' \subset \R^{d+\Adim}$, and $\Pi$ is the identity matrix w
 Let $\mA$, we now show that the H-Cone 
   \[\set{\xv \st A\x \leq \0}\]
 can be written as the projection of a V-Cone intersected with some hyperplanes.  Define $U'$:
-  \[ U' = \set{\eAj, \neAj, \zei, 1 \leq j \leq d,\, 1 \leq i \leq m} \]
+  \[ U' = \set{\zei, \eAj, \neAj, 1 \leq j \leq d,\, 1 \leq i \leq m} \]
   Then we claim:
 \begin{equation}\label{eq:hliftform}
    \set{\xv \st A\x \leq \0} = \set{\xv \St (\exists \t \geq 0) \xz = U'\t}
@@ -242,6 +244,11 @@ We would like to show that $A\x \leq \0$.  Let $\xjp,\xjm,w_i$ take the values o
 \end{align*}
 where $\w \geq \0$.  By \eqref{eq:Axz} we have $A\x \leq \0$.  So \eqref{eq:hliftform} holds.
 \end{proof}
+
+Note that $U'$ can be written:
+\begin{equation}\label{eq:Ulift} 
+  U' = \begin{pmatrix*}[r] \0 & I & -I \\ I & A & -A \end{pmatrix*}
+\end{equation}
 
 The proof of {\Hint} relies upon the following proposition.
 \begin{Prop}{\label{prop:Hintset}

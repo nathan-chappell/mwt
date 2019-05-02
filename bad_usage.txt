@@ -1,0 +1,9 @@
+$ ./main -vc <<< "0"
+terminate called after throwing an instance of 'input_error'
+  what():  bad d: 0
+Aborted (core dumped)
+$ ./main -vc <<< "2 1"
+error reading matrix, vector 1
+terminate called after throwing an instance of 'input_error'
+  what():  failed to read vector: istream failed
+Aborted (core dumped)

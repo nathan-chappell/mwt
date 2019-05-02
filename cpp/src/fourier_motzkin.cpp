@@ -9,9 +9,9 @@ using namespace std;
 
 // true iff index is "a member of" slice
 bool index_in_slice(size_t index, const slice &s) {
-  return (s.start() <= index && 
-          index <= s.start() + s.stride()*(s.size()-1) &&
-          (index - s.start()) % s.stride() == 0);
+  return ((index - s.start()) % s.stride() == 0) &&
+          s.start() <= index && 
+          index <= s.start() + s.stride()*(s.size()-1);
 }
 
 // Fourier Motzkin Elimation
@@ -61,7 +61,8 @@ Matrix sliced_fourier_motzkin(Matrix M, const slice &s) {
 //   d     d|     0 C[1]*I C[3]*I|
 // n|A| -> n|C[0]*I C[2]*A C[4]*A|
 //
-Matrix generalized_lift(const Matrix &cone, const array<double,5> &C) {
+Matrix generalized_lift(const Matrix &cone, 
+                        const array<double,5> &C) {
   const size_t d = cone.d;
   const size_t n = cone.size();
   Matrix result{d+n};
@@ -75,13 +76,15 @@ Matrix generalized_lift(const Matrix &cone, const array<double,5> &C) {
   // |C[1]*I C[2]*U|  |C[1]*I|
   //                  |C[2]*A|
   for (auto &&row_t : cone_t) {
-    result.push_back(concatenate(C[1]*e_k(d,k++), C[2]*row_t));
+    result.push_back(
+      concatenate(C[1]*e_k(d,k++), C[2]*row_t));
   }
   k = 0;
   // |C[3]*I C[4]*U|  |C[3]*I|
   //                  |C[4]*A|
   for (auto &&row_t : cone_t) {
-    result.push_back(concatenate(C[3]*e_k(d,k++), C[4]*row_t));
+    result.push_back(
+      concatenate(C[3]*e_k(d,k++), C[4]*row_t));
   }
   return result;
 }
@@ -111,7 +114,8 @@ Matrix cone_transform(const Matrix &cone, Lift lift) {
     throw logic_error{"empty cone for transform"};
   }
   // the idea of the entire mwt is this one line
-  return sliced_fourier_motzkin(lift(cone), slice(0, cone.d, 1));
+  return sliced_fourier_motzkin(
+    lift(cone), slice(0, cone.d, 1));
 }
 
 Matrix vcone_to_hcone(Matrix vcone) {

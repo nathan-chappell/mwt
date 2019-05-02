@@ -12,7 +12,7 @@ input format is as follows:
   hcone := dimension   (vector ws)*  
   vcone := dimension   (vector ws)*  
   hpoly := dimension+1 (vector ws constraint ws)*  
-  vpoly := dimension   ('U' | 'V') ws ((['U'] ws vector)* | (['V'] ws vector)*)
+  vpoly := dimension   ('U' | 'V') ws vpoly_vecs*
 
   ws         := whitespace, as would be read by "cin >> ws;"
   dimension  := a positive integer.  For hpoly, add one to the dimension of
@@ -20,6 +20,7 @@ input format is as follows:
   vector     := (dimension) doubles separated by whitespace  
   constraint := a double (the value b_i in <A_i,x> <= b_i)  
   'V' | 'U'  := the literal character 'U' or 'V'
+  vpoly_vecs := (['U'] ws vector) | (['V'] ws vector)
 
 VPOLY ONLY:
 
@@ -30,3 +31,52 @@ VPOLY ONLY:
   On input, enter 'U' or 'V' to indicate which matrix should receive the vectors
   that follow.  You can switch back and forth as you like, but either 'U' or 'V'
   must be entered before starting to input vectors.
+
+EXAMPLES:
+
+$ ./main -vc <<< "2 1 0"
+
+OUTPUT:
+
+2
+-0 -1 
+0 1 
+0 0 
+-1 0 
+
+$ ./main -hc <<< "2 1 0 0 1"
+
+OUTPUT:
+
+2
+-1 0 
+0 0 
+0 0 
+0 -1 
+
+$ ./main -vp <<< "2 U 1 0 V 0 0 1 1"
+
+OUTPUT:
+
+3
+0 0 -0 
+0 0 -0 
+0 1 1 
+0 0 1 
+-1 1 -0 
+-1 0 -0 
+0 0 -0 
+0 -1 -0 
+$ ./main -hp <<< "3 0 -1 0 0 1 1 -1 1 0"
+
+OUTPUT:
+
+2
+U
+1 0 
+0 0 
+0 0 
+0 0 
+V
+0 0 
+1 1 

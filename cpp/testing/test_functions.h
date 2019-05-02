@@ -4,11 +4,18 @@
 
 extern int verbosity;
 
-struct cone_test_case {
+struct hcone_test_case {
   std::string name;
-  Matrix rep; // vectors for H or V cone
+  Matrix hcone; // vectors for H or V cone
   Matrix key; // minimal genearating set of dual vectors
-  Matrix(*transform)(Matrix);
+
+  bool run_test() const;
+};
+
+struct vcone_test_case {
+  std::string name;
+  Matrix vcone; // vectors for H or V cone
+  Matrix key; // minimal genearating set of dual vectors
 
   bool run_test() const;
 };

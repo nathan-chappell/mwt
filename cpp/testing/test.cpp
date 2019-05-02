@@ -10,31 +10,29 @@
 
 using namespace std;
 
-vector<cone_test_case> cone_tests { 
+vector<hcone_test_case> hcone_tests { 
   { "upper-half first quadrant (hcone)",
     {{-1,0},{1,-1}},
     {{0,1},{1,1}},  
-    hcone_to_vcone
   },
   { "origin",
     {{1,0},{-1,-1},{0,1}},
     {{0,0}},
-    hcone_to_vcone
   },
   { "3-d pyramid (hcone)",
     {{1,1,-1},{-1,1,-1},{1,-1,-1},{-1,-1,-1}},
     {{0,1,1},{1,0,1},{0,-1,1},{-1,0,1}},
-    hcone_to_vcone
   },
+};
+
+vector<vcone_test_case> vcone_tests {
   { "upper-half first quadrant (vcone)",
     {{0,.1},{.1,.1}},
     {{-1,0},{.5,-.5}},  
-    vcone_to_hcone
   },
   { "3-d pyramid (vcone)",
     {{0,1,1},{1,0,1},{0,-1,1},{-1,0,1}},
     {{1,1,-1},{-1,1,-1},{1,-1,-1},{-1,-1,-1}},
-    vcone_to_hcone
   },
 };
 
@@ -51,9 +49,12 @@ vector<hpoly_test_case> hpoly_tests {
     {{-1,0,0,1},{0,-1,0,1},{0,0,-1,1}, {1,1,1,1}},
     { /*U*/{}, /*V*/{{0,0,0},{1,0,0},{0,1,0},{0,0,1}} }
   },
+  { "shape",
+    {{-1,0,0,-1},{-1,0,-1,-2},{0,-1,0,-1},{0,-1,-1,-2},{1,1,-1,4},{1,1,0,5}},
+    { /*U*/{{0,0,1}}, /*V*/{{1,1,1},{1,4,1},{2,2,0},{4,1,1 }} }
+  }
 };
 
-// above tests flipped around
 vector<vpoly_test_case> vpoly_tests {
   { "slice and shift first quadrant",
     { /*U*/{{1,0},{0,1}}, /*V*/{{1,3},{2,1}} },
@@ -65,7 +66,7 @@ vector<vpoly_test_case> vpoly_tests {
   },
   { "3-simplex",
     { /*U*/{}, /*V*/{{0,0,0},{1,0,0},{0,1,0},{0,0,1}} },
-    {{-1,0,0,1},{0,-1,0,1},{0,0,-1,1}, {1,1,1,1}}
+    {{-1,0,0,0},{0,-1,0,0},{0,0,-1,0}, {1,1,1,1}}
   },
 };
 
@@ -121,8 +122,10 @@ void satisfaction_fn_test() {
 
 void transform_test() {
   size_t failures{0};
-  for (auto &&test : cone_tests)  { failures += (!test.run_test()); }
+  for (auto &&test : hcone_tests) { failures += (!test.run_test()); }
+  for (auto &&test : vcone_tests) { failures += (!test.run_test()); }
   for (auto &&test : hpoly_tests) { failures += (!test.run_test()); }
+  for (auto &&test : vpoly_tests) { failures += (!test.run_test()); }
   cout << "transform failures: " << failures << endl;
 }
 

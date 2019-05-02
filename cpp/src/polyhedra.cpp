@@ -36,11 +36,11 @@ Matrix hcone_to_hpoly(Matrix hcone) {
 Matrix vpoly_to_vcone(VPoly vpoly) {
   //requires increase in dimension
   Matrix result{vpoly.d+1};
-  for (auto &&v : vpoly.U) {
-    result.push_back(concatenate({0},v));
+  for (auto &&u : vpoly.U) { 
+    result.push_back(concatenate({0},u)); 
   }
-  for (auto &&v : vpoly.V) {
-    result.push_back(concatenate({1},v));
+  for (auto &&v : vpoly.V) { 
+    result.push_back(concatenate({1},v)); 
   }
   return result;
 }
@@ -54,7 +54,7 @@ Matrix normalized_P(const Matrix &U) {
   Matrix result{U.d-1};
   std::slice s{1,result.d,1};
   for (auto &&v : U) {
-    // select the vectors with positive 0-th coordinate (can't use transform)
+    // select the vectors with positive 0-th coordinate
     if (v[0] <= 0) { continue; }
     // normalize the selected vectors,
     result.push_back(v[0] == 1 ? v[s] : (v / v[0])[s]);
@@ -66,7 +66,8 @@ Matrix normalized_P(const Matrix &U) {
 // V -> normalized_P
 VPoly vcone_to_vpoly(Matrix vcone) {
   VPoly result{vcone.d-1};
-  result.U = sliced_fourier_motzkin(vcone, slice(1,vcone.d-1,1));
+  result.U = sliced_fourier_motzkin(
+               vcone, slice(1,vcone.d-1,1));
   result.V = normalized_P(vcone);
   return result;
 }

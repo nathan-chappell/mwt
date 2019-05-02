@@ -11,8 +11,16 @@ Matrix::Matrix(size_t d) : d{d} {
   if (d == 0) throw std::logic_error{"no 0-d matrices!"};
 }
 
+size_t get_d(const std::initializer_list<Vector> &il) {
+  if (il.size()) {
+    return begin(il)->size();
+  } else {
+    throw std::logic_error{"get_d: empty init-list"};
+  }
+}
+
 Matrix::Matrix(std::initializer_list<Vector> &&il) 
-    : d{il.begin()->size()}, vectors{move(il)} {
+    : d{get_d(il)}, vectors{move(il)} {
   if (!check()) throw std::logic_error{"Matrix: bad init-list"};
 }
 
@@ -35,23 +43,29 @@ Matrix &Matrix::operator=(const Matrix &m) {
 
 Matrix &Matrix::operator=(Matrix &&m) {
   if (d != m.d) {
-    throw std::logic_error{"Matrix copy assignment: unmatched d"};
+    throw std::logic_error{"Matrix move assignment: unmatched d"};
   }
   vectors = move(m.vectors);
   return *this;
 }
 
+Matrix &Matrix::operator=(std::initializer_list<Vector> &&il) {
+  vectors = move(Vectors{il});
+  return *this;
+}
 
 void Matrix::push_back(const Vector &v) { 
   if (v.size() != d) {
-    throw std::out_of_range{"v.size() != d"};
+    string ineq = to_string(v.size()) + " != " + to_string(d);
+    throw std::out_of_range{"push_back(copy), " + ineq};
   }
   vectors.push_back(v); 
 }
 
 void Matrix::push_back(Vector &&v) { 
   if (v.size() != d) {
-    throw std::out_of_range{"v.size() != d"};
+    string ineq = to_string(v.size()) + " != " + to_string(d);
+    throw std::out_of_range{"push_back(move), " + ineq};
   }
   vectors.push_back(move(v)); 
 }
@@ -141,16 +155,29 @@ ostream& operator<<(ostream& o, const VPoly &vpoly) {
 
 size_t read_dimension(std::istream &i) {
   int d;
-  i >> d;
+  i >> d >> ws;
   if (d <= 0) {
     throw input_error{"bad d: "s + to_string(d)};
   }
   return static_cast<size_t>(d);
 }
 
+size_t get_d(const std::initializer_list<Vector> &Uil,
+             const std::initializer_list<Vector> &Vil) {
+  if (Uil.size()) { 
+    return begin(Uil)->size(); 
+  } else if (Vil.size()) {
+    return begin(Vil)->size(); 
+  } else {
+    return 0;
+  }
+}
+
 VPoly::VPoly(std::initializer_list<Vector>&& Uil, 
              std::initializer_list<Vector>&& Vil) 
-    : d{Uil.begin()->size()}, U{move(Uil)}, V{move(Vil)} {
+    : d{get_d(Uil,Vil)}, U{d}, V{d} {
+  U = move(Uil);
+  V = move(Vil);
   if (!check()) throw std::logic_error{"VPoly: bad init-list"};
 }
 
@@ -168,12 +195,29 @@ Matrix Matrix::read_Matrix(std::istream& i) {
   return result;
 }
 
+Vectors::iterator       Matrix::begin() { return vectors.begin(); }
+Vectors::iterator       Matrix::end()   { return vectors.end(); }
+Vectors::const_iterator Matrix::begin() const { return vectors.begin(); }
+Vectors::const_iterator Matrix::end()   const { return vectors.end(); }
+
+bool   Matrix::empty() const { return vectors.empty(); }
+size_t Matrix::size()  const { return vectors.size(); }
+Vector &Matrix::back()       { return vectors.back(); }
+
+Vector &Matrix::add_Vector() {
+  vectors.emplace_back(d);
+  return vectors.back();
+}
+
 // factory needed because const member must be set for operator>> to work
 VPoly VPoly::read_VPoly(std::istream& i) {
   VPoly result{read_dimension(i)};
   i >> result;
   return result;
 }
+
+input_error::input_error(const char*s) : std::runtime_error{s} {}
+input_error::input_error(const std::string &s) : std::runtime_error{s} {}
 
 // If I had to write that one more time I'd templatize it...
 
@@ -215,7 +259,7 @@ Vector get_column(const Matrix &M, size_t k) {
 }
 
 // Matrix transpose
-Matrix transpose(Matrix M) {
+Matrix transpose(const Matrix &M) {
   if (M.empty()) {
     return M;
   }
