@@ -38,7 +38,7 @@ double norm(const Vector &v) {
 
 bool approximately_zero(double d) {
   const double error = .000001;
-  bool result = d < error;
+  bool result = abs(d) < error;
   if (d != 0 && result) {
     char d_buf[64]{};
     std::sprintf(d_buf, "%.9e", d);
