@@ -153,18 +153,41 @@ Where \lsti{Matrix M} is a collection of row \lsti{Vector}s, or
 Where \lsti{Matrix M} is a collection of column \lsti{Vector}s.
 \lstgeneralizedlift
 
+\lsti{lift_vcone} and \lsti{lift_hcone} implement the appropriate transformation using \lsti{generalized_lift} and providing the appropriate coefficients in \\
+\lsti{array<double, 5> C}.
 \lstliftvcone
 \lstlifthcone
+
+\lsti{cone_transform} consolidates the logic of the V-Cone $\to$ H-Cone and H-Cone $\to$ V-Cone transformations by accepting a \lsti{Matrix cone} and a \lsti{Lift}.
 \lstconetransform
+
+\lsti{vcone_to_hcone} and \lsti{hcone_to_vcone} specialize \lsti{cone_transform} by providing the appropriate \lsti{Lift}.
 \lstvconetohcone
 \lsthconetovcone
 
 \subsection{\filename{polyhedra.cpp}}
+
+\lsti{hpoly_to_hcone} and \lsti{hcone_to_hpoly} implement the \lsti{Matrix} transforms:
+\[ \mli{hpoly_to_hcone}: (A|b) \to (-b|A),\quad \mli{hcone_to_hpoly} : (-b|A) \to (A|b) \]
+These very simple transforms are done with the \lsti{cshift} function, which ``circularly shifts'' the elements of a \lsti{Vector} (provided as part of the interface to \lsti{valarray}).
 \lsthpolytohcone
 \lsthconetohpoly
+
+\lsti{vpoly_to_vcone} implements the \lsti{VPoly} transform:
+\[ \mli{vpoly} \to 
+    \begin{pmatrix} 
+      \0 & \vec{1} \\ \mli{vpoly.U} & \mli{vpoly.V} 
+    \end{pmatrix} \]
 \lstvpolytovcone
+
+\lsti{normalized_P} calculates the $V$ in \eqref{eq:cvtopv}.  Let $\Pi$ is the identity matrix with the $0$-th row deleted, and $P = \set{\u \in U : u_0 > 0}$. then this is the result of:
+  \[ \Pi(\cone(P) \cap \set{x_0 = 1}) \]
 \lstnormalizedP
+
+\lsti{vcone_to_vpoly} implements the full tranformation in \eqref{eq:cvtopv}.
 \lstvconetovpoly
+
+\lsti{hpoly_to_vpoly} and \lsti{vpoly_to_hpoly} implement the complete transformations promised by the file.
 \lsthpolytovpoly
 \lstvpolytohpoly
 
