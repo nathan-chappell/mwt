@@ -222,7 +222,7 @@ makecommand "hasequivalentmember"\
              "$test_functions_cpp"
 
 makecommand "hasequalmember"\
-             "/bool has_equal_member(const Matrix &M, const Vector &v) {/,/$close_brace/"\
+             "/bool has_equal_member(const Matrix &M/,/$close_brace/"\
              "$test_functions_cpp"
 
 makecommand "subsetmodeq"\

@@ -40,9 +40,9 @@ bool approximately_zero(double d) {
   const double error = .000001;
   bool result = abs(d) < error;
   if (d != 0 && result) {
-    char d_buf[64]{};
-    std::sprintf(d_buf, "%.9e", d);
-    log("approximately_zero "s + d_buf, 1);
+    ostringstream oss;
+    oss << scientific << d;
+    log("approximately_zero " + oss.str(), 1);
   }
   return result;
 }
@@ -72,9 +72,11 @@ bool is_equal(const Vector &l, const Vector &r) {
 bool has_equivalent_member(const Matrix &M, 
                            const Vector &v) {
   if (!any_of(M.begin(), M.end(), 
-    [&](const Vector &u) { return is_equivalent(u,v); })) {
+    [&](const Vector &u) { 
+      return is_equivalent(u,v); })) {
     ostringstream oss;
-    oss << dashes << " no equivalent member found for:\n" 
+    oss << dashes 
+        << " no equivalent member found for:\n" 
         << v << endl;
     log(oss.str(),1);
     return false;
@@ -82,11 +84,14 @@ bool has_equivalent_member(const Matrix &M,
   return true;
 }
 
-bool has_equal_member(const Matrix &M, const Vector &v) {
+bool has_equal_member(const Matrix &M,
+                      const Vector &v) {
   if (!any_of(M.begin(), M.end(), 
-    [&](const Vector &u) { return is_equal(u,v); })) {
+    [&](const Vector &u) { return 
+      is_equal(u,v); })) {
     ostringstream oss;
-    oss << dashes << " no equal member found for:\n" 
+    oss << dashes 
+        << " no equal member found for:\n" 
         << v << endl;
     log(oss.str(),1);
     return false;
@@ -153,7 +158,8 @@ bool vec_satisfied(const Vector &constraint,
     throw runtime_error{"bad vec vs constraint"};
   }
   double ip = vec * constraint;
-  if (!(approximately_lt_zero(ip - constraint[cback_i]))) {
+  double c_val = constraint[cback_i];
+  if (!(approximately_lt_zero(ip - c_val))) {
     ostringstream oss;
     oss << dashes << " vec not satisfied!\n" 
         << "vec: " << vec 

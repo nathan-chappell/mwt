@@ -193,102 +193,176 @@ These very simple transforms are done with the \lsti{cshift} function, which ``c
 
 \section{Testing}
 
-In the next two sections, the methods used for testing the program described above will be discussed.  The correctness of the tests rely on the notions of \textit{minmal representation} and \textit{equivalent constraint}.
-%minimal representation
-%equivalent representation
+In the next sections, the methods used for testing the program described above will be discussed.
+
+\subsection{Testing H-Cone $\to$ V-Cone}
+Suppose we have an H-Cone $C_H = \set{A\x\leq\0}$, and would like to test if a V-Cone $\cone(V')$ represents the same set.  It's easy to check if
+  \[ (\forall v' \in V') A\v'\leq\0 \Rightarrow \cone(V') \subseteq C_H \]
+It's not clear what to do to check if $C_H \subseteq \cone(V')$.  Suppose we had a set $V$, and we knew that $C_H = \cone(V)$, and that $\cone(V) = \cone(V') \Rightarrow V \subseteq V'$.  Then we'd have the following situation:
+\begin{alignat*}{2}
+  &(\forall \v'\in V') A\v'\leq\0 \;&\Rightarrow&\; \cone(V') \subseteq C_H \\
+  &V \subseteq V'                 \;&\Rightarrow&\; C_H \subseteq \cone(V') \\
+  &\cone(V') = C_H                \;&\Rightarrow&\; V \subseteq V' \\
+  &\cone(V') = C_H                \;&\Rightarrow&\; (\forall \v'\in V') A\v'\leq\0
+\end{alignat*}
+Therefore, we have
+\[ C_H = \cone(V') \Leftrightarrow \left[ V \subseteq V',\;(\forall \v'\in V') A\v'\leq\0 \right] \]  The problem is now to come up with such a set $V$.  We will need to relax the requirements on $V$ a little bit, but not in a way that reduces its utility.  The set is desribed in the next proposition, but first we introduce the notion of equivalence vectors:
+
+\begin{Def}[vector equivalence]
+  Let $\u,\v \in \R^d$, and suppose that $\u/\norm{\u} = \v/\norm{\v}$.  Then say that $\u,\v$ are equivalent, and write:
+  \[ \u \simeq \v \]
+\end{Def}
+
+\begin{Def}[Extreme]
+  Let $V \in \R^{d\times n}$, if no member of $V$ is a positive linear combination of other elements of $V$ then $V$ is called \textit{extreme}.
+\end{Def}
+
+
+\begin{Prop}{\label{prop:minrays}
+  Let $V \in \R^{d\times n}$ be extreme.  Then
+  \[ \cone(V) = \cone(V') \Rightarrow (\forall \v \in V)(\exists \v'\in V') 
+                            : \v \simeq \v' \]
+} \end{Prop}
+
+\begin{proof}
+Let $\v \in V$, so that $\v = V\e_k$.  Since $\cone(V) = \cone(V')$, there exists a matrix $A$ with all non-negative entries such that $V' = VA$.  There is also a non-negative $b$ such that $\v = V'b$.  Then $\v = (VA)b = V(A\b)$.  Since $A$ and $b$ contain only non-negative entries, so does $A\b$.  Since $\v$ is not a non-negative combination of other vectors from $V$, $A\b$ must be the basis vector $\e_k$.  Then if $i \neq k$, $\e_i^T(A\b) = 0$, or $(\e_i^TA)b = \sum_j A_i^j b_j = 0$.  Since $A_i^j, b_j \geq 0$, we have:
+\begin{alignat*}{3}
+  (\forall i \neq k)&\quad&A_i^j > 0 \;&\Rightarrow&\; b_j = 0 \\
+  (\forall i \neq k)&\quad&b_j > 0   \;&\Rightarrow&\; A_i^j = 0
+\end{alignat*}
+Furthermore, we have $\ip{A_k}{b} = 1$, so for some $l$, $A_i^l,b_l > 0$.  Then, 
+\[ (\forall i \neq k)\quad A_i^l = 0 \]
+Now let $\b'=\e_l/A_k^l$.  Then it immediately follows that $\ip{A_k}{\b'} = 1$.  Also,
+\[ (\forall i \neq k)\quad A_i^l = 0 \quad \Rightarrow\quad \ip{A_i}{b'} = A_i^l/A_k^l = 0\]
+We conclude that $A\b' = \e_k = A\b$, and that $\v = V(A\b) = V(A\b') = (VA)\b' = U(\e_l/A_k^l)$.  If $\v' = U\e_l$, that is $\v'$ is the $l$-th vector of $U$, then $\v = \v'/A_k^l$, or 
+\[ \v/\norm{\v} = (\v'/A_k^l)/\norm{\v'/A_k^l} = \v'/\norm{\v'} \]
+So $\v \simeq \v'$.
+\end{proof}
+
+Let's denote $(\forall \v \in V)(\exists \v'\in V') : \v \simeq \v'$ as $V \sqsubseteq V'$.  Then, considering the discussion before the proposition, we have the following result.  Say $V \in \R^{d\times n}$ is extreme.  Also suppose that $\cone(V) = \set{\x\st A\x\leq\0}$.  Then
+\[ \cone(V) = \cone(V') \quad\Leftrightarrow\quad 
+   (\forall \v'\in V')A\v'\leq\0,\; V \sqsubseteq V' \]
+
+We now have a method for testing the program.  First, we hand-craft an H-Cone $\set{\x\st A\x\leq\0}$ based on some extreme set $V$, then run our program to get a set $V'$, with the alleged property that $\cone(V') = \set{\x\st A\x\leq\0}$.  If we confirm that $\forall \v'\in V', A\v'\leq 0$ and $V \sqsubseteq V'$, then our program has succeeded.
+
+\subsection{Testing V-Cone $\to$ H-Cone}
+The procedure for the other direction is \textit{almost} identical, but there is a slight catch.  Call a set of row vectors \textbf{extreme} if no row is a non-negative combination of the other.  We would be able to use proposition \ref{prop:minrays} to say something similar about an extreme set of row vectors $A$, if we could say that:
+
+\begin{Prop} 
+  \[ \set{\x\st A\x\leq\0} = \set{\x\st A'\x\leq\0} \Leftrightarrow \cone(A^T) = \cone(A'^T) \]
+\end{Prop}
+
+To prove this proposition, we use the Farkas Lemma:
+
+\begin{Prop}
+  Precisely one of the following is true:
+  \[ (\exists \t \geq \0) : \x = U\t \]
+  \[ (\exists \y) : U^T\y \leq 0,\; \ip{\x}{\y} > 0 \]
+\end{Prop}
+
+
+
+\begin{proof}  That both can't be true can be seen by:
+  \[ \x = U\t \Rightarrow \y^T\x = \y^T U\t \Rightarrow 0 \neq 0 \]
+To see that at least one is true we must reconsider Fourier Motzkin Elimination.  Suppose that
+  \[ (\neg \exists \t \geq \0) : \x = U\t \]
+This is precisely the same as saying that $\x \not\in \cone(U)$.  Suppose we now start doing our conversion from $\cone(U)$ to some H-Cone.  First we lift it to the form
+
+  Proposition \ref{prop:hconeproj} three 
+\end{proof}
 
 \subsection{\filename{test\_functions.h}}
 
-
+The following types are defined for running tests of the different algorithms.  They are expected to be given a descriptive name, the object on which the test will be run, and a \lsti{key} with which the result of the test will be compared.  The \list{key} object is one of the objects described above.
 \lsthconetestcasea
 \lstvconetestcasea
 \lsthpolytestcaseb
 \lstvpolytestcaseb
 
 \subsection{\filename{test\_functions.cpp}}
+
+The dot-product and norm (in terms of dot product).
 \lstoperator
 \lstnorm
+
+\lsti{approximately_zero} is used during tests to avoid issues involving floating point rounding errors.  For example, \lsti{1/6.0 * 2.5 - 5/12.0 == 0} will give \lsti{false}, while \lsti{approximately_zero(1/6.0 * 2.5 - 5/12.0)} will return \lsti{true}.  Test cases are used where intermediate calculations don't depend on such high accuracy, and these discrepencies can be ignored.
+
+\lsti{approximately_zero(c) == true} will be denoted $\mli{c} \approx 0$.
 \lstapproximatelyzeroa
+
+%Tests $\mli{c} < 0 \lor \mli{c} \approx 0$.
+Tests $c < 0 \lor c \approx 0$.
 \lstapproximatelyltzero
+
+%Tests $\norm{\mli{v}} \approx 0$.  This will be denoted $\mli{v} \approx \0$.
+Tests $\norm{\v} \approx 0$.  This will be denoted $\v \approx \0$.
 \lstapproximatelyzerob
+
+%Tests $\mli{l}/\norm{\mli{l}} - \mli{r}/\norm{\mli{r}} \approx \0 $.  This will be denoted $\mli{l} \simeq \mli{r}$.
+Tests $\u/\norm{\u} - \v/\norm{\v} \approx \0 $.  This will be denoted $\u \simeq \v$.
 \lstisequivalent
+
+%Tests $\mli{l} - \mli{r} \approx \0$.  This will be denoted $\mli{l} \approx \mli{r}$.
+Tests $\u - \v \approx \0$.  This will be denoted $\u \approx \v$.
 \lstisequal
+
+%Tests $(\exists \mli{u} \in \mli{Matrix M}) \st \mli{v} \simeq \mli{u}$.
+Tests $(\exists \u \in U) \st \v \simeq \u$.
 \lsthasequivalentmember
+
+%Tests $(\exists \mli{u} \in \mli{Matrix M}) \st \mli{v} \approx \mli{u}$.
+Tests $(\exists \u \in U) \st \v \approx \u$.
 \lsthasequalmember
+
+%Tests $(\forall \mli{ray} \in \mli{Matrix vcone}) (\exists \mli{g} \in \mli{Matrix generators}) \st \mli{v} \simeq \mli{u}$.
+Tests $(\forall v \in V)(\exists \u \in U) \st \v \simeq \u$.  This will be denoted $V \sqsubseteq U$.
 \lstsubsetmodeq
+
+%Tests $(\forall \mli{ray} \in \mli{Matrix vcone}) (\exists \mli{g} \in \mli{Matrix generators}) \st \mli{v} \approx \mli{u}$.
+Tests $(\forall v \in V)(\exists \u \in U) \st \v \approx \u$.  This will be denoted $V \subseteq U$.
 \lstsubset
+
+Given a \mli{Vector constraint} and \mli{Vector ray}, tests if \\
+\lsti{approximately_lt_zero(ray * constraint)}.  Note that if the constraint is of the form $\ip{A_i}{\v} \leq b$ for some value $b$, then this still works, because the dot product function only takes the first $d$ values of each vector.
 \lstraysatisfieda
+
+%Test $(\forall \mli{cv} \in \mli{Matrix constraints})\,\mli{ray_satisfied(ray, cv)}$
+Test $A\v \leq \0$
 \lstraysatisfiedb
+
+%Test 
+%\begin{align*}
+  %&(\forall \mli{ray} \in \mli{Matrix rays})(\forall \mli{cv} \in \mli{Matrix constraints})\\
+  %&\quad\mli{ray_satisfied(ray, cv)}
+%\end{align*}
+
+Test $(\forall \v) A\v \leq \0$
 \lstrayssatisfied
+
+Test $\ip{A_i}{\v} \leq b_i$
 \lstvecsatisfieda
+
+Test $A\v \leq \b$
 \lstvecsatisfiedb
+
+Test $(\forall \v) A\v \leq \b$
 \lstvecssatisfied
+
+Given an H-Cone $C_H = \set{\x\st A\x\leq\0} = \cone(U)$ where $U$ is minimal, and an alternative representation $U'$, determines if $C_H = \cone(U')$.
+
+Similarly, given a V-Cone $C_U = \cone(U) = \set{\x\st A\x\leq\0}$ where $A$ is minimal, and an alternative representation $A'$, determines if \\
+$C_U = \set{\x\st A'\x\leq\0}$.
 \lstequivalentconerep
+
+Given an H-Polytope $P_H = \set{\x\st A\x\leq\b} = \cone(U) + \conv(V)$ where $U$ and $V$ are minimal, and an alternative representation $(U',V')$, determines if $P_H = \cone(U') + \conv(V')$.
 \lstequivalenthpolyrep
+
+Given a V-Polytope $P_V = \cone(U) + \conv(V) = \set{\x\st A\x\leq\b}$ where $A$ is minimal, and an alternative representation $A'$, determines if $P_V = \set{\x\st A'\x\leq\0}$.
 \lstequivalentvpolyrep
-\lsthconetestcaseb
-\lstvconetestcaseb
-\lsthpolytestcasea
-\lstvpolytestcasea
+
+%\lsthconetestcaseb
+%\lstvconetestcaseb
+%\lsthpolytestcasea
+%\lstvpolytestcasea
 
 
-%\section{\texttt{include/hcone.h, src/hcone.cpp}}
-%\lstinputlisting{\cppSourceDir/include/hcone.h}
-%\texttt{hcone.h} and \texttt{hcone.cpp} implement the transformation from H-Cone to V-Cone.
-%
-%\lstLiftHcone
-%Takes a \texttt{Matrix} representing an H-Cone and creates the new matrix
-%  \[ \set{\eAj, \neAj, \zei, 1 \leq j \leq d,\, 1 \leq i \leq m} \]
-%where $A$ represents \texttt{hcone}.  This operation is justified by {\Hlift}.
-%
-%\lstIntersectVCone
-%Here the tools from \texttt{common.h} are used to implement the algorithm described in proposition \ref{prop:Hintset}, where a V-Cone is sequentially intersected with coordinate-hyperplanes.  The result of these intersections is the projected to the original space.  These operations are justified by {\Hint} and {\Hproj}.
-%
-%\lstHconeToVcone
-%This function does a sanity check and then return the transformed \texttt{hcone}.\\
-%
-%\section{\texttt{include/vcone.h, src/vcone.cpp}}
-%\lstinputlisting{\cppSourceDir/include/vcone.h}
-%\texttt{vcone.h} and \texttt{vcone.cpp} implement the transformation from V-Cone to H-Cone.
-%
-%\lstLiftVcone
-%Takes a \texttt{Matrix} representing an V-Cone and creates the new matrix
-%  \[\begin{pmatrix*}[r] \0 & -I \\ I & -U \\ -I & U \end{pmatrix*} \]
-%where $U$ represents \texttt{vcone}.  This operation is justified by {\Vlift}.
-%
-%\lstProjectHCone
-%Here the tools from \texttt{common.h} are used to implement the algorithm described in proposition \ref{prop:hconeproj}, where an H-Cone is sequentially projected down to coordinate-axis.  This result is then projected to the original space, i.e. the first $d$ coordinates are taken from each \texttt{Vector} in the \texttt{Matrix}.  These operations are justified by {\Vproj} and proposition \ref{prop:hconezero}.
-%
-%\lstVconeToHcone
-%This function does a sanity check and then return the transformed \texttt{hcone}.\\
-%
-%\section{\texttt{include/polyhedra.h, src/polyhedra.cpp}}
-%\lstinputlisting{\cppSourceDir/include/polyhedra.h}
-%\texttt{vcone.h} and \texttt{vcone.cpp} implement the reductions from Polyhedra to Cones.
-%
-%\lstProjectZero
-%Using the \lsti{std::slice} object, the first coordinate of each \lsti{Vector} is dropped from the \lsti{Matrix}.
-%
-%\lstNormalizeP
-%Creates the set $V$ in \eqref{eq:cvtopv}.  Note that the operation $U^i/\Uiz$ is only done if $\Uiz$ is not already $1$
-%
-%\lstHpolyToHCone
-%Each \lsti{Vector} is supposed to be of the form $(A_i,b)$, expressing the constraint $\ip{A_i}{\x} \leq b$.  $b$ is moved to the first coordinate, and negated to transform 
-%\[ [A|b] \to [-b|A] \]
-%
-%\lstHconeToHPoly
-%This is the inverse to \lsti{hcone_to_hpoly}:
-%\[ [-b|A] \to [A|b] \]
-%
-%\lstVpolyToVCone
-%\lsti{d} must be increased for operations which depend on it to function correctly.  Then conducts the transform:
-%\[ \cone(U) + \conv(V) \to \cone\lcone \]
-%
-%\lstVconeToVPoly
-%This implements the tranformation justified by \eqref{eq:cvtopv}, returning the result of 
-%\[ \text{\lsti{vcone}} \cap \set{\x \st \ip{\e_0}{\x} = 1} \]
-%
-%\lstHpolyToVPoly
-%\lstVpolyToHPoly
-%Using the other functions in the file, these implement the described transformations.
-%

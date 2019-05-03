@@ -7,7 +7,7 @@ extern int verbosity;
 struct hcone_test_case {
   std::string name;
   Matrix hcone; // vectors for H or V cone
-  Matrix key; // minimal genearating set of dual vectors
+  Matrix key;   // minimal generating set
 
   bool run_test() const;
 };
@@ -15,7 +15,7 @@ struct hcone_test_case {
 struct vcone_test_case {
   std::string name;
   Matrix vcone; // vectors for H or V cone
-  Matrix key; // minimal genearating set of dual vectors
+  Matrix key;   // minimal generating set
 
   bool run_test() const;
 };
@@ -23,7 +23,7 @@ struct vcone_test_case {
 struct hpoly_test_case {
   std::string name;
   Matrix hpoly; // vectors for H-Polyhedron
-  VPoly key;    // minimal genearating set of dual vectors
+  VPoly key;    // minimal generating set
 
   bool run_test() const;
 };
@@ -31,7 +31,7 @@ struct hpoly_test_case {
 struct vpoly_test_case {
   std::string name;
   VPoly  vpoly; // vectors for V-Polyhedron
-  Matrix key;   // minimal genearating set of dual vectors
+  Matrix key;   // minimal generating set
 
   bool run_test() const;
 };
