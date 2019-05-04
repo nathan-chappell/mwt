@@ -255,7 +255,7 @@ The procedure for the other direction is \textit{almost} identical, but there is
 
 To prove this proposition, we use the Farkas Lemma:
 
-\begin{Prop}[The Farkas Lemma]
+\begin{Prop}[The Farkas Lemma]\label{prop:Farkas}
   Let $U \in \R^{d\times n}$.  Precisely one of the following is true:
   \[ (\exists \t \geq \0) : \x = U\t \]
   \[ (\exists \y) : U^T\y \leq 0,\; \ip{\x}{\y} > 0 \]
@@ -323,6 +323,79 @@ Now, as before, we suppose that we have a set $V$ and $A$, where $A$ is extreme,
 So we can conclude that
 \[ C = \HC{A'} \quad\Leftrightarrow\quad 
    (\forall \v\in V)A'\v\leq\0,\; A \sqsubseteq A' \]
+
+\subsection{Testing H-Polyhedron $\to$ V-Polyhedron}
+
+Say we have an H-Polyhedron $P_H = \HP{A}$, and wish to check that our program correctly calculates a $V'$ and $U'$ such that $P_H = \cone(U') + \conv(V')$.  Again, we shall use the notion of extremity and show that under certain circumstances we can use extreme sets to demonstrate the validity of our algorithm.  In this case, the definition of extreme is a little more complicated, but it asserts that a set $U$ is extreme as before, and that no element of another set $V$ can be expressed as a non-trival sum of a convex combination of $V$ and a non-negative linear combination of members of $U$.
+
+\begin{Def}[Extreme Pair]{ A pair of sets $U\in\R^{d\times n}, V\in\R^{d\times p}$ is called an \textit{extreme pair} if for any $\u = U\e_k, \v = V\e_l$ the following is true:
+\begin{alignat*}{1}
+   &\t \geq \0,\; \u = U\t \Rightarrow \t = \e_k \\
+   &\t \geq \0, \blam \geq \0, \ip{\blam}{\1} = 1, \v = U\t + V\blam 
+                \Rightarrow \t = \0, \blam = \e_l
+\end{alignat*}
+}\end{Def}
+
+Let us now consider the set $U$ in the expression $\HP{A} = \cone(U) + \conv(V)$.
+\begin{Prop}{\label{prop:ultz}
+  Suppose that $P := \HP{A} = \cone(U) + \conv(V)$.  Then
+  \[ \cone(U) = \HC{A} \]
+} \end{Prop}
+\begin{proof}
+We show that the following three statements are equivalent:
+\begin{enumerate}
+  \item $A\r\leq\0$
+  \item $(\forall \x\in P)(\forall \alpha > 0)\;\x + \alpha\r \in P$
+  \item $\r \in \cone(U)$
+\end{enumerate}
+$(1 \Rightarrow 2)$. $\x\in P$ means that $A\x\leq\b$, and $A\r\leq\0$ means that $A(\x+\alpha\r) \leq A\x \leq \b$.\\
+$(\neg 1 \Rightarrow \neg 2)$.  Suppose $\ip{A_i}{\r} \geq 0$, then let $\alpha > (b_i - \ip{A_i}{\x})/\ip{A_i}{\u}$.  We have:
+  \[ \ip{A_i}{\x + \alpha\u} > \ip{A_i}{\x} + 
+          \frac{b_i\ip{A_i}{\u} - \ip{A_i}{\x}\ip{A_i}{\u}}{\ip{A_i}{\u}} = b_i \]
+$(3 \Rightarrow 2)$.  This is essentially the definition of $\cone(U) + \conv(V)$.
+$(2 \Rightarrow 3)$.  Now for the real work.  Suppose that (2) holds, but $\r\not\in\cone(U)$.  Then by the Farkas Lemma, we have a $\y$ that satisfies $(\forall \u\in U)\,\ip{\u}{\y}\leq 0,\; \ip{\y}{\r} > 0$.  From (2) we construct a sequence: $(\x_n) = \v+n\cdot\r$.  Then it is clear that the sequence $\ip{\y}{\x_n} \to \infty$.  It is also clear that $(\forall n)\,\x_n \in P$.  We now require a few basic results from topology and analysis, proved in appendix A.
+\begin{itemize}
+  \item $\conv(V)$ is compact.
+  \item a continuous function on a compact set achieves its maximal value.
+\end{itemize}
+Now consider the maximum value of the function $\ip{\y}{\bullet}$ on $P$.  Since any element of $P$ can be written $\u + \v \st \u\in\cone(U),\,\v\in\conv(V)$, and $(\forall\u\in U) \ip{\y}{\u} \leq 0$, we can find the maximum value on $\conv(V)$.  However, since $\conv(V)$ is compact, the function will actually achieve this value, which is a contradiction with the fact that $\ip{\y}{\x_n} \to \infty$, so we conclude that $\r\in\cone(U)$.
+\end{proof}
+
+One more quick observation to make tidier notation, and we will be ready to state the testing criteria.  Let $\Lambda$ represent a collection of convex combinations, that is, $\vec{1}^T\Lambda = \vec{1}^T$, and let $\lambda\geq\0,\,\1^T\lambda = 1$ be a typical convex combinator.  Then $\Lambda\lambda = \lambda'$ where $\lambda'\geq\0,\,\1^T\lambda'=1$.  That $\lambda'\geq\0$ is clear, then just note that $\1^T\lambda' = \1^T\Lambda\lambda = \1^T\lambda = 1$.  In words, \textit{a convex combination of convex combinations is yet again a convex combination}.
+
+\begin{Prop}{\label{prop:hpolytest}
+  Suppose that there is an extreme pair $U,V$ such that $\cone(U) + \conv(V) = \HP{A}$.  Denote this Polyhedron $P$.  Then the following are equivalent:
+\begin{enumerate}
+  \item $P = \cone(U') + \conv(V')$
+  \item $U \sqsubseteq U',\; V \subseteq V',\; 
+        (\forall \u'\in U',\v'\in V') A\u'\leq\0, A\v'\leq\b$
+\end{enumerate}
+}\end{Prop}
+
+\begin{proof}
+$(2 \Rightarrow 1)$.  There's not too much to say about this direction, it's mostly just collecting some straightforward observations and results.
+\begin{itemize}
+  \item[(a)] $U \sqsubseteq U' \Rightarrow \cone(U) \subseteq \cone(U')$  
+  \item[(b)] $V \subseteq V' \Rightarrow \conv(V) \subseteq \conv(V')$
+  \item[(c)] (a) + (b) $\Rightarrow \cone(U)+\conv(V) \subseteq \cone(U') + \conv(V')$
+  \item[(d)] $(\forall \u'\in U') A\u' \leq \0 \Rightarrow \cone(U') \subseteq \cone(U)$
+  \item[(e)] $(\forall \v'\in U') A\v' \leq \0 \Rightarrow \conv(V') \subseteq P$
+  \item[(f)] (d) + (e) $\Rightarrow \cone(U') + \conv(V') \subseteq P + \cone(U) = P$
+  \item (c) + (f) $\Rightarrow (2 \Rightarrow 1)$
+\end{itemize}
+
+$(1 \Rightarrow 2)$.  This direction is a little more interesting.  First we observe:
+\[ \cone(U) = \HC{A} = \cone(U') \Rightarrow U \sqsubseteq U' \]
+The equalities follow proposition \ref{prop:ultz}, and the implication from proposition \ref{prop:minrays}.  Note that the extremeness of $U$ and the Farkas lemma are both used here.  Since we know that $\cone(U) = \cone(U')$, we also know that $\cone(U') + \conv(V') = \cone(U) + \conv(V')$.  Next, we consider $V$ and exploit its extremeness.  Since $P = \cone(U) + \conv(V')$, each $\v'\in V'$ can be written $U\t + V\blam$, where $\t \geq \0$ and $\blam$ is a convex combinator.  We combine these into matrices $T$ and $\Lambda$, so $V' = UT + V\Lambda$.  But it is also true that every $\v\in V$ can be written as 
+  \[ \v = U\t + V'\blam = U\t + (UT + V\Lambda)\blam = U\t' + V\blam' \]
+Where $\t'\geq\0$, and $\blam'$ is a convex combinator.  Because $U,V$ is an extreme pair, we have that $\t'=\0$, and $\blam = \e_k$ for some $k$.  Because $U$ is extreme, it does not contain $\0$, and so $\t = \0$.  This puts us at $\v = V'\blam = V\Lambda\blam = V\blam'$, and $\blam' = \e_k$.  In order that $\blam' = \e_k$, for every column of $\Lambda$ corresponding to a positive entry in $\blam$, only one row may contain a positive entry, and that entry must be $1$.  Then instead of $\blam$, use instead $\e_l$ where $\Lambda_k^l = 1$.  Then $\Lambda\blam = \Lambda\e_l$, so $V\Lambda\blam = V\Lambda\e_l = V'\e_l=\v'$ where $\v'\in V'$.  Then $\v \in V'$.
+
+That $(\forall \v'\in V')A\v'\leq\b$ is obvious, and that $(\forall\u'\in U') A\u'\leq\0$ is the subject of proposition \ref{prop:ultz}.
+\end{proof}
+
+\paragraph{The Test.}  To test our program, we \textit{simply} create Polyhedron $P =$ $\HP{A}$ $= \cone(U) + \conv(V)$ where $(U,V)$ is an extreme pair, run our program on $(A,b)$ to get some new $(V',U')$.  Then, we check that $A\v' \leq \b$, $A\u'\leq\0$, $U\sqsubseteq U'$, and $V\subseteq V'$.
+
+\subsection{Testing V-Polyhedron $\to$ H-Polyhedron}
 
 \subsection{\filename{test\_functions.h}}
 
