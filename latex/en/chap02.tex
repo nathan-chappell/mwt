@@ -128,6 +128,15 @@ Now consider a row $ B_i$ from $ B$:
 \[ \ip{B_i}{\x-t\e_k} =  B_i {\x} - \Bik t \leq 0 \]
 So, we've demonstrated that $\x-t\e_k$ satisfies all the constraints from $B$, and the left implication is shown.  So \textit{4} holds.
 \end{proof}
+
+\paragraph{Remark:}  \label{rem:fm} Proposition \ref{prop:hconeproj} highlights the properties of the matrix $B'$.  Upon close inspection, we can create a Matrix $Y$ such that $B' = YB$, and every element of $Y$ is non-negative.  Create the following set of row vectors $Y$
+\begin{alignat*}{2}
+  &\e_l                  &\st& l \in Z \\
+  &\Bik \e_j - \Bjk \e_i &\st& i\in P,\; j\in N
+\end{alignat*}
+Since the basis vectors simply select rows during matrix multiplication, it is clear that
+ \[ B' = YB \]
+
 Now to prove:
 \begin{enumerate}
   \item[\Vproj] Every coordinate-projection of an H-Cone is an H-Cone.

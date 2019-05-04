@@ -239,37 +239,90 @@ We conclude that $A\b' = \e_k = A\b$, and that $\v = V(A\b) = V(A\b') = (VA)\b' 
 So $\v \simeq \v'$.
 \end{proof}
 
-Let's denote $(\forall \v \in V)(\exists \v'\in V') : \v \simeq \v'$ as $V \sqsubseteq V'$.  Then, considering the discussion before the proposition, we have the following result.  Say $V \in \R^{d\times n}$ is extreme.  Also suppose that $\cone(V) = \set{\x\st A\x\leq\0}$.  Then
-\[ \cone(V) = \cone(V') \quad\Leftrightarrow\quad 
+Let's denote $(\forall \v \in V)(\exists \v'\in V') : \v \simeq \v'$ as $V \sqsubseteq V'$.  Then, considering the discussion before the proposition, we have the following result.  Say $V \in \R^{d\times n}$ is extreme.  Also suppose that $C_V = \cone(V) = \set{\x\st A\x\leq\0}$.  Then
+\[ C_V = \cone(V') \quad\Leftrightarrow\quad 
    (\forall \v'\in V')A\v'\leq\0,\; V \sqsubseteq V' \]
 
 We now have a method for testing the program.  First, we hand-craft an H-Cone $\set{\x\st A\x\leq\0}$ based on some extreme set $V$, then run our program to get a set $V'$, with the alleged property that $\cone(V') = \set{\x\st A\x\leq\0}$.  If we confirm that $\forall \v'\in V', A\v'\leq 0$ and $V \sqsubseteq V'$, then our program has succeeded.
 
-\subsection{Testing V-Cone $\to$ H-Cone}
+\subsection{Farkas Lemma}
 The procedure for the other direction is \textit{almost} identical, but there is a slight catch.  Call a set of row vectors \textbf{extreme} if no row is a non-negative combination of the other.  We would be able to use proposition \ref{prop:minrays} to say something similar about an extreme set of row vectors $A$, if we could say that:
 
-\begin{Prop} 
+\begin{Prop}\label{prop:ddcones}
   \[ \set{\x\st A\x\leq\0} = \set{\x\st A'\x\leq\0} \Leftrightarrow \cone(A^T) = \cone(A'^T) \]
 \end{Prop}
 
+
 To prove this proposition, we use the Farkas Lemma:
 
-\begin{Prop}
-  Precisely one of the following is true:
+\begin{Prop}[The Farkas Lemma]
+  Let $U \in \R^{d\times n}$.  Precisely one of the following is true:
   \[ (\exists \t \geq \0) : \x = U\t \]
   \[ (\exists \y) : U^T\y \leq 0,\; \ip{\x}{\y} > 0 \]
 \end{Prop}
 
-
-
 \begin{proof}  That both can't be true can be seen by:
-  \[ \x = U\t \Rightarrow \y^T\x = \y^T U\t \Rightarrow 0 \neq 0 \]
-To see that at least one is true we must reconsider Fourier Motzkin Elimination.  Suppose that
-  \[ (\neg \exists \t \geq \0) : \x = U\t \]
-This is precisely the same as saying that $\x \not\in \cone(U)$.  Suppose we now start doing our conversion from $\cone(U)$ to some H-Cone.  First we lift it to the form
-
-  Proposition \ref{prop:hconeproj} three 
+  \[ \x = U\t \quad\Rightarrow\quad \y^T\x = \y^T U\t \quad\Rightarrow\quad 0 \neq 0 \]
+To see that at least one is true we must reconsider the process of converting a V-Cone to an H-Cone.  First, we lift the V-Cone $\cone(U)$ into the following form:
+  \[ A = \begin{pmatrix*}[r] \0 & -I \\ I & -U \\ -I & U \end{pmatrix*}  \]
+In the proof of the transformation, we use proposition \ref{prop:hconeproj} to transform that matrix $A$.  The remark \ref{rem:fm} after the proof of the proposition promises a sequence of matrices $Y_{d+1}, \dots, Y_{d+n}$ satisfying certain properties.  Let $Y = Y_{d+n}Y_{d+(n-1)}\dots Y_{d+1}$, then it can be said of $Y$:
+\begin{enumerate}
+  \item Every element of $Y$ is non-negative.
+  \item $Y$ is finite.
+  \item The last $n$ columns of $YA$ is $\0$.
+  \item \((\exists t_{d+1},\dots,t_{d+n})A(\x + \sum_{i=d+1}^{d+n} t_i\e_i) \leq \0 
+        \Leftrightarrow (YA)\x \leq \0 \)
+\end{enumerate}
+Note that here $\x \in \R^{d+n}$.  $A$ has three blocks of rows, which can be labeled with $Z,P,N$ in a fairly obvious way.  Then, $Y$ can be broken up into three blocks of columns, so that
+\[ Y = (Y_Z \; Y_P \; Y_N) \]
+Where each of $Y_Z,Y_P,Y_N \geq \0$.  Consolidating what is known about $A$ and $Y$,
+\[ YA = (Y_Z \; Y_P \; Y_N) \begin{pmatrix*}[r] \0 & -I \\ I & -U \\ -I & U \end{pmatrix*}  
+      = (Y' \; \0) \]
+Here, we have let $Y' = Y_P - Y_N$.  Then it follows that
+\[ \0 = -Y_Z - Y_P(U) + Y_N(U) = -Y_Z - Y'(U) \;\Rightarrow\; Y_Z = - Y'U 
+          \;\Rightarrow\; Y'U \leq \0 \]
+Then it holds that, for any row $\y' \in Y'$:
+\begin{equation}\label{eq:flneg}
+  \y'U \leq \0
+\end{equation}
+We also have
+\begin{equation}\label{eq:flconst}
+  (\exists \t) : A \xt \leq \0 \Leftrightarrow (YA)\xt = (Y'\;\0)\xt = Y'\x \leq \0  
+\end{equation}
+Note that here $\x \in \R^d$.  So, if given some $\x$, the left side of \eqref{eq:flconst} is not satisfied, then neither is the right, and there must be some row $\y' \in Y'$ such that the following holds:
+\begin{equation}\label{eq:flconstbrk} \ip{\y'}{\x} > 0 \end{equation}
+Furthermore, by the way $A$ is constructed, 
+\begin{equation}\label{eq:flcone}
+  (\exists \t) : A \xt \leq \0 \Leftrightarrow (\exists \t\geq\0)\; \x = U\t
+\end{equation}
+Then we conclude that, if the right side of \eqref{eq:flcone} fails, then there is a vector $\y' \in Y'$ satisfying \eqref{eq:flneg} and \eqref{eq:flconstbrk}.
 \end{proof}
+
+\subsection{Testing V-Cone $\to$ H-Cone}
+
+Now we can prove proposition \ref{prop:ddcones}:
+  \[ \set{\x\st A\x\leq\0} = \set{\x\st A'\x\leq\0} \Leftrightarrow \cone(A^T) = \cone(A'^T) \]
+\begin{proof}
+First suppose that $\cone(A^T) = \cone(A'^T)$.  Then there exists a non-negative matrix $B$ such that $A'^T = A^TB$.  Then $A\x \leq \0 \Rightarrow B^TA\x\leq \0 \Rightarrow A'\x\leq\0$.  Precisely the same reasoning shows that $A'\x\leq\0 \Rightarrow A\x\leq\0$, and we conclude that $\cone(A^T) = \cone(A'^T) \Rightarrow \set{\x\st A\x\leq\0} = \set{\x\st A'\x\leq\0}$.
+
+Next suppose that $\cone(A^T) \neq \cone(A'^T)$, that is, let $\z \in \cone(A), \z \not\in\cone(A')$.  We must show that $\set{\x\st A\x\leq\0} \neq \set{\x\st A'\x\leq\0}$.  By the Farkas Lemma, we have a $\y$ such that $\ip{\y}{\z} > 0,\; A'\y \leq \0$.  Clearly this means that $\y \in \set{\x\st A'\x\leq\0}$.  Since $\z \in \cone(A)$, there is some $(\t \geq \0): \z^T = \t^T A$.  Then if $A\y\leq\0$, we would have $\ip{\y}{\z} = \t^T A\y \leq 0 < \ip{\y}{\z}$, a contradiction.  So we conclude that $\y\not\in\set{\x\st A\x\leq\0}$.
+\end{proof}
+
+\paragraph{The Test}
+\textit{Finally}, we can make a test for the transformation from V-Cone to H-Cone.  Let $A$ be an \textit{extreme} set of row vectors.  Then clearly $A^T$ is an extreme set of column vectors, and we can use propositions \ref{prop:minrays} and \ref{prop:ddcones} to say that 
+\[ \HC{A} = \HC{A'} \Leftrightarrow \cone(A^T) = \cone(A'^T) \Rightarrow A^T \sqsubseteq A'^T \]
+Given the last implication, we can also write $A \sqsubseteq A'$, where we are now considering $A$ and $A'$ as sets of row vectors as opposed to column vectors.
+
+Now, as before, we suppose that we have a set $V$ and $A$, where $A$ is extreme, and we know that $C := \cone(V) = \HC{A}$.  We run our program on $V$ and get a new set $A'$, and would like to know if $C = \HC{A'}$.  We have the following situation:
+\begin{alignat*}{2}
+  &C = \HC{A'}    \;&\Rightarrow&\; A \sqsubseteq A' \\
+  &C = \HC{A'}    \;&\Rightarrow&\; (\forall \v\in V) A'\v \leq \0 \\
+  &A \sqsubseteq A' \;&\Rightarrow&\; \HC{A'} \subseteq C \\
+  &(\forall \v\in V) A'\v \leq \0  \;&\Rightarrow&\; C \subseteq \HC{A'} 
+\end{alignat*}
+So we can conclude that
+\[ C = \HC{A'} \quad\Leftrightarrow\quad 
+   (\forall \v\in V)A'\v\leq\0,\; A \sqsubseteq A' \]
 
 \subsection{\filename{test\_functions.h}}
 
