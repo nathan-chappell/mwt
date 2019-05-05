@@ -180,7 +180,7 @@
 \newcommand{\isconv}{\lambda_j \geq 0 \lsum = 1}
 \newcommand{\sumi}{\sum\nolimits_i}
 \newcommand{\HC}[1]{\set{\x\st #1\x\leq\0}}
-\newcommand{\HP}[1]{\set{\x\st #1\x\leq\b}}
+\newcommand{\HP}[2]{\set{\x\st #1\x\leq #2}}
 
 \theoremstyle{plain}
 \newtheorem{Thm}{Theorem}
@@ -206,6 +206,8 @@
 \newcommand{\invariant}[1]{\textbf{invariant:}\quad#1}
 \newcommand{\mli}[1]{\text{\lsti{#1}}}
 \newcommand{\norm}[1]{\left|\left|#1\right|\right|}
+\renewcommand{\pmb}{\begin{pmatrix*}[r]}
+\newcommand{\pme}{\end{pmatrix*}}
 
 \lstset{
   language=C++,

@@ -1,7 +1,8 @@
 usage: ./main input_type
 
-The input object is read on stdin, and the result of the transform to sent to
-stdout.  input_type determines the type of input and output:
+The input object is read on stdin, and the result of the
+transform to sent to stdout.  input_type determines the type
+of input and output:
 
     -vc  # transforms a vcone into an hcone
     -vp  # transforms a vpolyhedron into an hpolyhedron
@@ -15,8 +16,9 @@ input format is as follows:
   vpoly := dimension   ('U' | 'V') ws vpoly_vecs*
 
   ws         := whitespace, as would be read by "cin >> ws;"
-  dimension  := a positive integer.  For hpoly, add one to the dimension of
-                the space (this extra dimension is for the constraint)
+  dimension  := a positive integer.  For hpoly, add one to
+                the dimension of the space (this extra
+                dimension is for the constraint)
   vector     := (dimension) doubles separated by whitespace  
   constraint := a double (the value b_i in <A_i,x> <= b_i)  
   'V' | 'U'  := the literal character 'U' or 'V'
@@ -28,9 +30,10 @@ VPOLY ONLY:
     U - contains the rays of the vpolyhedron
     V - contains the points of the vpolyhedron
 
-  On input, enter 'U' or 'V' to indicate which matrix should receive the vectors
-  that follow.  You can switch back and forth as you like, but either 'U' or 'V'
-  must be entered before starting to input vectors.
+  On input, enter 'U' or 'V' to indicate which matrix should
+  receive the vectors that follow.  You can switch back and
+  forth as you like, but either 'U' or 'V' must be entered
+  before starting to input vectors.
 
 EXAMPLES:
 
