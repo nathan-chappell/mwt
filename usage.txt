@@ -10,10 +10,10 @@ of input and output:
     -hp  # transforms an hpolyhedron into a vpolyhedron
 
 input format is as follows:
-  hcone := dimension   (vector ws)*  
-  vcone := dimension   (vector ws)*  
-  hpoly := dimension+1 (vector ws constraint ws)*  
-  vpoly := dimension   ('U' | 'V') ws vpoly_vecs*
+  hcone := dimension   ws (vector ws)*  
+  vcone := dimension   ws (vector ws)*  
+  hpoly := dimension+1 ws (vector ws constraint ws)*  
+  vpoly := dimension   ws ('U' | 'V') ws vpoly_vecs*
 
   ws         := whitespace, as would be read by "cin >> ws;"
   dimension  := a positive integer.  For hpoly, add one to
