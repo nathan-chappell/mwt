@@ -1,0 +1,152 @@
+strict digraph {
+	graph [rankdir=LR]
+	node [shape="rectangle", fontname="Courier"]
+	_Z12slice_matrixRK6MatrixRKSt5slice [
+		label="slice_matrix",
+		filename="../../../cpp/src/linear_algebra.cpp",
+		firstline=275,
+		lastline=280
+	]
+	_Z9transposeRK6Matrix [
+		label="transpose",
+		filename="../../../cpp/src/linear_algebra.cpp",
+		firstline=262,
+		lastline=272
+	]
+	_Z10get_columnRK6Matrixm [
+		label="get_column",
+		filename="../../../cpp/src/linear_algebra.cpp",
+		firstline=249,
+		lastline=259
+	]
+	_Z3e_kmm [
+		label="e_k",
+		filename="../../../cpp/src/linear_algebra.cpp",
+		firstline=232,
+		lastline=236
+	]
+	_Z14hpoly_to_hcone6Matrix [
+		label="hpoly_to_hcone",
+		filename="../../../cpp/src/polyhedra.cpp",
+		firstline=13,
+		lastline=20
+	]
+	_Z14hpoly_to_vpoly6Matrix [
+		label="hpoly_to_vpoly",
+		filename="../../../cpp/src/polyhedra.cpp",
+		firstline=77,
+		lastline=81
+	]
+	_Z14hcone_to_hpoly6Matrix [
+		label="hcone_to_hpoly",
+		filename="../../../cpp/src/polyhedra.cpp",
+		firstline=24,
+		lastline=31
+	]
+	_Z16generalized_liftRK6MatrixRKSt5arrayIdLm5EE [
+		label="generalized_lift",
+		filename="../../../cpp/src/fourier_motzkin.cpp",
+		firstline=64,
+		lastline=90
+	]
+	_Z11concatenateRKSt8valarrayIdES2_ [
+		label="concatenate",
+		filename="../../../cpp/src/linear_algebra.cpp",
+		firstline=239,
+		lastline=244
+	]
+	_Z14vpoly_to_vcone5VPoly [
+		label="vpoly_to_vcone",
+		filename="../../../cpp/src/polyhedra.cpp",
+		firstline=36,
+		lastline=46
+	]
+	_Z10lift_vconeRK6Matrix [
+		label="lift_vcone",
+		filename="../../../cpp/src/fourier_motzkin.cpp",
+		firstline=98,
+		lastline=100
+	]
+	_Z14index_in_slicemRKSt5slice [
+		label="index_in_slice",
+		filename="../../../cpp/src/fourier_motzkin.cpp",
+		firstline=11,
+		lastline=15
+	]
+	_Z15fourier_motzkin6Matrixm [
+		label="fourier_motzkin",
+		filename="../../../cpp/src/fourier_motzkin.cpp",
+		firstline=20,
+		lastline=37
+	]
+	_Z22sliced_fourier_motzkin6MatrixRKSt5slice [
+		label="sliced_fourier_motzkin",
+		filename="../../../cpp/src/fourier_motzkin.cpp",
+		firstline=40,
+		lastline=47
+	]
+	_Z14hcone_to_vcone6Matrix [
+		label="hcone_to_vcone",
+		filename="../../../cpp/src/fourier_motzkin.cpp",
+		firstline=124,
+		lastline=126
+	]
+	_Z12normalized_PRK6Matrix [
+		label="normalized_P",
+		filename="../../../cpp/src/polyhedra.cpp",
+		firstline=50,
+		lastline=63
+	]
+	_Z14vpoly_to_hpoly5VPoly [
+		label="vpoly_to_hpoly",
+		filename="../../../cpp/src/polyhedra.cpp",
+		firstline=83,
+		lastline=87
+	]
+	_Z10lift_hconeRK6Matrix [
+		label="lift_hcone",
+		filename="../../../cpp/src/fourier_motzkin.cpp",
+		firstline=107,
+		lastline=109
+	]
+	_Z14vcone_to_vpoly6Matrix [
+		label="vcone_to_vpoly",
+		filename="../../../cpp/src/polyhedra.cpp",
+		firstline=67,
+		lastline=73
+	]
+	_Z14cone_transformRK6MatrixPFS_S1_E [
+		label="cone_transform",
+		filename="../../../cpp/src/fourier_motzkin.cpp",
+		firstline=112,
+		lastline=118
+	]
+	_Z14vcone_to_hcone6Matrix [
+		label="vcone_to_hcone",
+		filename="../../../cpp/src/fourier_motzkin.cpp",
+		firstline=120,
+		lastline=122
+	]
+
+	_Z14vcone_to_hcone6Matrix -> _Z14cone_transformRK6MatrixPFS_S1_E
+	_Z14cone_transformRK6MatrixPFS_S1_E -> _Z22sliced_fourier_motzkin6MatrixRKSt5slice
+	_Z10lift_hconeRK6Matrix -> _Z16generalized_liftRK6MatrixRKSt5arrayIdLm5EE
+	_Z9transposeRK6Matrix -> _Z10get_columnRK6Matrixm
+	_Z14vcone_to_vpoly6Matrix -> _Z12normalized_PRK6Matrix
+	_Z14vcone_to_vpoly6Matrix -> _Z22sliced_fourier_motzkin6MatrixRKSt5slice
+	_Z14hpoly_to_vpoly6Matrix -> _Z14hcone_to_vcone6Matrix
+	_Z14hpoly_to_vpoly6Matrix -> _Z14hpoly_to_hcone6Matrix
+	_Z14hpoly_to_vpoly6Matrix -> _Z14vcone_to_vpoly6Matrix
+	_Z10lift_vconeRK6Matrix -> _Z16generalized_liftRK6MatrixRKSt5arrayIdLm5EE
+	_Z14vpoly_to_hpoly5VPoly -> _Z14hcone_to_hpoly6Matrix
+	_Z14vpoly_to_hpoly5VPoly -> _Z14vcone_to_hcone6Matrix
+	_Z14vpoly_to_hpoly5VPoly -> _Z14vpoly_to_vcone5VPoly
+	_Z14hcone_to_vcone6Matrix -> _Z14cone_transformRK6MatrixPFS_S1_E
+	_Z22sliced_fourier_motzkin6MatrixRKSt5slice -> _Z12slice_matrixRK6MatrixRKSt5slice
+	_Z22sliced_fourier_motzkin6MatrixRKSt5slice -> _Z14index_in_slicemRKSt5slice
+	_Z22sliced_fourier_motzkin6MatrixRKSt5slice -> _Z15fourier_motzkin6Matrixm
+	_Z14vpoly_to_vcone5VPoly -> _Z11concatenateRKSt8valarrayIdES2_
+	_Z16generalized_liftRK6MatrixRKSt5arrayIdLm5EE -> _Z11concatenateRKSt8valarrayIdES2_
+	_Z16generalized_liftRK6MatrixRKSt5arrayIdLm5EE -> _Z3e_kmm
+	_Z16generalized_liftRK6MatrixRKSt5arrayIdLm5EE -> _Z9transposeRK6Matrix
+}

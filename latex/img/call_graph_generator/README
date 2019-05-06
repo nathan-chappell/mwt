@@ -1,0 +1,7 @@
+####### generating the callgraphs
+
+Requires libclang and graphviz.
+Run the program, then run
+$ dot -Tpdf mwt.gv > ../callgraph.pdf
+
+The callgraph made from "test.gv" was found to be less intersting, so is not now included in the thesis.
