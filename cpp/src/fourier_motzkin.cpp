@@ -28,9 +28,9 @@ Matrix fourier_motzkin(Matrix M, size_t k) {
   move(M.begin(), z_end, back_inserter(result));
   // convolute vectors from P,N
   for (auto p_it = z_end; p_it != p_end; ++p_it) {
-    for (auto z_it = p_end; z_it != M.end(); ++z_it) {
+    for (auto n_it = p_end; n_it != M.end(); ++n_it) {
       result.push_back( 
-        (*p_it)[k]*(*z_it) - (*z_it)[k]*(*p_it));
+        (*p_it)[k]*(*n_it) - (*n_it)[k]*(*p_it));
     } 
   } 
   return result;
@@ -113,7 +113,6 @@ Matrix cone_transform(const Matrix &cone, Lift lift) {
   if (cone.empty()) {
     throw logic_error{"empty cone for transform"};
   }
-  // the idea of the entire mwt is this one line
   return sliced_fourier_motzkin(
     lift(cone), slice(0, cone.d, 1));
 }
