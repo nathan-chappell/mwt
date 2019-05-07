@@ -2,15 +2,16 @@
 
 \section{Every V-Cone is an H-Cone}
 
-\begin{Def}[Coordinate Projection]{
-		Let $I$ be the identity matrix.  Then the matrix $I'$ formed by deleting some rows from $I$ is called a \textbf{coordinate-projection}.
-	}\end{Def}
+\begin{Def}[Coordinate Projection]
+	Let $I$ be the identity matrix.  Then the matrix $I'$ formed by deleting some rows from $I$ is called a \textbf{coordinate-projection}.
+\end{Def}
 
 The proof rests on the following two propostions:
 \begin{itemize}
 	\item[\Vlift] Every V-Cone is a coordinate-projection of an H-Cone.
 	\item[\Vproj] Every coordinate-projection of an H-Cone is an H-Cone.
 \end{itemize}
+
 \begin{proof}
 	Given {\Vlift} and {\Vproj}, the proof follows simply.  Given a V-Cone, we use {\Vlift}, to get a description involving coordinate-projection of an H-Cone.  Then we can apply {\Vproj} in order to get an H-Cone.
 \end{proof}
@@ -42,12 +43,14 @@ The proof rests on the following two propostions:
 	\end{equation}
 	This is a coordinate projection of an H-Cone, and {\Vlift} is shown.
 \end{proof}
+
 To prove {\Vproj}, we use two separate propositions.
-\begin{Prop}{\label{prop:hconezero}
-		Let $B\in\R^{m'\times(d+\Udim)}$, $B'$ be $B$ with the last $\Udim$ columns deleted, and $\Pi$ the identity matrix with the last $\Udim$ rows deleted (i.e. $B' = \Pi B$).  Furthermore, suppose that the last $\Udim$ columns of $B$ are $\0$.  Then
-		\[ \Pi\left(\set{\y \in \R^{d+\Udim} \st B\y \leq \0}\right) =
-			\set{\x\in\R^d\st B'\x\leq\0} \]
-	}\end{Prop}
+\begin{Prop}\label{proj_0_columns}
+	Let $B\in\R^{m'\times(d+\Udim)}$, $B'$ be $B$ with the last $\Udim$ columns deleted, and $\Pi$ the identity matrix with the last $\Udim$ rows deleted (i.e. $B' = \Pi B$).  Furthermore, suppose that the last $\Udim$ columns of $B$ are $\0$.  Then
+	\[ \Pi\left(\set{\y \in \R^{d+\Udim} \st B\y \leq \0}\right) =
+		\set{\x\in\R^d\st B'\x\leq\0} \]
+\end{Prop}
+
 \begin{proof}
 	Recall that $B\y \leq \0$ means that $(\forall i)\ip{B_i}{\y} \leq 0$.  Because the last $\Udim$ columns of $B$ are $\0$, any row $B_i$ of $B$ can be written $(B'_i,\0)$, with $\0 \in \R^\Udim$.  We can also rewrite $\y\in\R^{d+\Udim}$ as $(\x,\w)$ with $\x\in\R^d,\w\in\R^\Udim$, so that $\x = \Pi(\y)$.  Then
 	\[ \ip{B}{\y} = \ip{(B'_i,\0)}{(\x,\w)} = \ip{B'_i}{\x} = \ip{B'_i}{\Pi(\y)} \]
@@ -58,15 +61,16 @@ To prove {\Vproj}, we use two separate propositions.
 
 In order to use the above proposition, we need a matrix with columns which are $\0$.  The next proposition shows us how to obtain such a matrix from another, while maintaining certain properties.
 
-\begin{Prop}{\label{prop:hconeproj}
-		Let $\mB$, $1 \leq k \leq (d+p)$, and $\x = \sum_{i\neq k}x_i \e_i$.  Then there exists a matrix $\mC$ with the following properties:
-		\begin{enumerate}
-			\item Every row of $B'$ is a postive linear combination of rows of $B$.
-			\item $m_2$ is finite.
-			\item The $k$-th column of $B'$ is $\0$.
-			\item \((\exists t)B(\x + t\e_k) \leq \0 \Leftrightarrow B'\x \leq \0\)
-		\end{enumerate}
-	}\end{Prop}
+\begin{Prop}[Fourier Motzkin Elimination for H-Cones]\label{fm_hcone}
+	Let $\mB$, $1 \leq k \leq (d+p)$, and $\x = \sum_{i\neq k}x_i \e_i$.  Then there exists a matrix $\mC$ with the following properties:
+	\begin{enumerate}
+		\item Every row of $B'$ is a postive linear combination of rows of $B$.
+		\item $m_2$ is finite.
+		\item The $k$-th column of $B'$ is $\0$.
+		\item \((\exists t)B(\x + t\e_k) \leq \0 \Leftrightarrow B'\x \leq \0\)
+	\end{enumerate}
+\end{Prop}
+
 \begin{proof}
 	Partition the rows of $B$ as follows:
 	\begin{alignat*}{3}
@@ -122,7 +126,7 @@ In order to use the above proposition, we need a matrix with columns which are $
 	So, we've demonstrated that $\x-t\e_k$ satisfies all the constraints from $B$, and the left implication is shown.  So \textit{4} holds.
 \end{proof}
 
-\paragraph{Remark:}  \label{rem:fm} Proposition \ref{prop:hconeproj} highlights the properties of the matrix $B'$.  Upon close inspection, we can create a Matrix $Y$ such that $B' = YB$, and every element of $Y$ is non-negative.  Create the following set of row vectors $Y$
+\paragraph{Remark:}  \label{rem:fm} Proposition \ref{fm_hcone} highlights the properties of the matrix $B'$.  Upon close inspection, we can create a Matrix $Y$ such that $B' = YB$, and every element of $Y$ is non-negative.  Create the following set of row vectors $Y$
 \begin{alignat*}{2}
 	 & \e_l                  & \st & l \in Z          \\
 	 & \Bik \e_j - \Bjk \e_i & \st & i\in P,\; j\in N
@@ -136,7 +140,7 @@ Now to prove:
 \end{enumerate}
 
 \begin{proof}[proof of \Vproj]
-	Here we prove the case that the coordinate projection is onto the first $d$ of $d+p$ coordinates.  Let $\set{\y\in\R^{d+\Udim}:A'\y \leq \0}$ be the H-Cone we need to project, and $\Pi$ the coordinate-projection we need to apply (the identity matrix with the last p columns deleted).  For each $1 \leq k \leq p$ we can use proposition \ref{prop:hconeproj} in an incremental manner, starting with $A'$.
+	Here we prove the case that the coordinate projection is onto the first $d$ of $d+p$ coordinates.  Let $\set{\y\in\R^{d+\Udim}:A'\y \leq \0}$ be the H-Cone we need to project, and $\Pi$ the coordinate-projection we need to apply (the identity matrix with the last p columns deleted).  For each $1 \leq k \leq p$ we can use proposition \ref{fm_hcone} in an incremental manner, starting with $A'$.
 	\begin{align*}
 		 & \text{let } B_0 := A'                                        \\
 		 & \text{for } 1 \leq k \leq p                                  \\
@@ -146,8 +150,7 @@ Now to prove:
 		 & \text{return } B_p
 	\end{align*}
 
-
-	Consider the resulting $B$.  Property \textit{2} holds throughout, so $B$ is finite.  After each iteration, property \textit{3} holds for $k$, so the $k$-th column is $\0$.  Since each iteration only results from non-negative combinations of the result of the previous iteration (property \textit{1}), once a column is $\0$ it remains so.  Therefore, at the end of the process, the last $p$ columns of $B$ are all $\0$.  Then, by proposition \ref{prop:hconezero}, we can apply $\Pi$ to $B$ by simply deleting the last $p$ columns of $B$.  Denote this resulting matrix $A$.  We still need to check that
+	Consider the resulting $B$.  Property \textit{2} holds throughout, so $B$ is finite.  After each iteration, property \textit{3} holds for $k$, so the $k$-th column is $\0$.  Since each iteration only results from non-negative combinations of the result of the previous iteration (property \textit{1}), once a column is $\0$ it remains so.  Therefore, at the end of the process, the last $p$ columns of $B$ are all $\0$.  Then, by proposition \ref{proj_0_columns}, we can apply $\Pi$ to $B$ by simply deleting the last $p$ columns of $B$.  Denote this resulting matrix $A$.  We still need to check that
 	\begin{equation}\label{eq:V2equal}
 		\Pi\set{\y\in\R^{d+\Udim}\st A'\y\leq\0} = \set{\x\in\R^{d}\st A\x\leq\0}
 	\end{equation}
@@ -156,7 +159,7 @@ Now to prove:
 		A'\y & \leq \0 \Rightarrow A(\Pi(\y)) \leq \0 \label{V2seteqright}                                                           \\
 		A\x  & \leq \0 \Rightarrow (\exists t_1)\dots(\exists t_p) A'(\x+t_1\e_{d+1}+\cdots+t_p\e_{d+p}) \leq \0 \label{V2seteqleft}
 	\end{align}
-	The key observation of this verification utilizes property \textit{4} of proposition \ref{prop:hconeproj}:
+	The key observation of this verification utilizes property \textit{4} of proposition \ref{fm_hcone}:
 	\[ (\exists t)B(\x + t\e_k) \leq \0 \Leftrightarrow B'\x \leq \0 \]
 	In what follows, let $\x = \sum_{1 \leq j \leq d}x_j\e_j$.  The above property is applied sequentially to the sets $B_k$ as follows:
 	\begin{alignat*}{2}
@@ -176,13 +179,13 @@ With {\Vlift} and {\Vproj} proven, we are now certain that any V-Cone is also an
 
 \section{Every H-Cone is a V-Cone}
 
-\begin{Def}[Coordinate Hyperplane]{
-		A set of the form
-		\[ \set{\x \in \R^{d+\Adim} \st \ip{\x}{\e_k} = 0} =
-			\set{\x \in \R^{d+\Adim} \st x_k = 0}
-		\]
-		is called a \em{coordinate-hyperplane}.
-	}\end{Def}
+\begin{Def}[Coordinate Hyperplane]
+	A set of the form
+	\[ \set{\x \in \R^{d+\Adim} \st \ip{\x}{\e_k} = 0} =
+		\set{\x \in \R^{d+\Adim} \st x_k = 0}
+	\]
+	is called a \em{coordinate-hyperplane}.
+\end{Def}
 
 We will use coordinate-hyperplanes in the following way.  We consider a V-Cone intersected with some coordinate hyperplanes, and write it in the following way:
 \begin{equation}\label{eq:coneintform1}
@@ -248,16 +251,16 @@ The proof rests on the following three propostions:
 \end{proof}
 
 The proof of {\Hint} relies upon the following proposition.
-\begin{Prop}{\label{prop:Hintset}
-		Let $Y \in \R^{(d+m)\times n_1}$, $1 \leq k \leq m$, and $\x$ satisfy $x_k = 0$.  Then there exists a matrix $Y' \in \R^{(d+m)\times n_2}$ with the following properties:
-		\begin{enumerate}
-			\item Every column of $Y'$ is a postive linear combination of columns of $Y$.
-			\item $n_2$ is finite.
-			\item The $k$-th row of $Y'$ is $\0$.
-			\item \((\exists \t\geq\0)\x = Y\t \Leftrightarrow (\exists \t' \geq \0)\x = Y'\t'\)
-		\end{enumerate}
-	}\end{Prop}
-%Recall that $ Y^i$ is the $i$-th column of $ Y$, and $\Yi$ is the element of $ Y$ in the $i$-th column and $k$-th row.
+\begin{Prop}[Fourier Motzkin Elimination for V-Cones]\label{fm_vcone}
+	Let $Y \in \R^{(d+m)\times n_1}$, $1 \leq k \leq m$, and $\x$ satisfy $x_k = 0$.  Then there exists a matrix $Y' \in \R^{(d+m)\times n_2}$ with the following properties:
+	\begin{enumerate}
+		\item Every column of $Y'$ is a postive linear combination of columns of $Y$.
+		\item $n_2$ is finite.
+		\item The $k$-th row of $Y'$ is $\0$.
+		\item \((\exists \t\geq\0)\x = Y\t \Leftrightarrow (\exists \t' \geq \0)\x = Y'\t'\)
+	\end{enumerate}
+\end{Prop}
+
 \begin{proof}
 	We partition the columns of $ Y$:
 	\begin{alignat*}{3}
@@ -277,22 +280,23 @@ The proof of {\Hint} relies upon the following proposition.
 	Before moving on to the proof, we first note how we may write our vectors.
 	\[  Y\t = \Zsum t_k  Y^k + \Psum t_i  Y^i + \Nsum t_j  Y^j \]
 	\[  Y'\t = \Zsum t_k  Y^k + \NPsum t_{ij} (\Yi Y^j - \Yj Y^i) \]
-	Then, by proposition \ref{prop:closure} (cone closure), to show that the proposition is true, we need only show that, given any $t_i, t_j \geq 0$ ($t_{ij} \geq 0)$, there exists $t_{ij} \geq 0$ ($t_i, t_j \geq 0$) such that
+	Then, by proposition \ref{cone_closure} (cone closure), to show that the proposition is true, we need only show that, given any $t_i, t_j \geq 0$ ($t_{ij} \geq 0)$, there exists $t_{ij} \geq 0$ ($t_i, t_j \geq 0$) such that
 	\begin{equation} \label{eq:coneEq}
 		\Psum t_i  Y^i + \Nsum t_j  Y^j = \NPsum t_{ij} (\Yi Y^j - \Yj Y^i)
 	\end{equation}
-	\begin{Prop}{
-			Suppose that
-			\[ \Psum t_i  Y^i_{d+1} + \Nsum t_j  Y^j_{d+1} = 0\quad\quad \Yj < 0 < \Yi \]
-			Then the following holds
-			\begin{alignat*}{2}
-				(t_i, t_j \geq 0) & \Rightarrow (\exists t_{ij} \geq 0)
-				                  &                                       & \mathrm{\;such\; that\; \eqref{eq:coneEq}\; holds} \\
-				(t_{ij} \geq 0)   & \Rightarrow (\exists t_i, t_j \geq 0)
-				                  &                                       & \mathrm{\;such\; that\; \eqref{eq:coneEq}\; holds}
-			\end{alignat*}
-		}\end{Prop}
-	\begin{proof}
+
+	\newcommand{\coneEqSat}{\quad\mathrm{\;such\; that\; \eqref{eq:coneEq}\; holds}}
+	\begin{Prop}[Sum Mixture]
+		Suppose that
+		\[ \Psum t_i  Y^i_{d+1} + \Nsum t_j  Y^j_{d+1} = 0\quad\quad \Yj < 0 < \Yi \]
+		Then the following holds
+		\begin{alignat*}{2}
+			(t_i, t_j \geq 0) & \Rightarrow (\exists t_{ij} \geq 0)   &  & \coneEqSat \\
+			(t_{ij} \geq 0)   & \Rightarrow (\exists t_i, t_j \geq 0) &  & \coneEqSat
+		\end{alignat*}
+	\end{Prop}
+
+	\begin{proof}[Sum Mixture]
 		First note that if all $t_i = 0,t_j = 0$, then choosing $t_{ij} = 0$ satisfies \eqref{eq:coneEq}, likewise if all $t_{ij} = 0$, then $t_i = 0, t_j = 0$ satisfies \eqref{eq:coneEq}.  So suppose that some $t_i \neq 0, t_j \neq 0, t_{ij} \neq 0$.
 
 		The right hand side of \eqref{eq:coneEq} can be written
@@ -310,14 +314,13 @@ The proof of {\Hint} relies upon the following proposition.
 			\NPsum \frac{t_i t_j}{\sigma}\Yi Y^j
 		\end{alignat*}
 		Combining these results, we have
-		\[ \Psum t_i Y^i + \Nsum t_j Y^j =
-			\NPsum \frac{t_i t_j}{\sigma}(\Yi Y^j - \Yj Y^i) \]
+		\[ \Psum t_i Y^i + \Nsum t_j Y^j = \NPsum \frac{t_i t_j}{\sigma}(\Yi Y^j - \Yj Y^i) \]
 	\end{proof}
-	Finally, we can conclude that, given $\t \geq \0$, if $ Y\t$ has a $0$ in the final coordinate, then we can write it as $ Y'\t'$ where $\t' \geq \0$, and any non-negative linear combination of vectors from $Y'$ can be written as a non-negative linear combination of vetors from $Y$, and will necessarily have the $k$-th coordinate be $0$ by property \textit{3}.  So property \textit{4} holds.
+	Finally, we can conclude that, given $\t \geq \0$, if $Y\t$ has a $0$ in the final coordinate, then we can write it as $ Y'\t'$ where $\t' \geq \0$, and any non-negative linear combination of vectors from $Y'$ can be written as a non-negative linear combination of vetors from $Y$, and will necessarily have the $k$-th coordinate be $0$ by property \textit{3}.  So property \textit{4} holds.
 \end{proof}
 
 \begin{proof}[Proof of {\Hint}]
-	In proposition \ref{prop:Hintset}, the assumption that $x_k = 0$ in property \textit{4} creates the set $\cone(Y) \cap \set{\x \st x_k = 0}$.  This set, by property \textit{4}, is $\cone(Y')$.
+	In proposition \ref{fm_vcone}, the assumption that $x_k = 0$ in property \textit{4} creates the set $\cone(Y) \cap \set{\x \st x_k = 0}$.  This set, by property \textit{4}, is $\cone(Y')$.
 \end{proof}
 
 \begin{proof}[Proof of {\Hproj}]
@@ -337,96 +340,101 @@ The proof of {\Hint} relies upon the following proposition.
 \end{Def}
 
 \subsection{H-Polyhedra $\leftrightarrow$ H-Cones}
-We show that an H-Polyhedron can be represented as the projection of an H-Cone intersected with a hyperplane.  We begin by re-writing the expression:
-\begin{equation}\label{eq:HPtoHC}
-	A\x \leq \b \Leftrightarrow -\b + A\x \leq \0 \Leftrightarrow
-	\big[-\b|A\big]\onex \leq \0
-\end{equation}
 
+\newcommand{\hpxz}{\set{\x\st x_0 = 1}}
 \begin{Prop}
-	Every H-Polyhedron can be written as an H-Cone intersected with the set $\set{\x\st x_0 = 1}$, and any H-Cone intersected with the set $\set{\x\st x_0 = 1}$ is an H-Polyhedron.
+	Every H-Polyhedron can be written as an H-Cone intersected with the set $\hpxz$, and any H-Cone intersected with the set $\hpxz$ is an H-Polyhedron.
 \end{Prop}
+
 \begin{proof}
-	We extend \eqref{eq:HPtoHC}:
-	\[ \x \in \set{\xv \st A\x \leq \b} \Leftrightarrow
-		\onex \in \set{\yv \st \big[-\b|A\big]\y \leq \0}\\
-	\]
-	We conclude, given an H-Polyhedron, we can add an extra coordinate and prepend the vector $\b$ to the left of $A$, and later we can just move this column back to the right side of the inequality and drop the extra coordinate.
+	We begin by re-writing the expression:
+	\[	A\x \leq \b \Leftrightarrow -\b + A\x \leq \0 \Leftrightarrow
+		\big[-\b|A\big]\onex \leq \0 \]
+	Note that
+	\[\set{\x \st \big[-\b|A\big]\onex \leq \0} = \HC{\big[-\b|A\big]} \cap \hpxz \]
+	It follows that
+	\[ \HP{A}{\b} = \HC{\big[-\b|A\big]} \cap \hpxz \]
 \end{proof}
 
 \subsection{V-Polyhedra $\leftrightarrow$ V-Cone}
 
-We show that a V-Polyhedra can be reprented as a projection of a V-Cone intersected with the hyperplane $\set{\yv \st y_0 = 1}$.  Given two sets $\mV$ and $\mU$, the V-Polyhedron is given by:
-\[ P_V = \set{\x + \y \st \x \in \cone(U),\, \y \in \conv(V)} \]
+\begin{Prop}[V-Polyhedron $\to$ V-Cone]
+	\[ \VP{U}{V} = \cone\pmb \0 & \1 \\ U & V \pme \cap \hpxz \]
+\end{Prop}
 
-It isn't hard to see that
-\[ \x \in P_V \Leftrightarrow \onex \in \cone\lcone \]
-For the value $1$ to appear in the first coordinate, a convex combination of the vectors from $(\vec{1}, V)$ must be taken.  After that, any non-negative combination of $(\0,U)$ added to this vector won't affect the $1$ in the first coordinate.
+\begin{proof}
+	For the value $1$ to appear in the first coordinate, a convex combination of the vectors from $(\vec{1}, V)$ must be taken.  After that, any non-negative combination of $(\0,U)$ added to this vector won't affect the $1$ in the first coordinate.
+\end{proof}
 
-It is more difficult to show that, given a V-Cone, that you can intersect it with the hyperplane $\set{\yv \st y_0 = 1}$ and get a V-Polytope out of it.  So let
-\[ C_V = \cone(U) \cap \set{\yv \st y_0 = 1} \]
-We partition $U$ into the sets:
-\begin{alignat*}{3}
-	 & P &  & = i & \st & \Uiz > 0 \\
-	 & N &  & = j & \st & \Ujz < 0 \\
-	 & Z &  & = l & \st & \Ulz = 0
-\end{alignat*}
-And define two new sets:
-\begin{align*}
-	U'  & = \set{U^l \st l \in Z} \cup \set{\Uiz U^j - \Ujz U^i \st i\in P,\, j\in N} \\
-	V\; & = \set{U^i/\Uiz \st i \in P}
-\end{align*}
-Then I claim that
-\begin{equation}\label{eq:cvtopv}
-	C_V = \set{\x + \y \st \x\in\cone(U'),\, \y\in\conv(V)}
-\end{equation}
-Say $\x \in\cone(U')$, $\x$ can be written
-\begin{align*}
-	\x & = \sum_{l\in Z}t_l U^l + \NPsum t_{ij}(\Uiz U^j - \Ujz U^i)      \\
-	   & = \sum_{l\in Z}t_l U^l + \Nsum \left(\Psum t_{ij}\Uiz\right) U^j
-	+ \Psum \left(\Nsum -t_{ij}\Ujz\right) U^i
-\end{align*}
-So $\x \in \cone(U)$.  Furthermore,
-\[ \ip{\e_0}{\x} = \sum_{l\in Z}t_l \Ulz + \NPsum t_{ij}(\Uiz \Ujz - \Ujz \Uiz) = 0\]
-So $x_0 = 0$.  Similarly, for $\y$,
-\[ \y = \Psum \lambda_i U^i/\Uiz,\quad\Psum\lambda_i = 1 \]
-So $\y \in \cone(U)$, and then $\x + \y \in \cone(U)$.  Furthermore,
-\[ \ip{\e_0}{\y} = \Psum \lambda_i \Uiz/\Uiz = 1\]
-So $y_0 = 1$ and $x_0 + y_0 = 1$.  Then, by proposition \ref{prop:closure} (cone closure), $\x + \y \in C_V$.
+This shows that a V-Polyhedron may be written as an intersection of a V-Cone and the hyperplane $\hpxz$.  It is more difficult to show that, given a V-Cone, that you can intersect it with the hyperplane $\hpxz$ and get a V-Polyhedron out of it.
 
-Next, suppose that $\z \in C_V$, then $\z$ can be written
-\[ \z = \Zsum t_l U^l + \Psum t_i U^i + \Nsum t_j U^j \]
-It will be convenient to use shorter notation for these sums.  Define the following:
-\begin{alignat*}{3}
-	\bsigma_Z & = \Zsum t_l U^l, \quad &  & \sigma_l \, & = & \, \Zsum t_l \Ulz \;= 0 \\
-	\bsigma_P & = \Psum t_i U^i, \quad &  & \sigma_i \, & = & \, \Psum t_i \Uiz       \\
-	\bsigma_N & = \Nsum t_j U^j, \quad &  & \sigma_j \, & = & \, \Nsum t_j \Ujz
-\end{alignat*}
-Then it holds that
-\[ \ip{\e_0}{\z} = \sigma_l + \sigma_i + \sigma_j = \sigma_i + \sigma_j = 1
-	\quad\Rightarrow\quad -\sigma_j/\sigma_i = 1 - 1/\sigma_i \]
-\[ \bsigma_P = \bsigma_P/\sigma_i + (1-1/\sigma_i)\bsigma_P
-	= \bsigma_P/\sigma_i - (\sigma_j/\sigma_i)\bsigma_P \]
-Using the new notation, we can rewrite $\z$:
-\[ \z = \bsigma_Z + \bsigma_P + \bsigma_N
-	= \bsigma_Z + \frac{\bsigma_P}{\sigma_i} - \frac{\sigma_j}{\sigma_i}\bsigma_P
-	+ \frac{\sigma_i}{\sigma_i}\bsigma_N
-	= \bsigma_Z + \frac{\bsigma_P}{\sigma_i} +
-	\frac{\sigma_i\bsigma_N - \sigma_j\bsigma_P}{\sigma_i}
-\]
-Using proposition \ref{prop:closure}, we need only show that
-\begin{enumerate}
-	\item $\bsigma_Z \in \cone(U')$
-	\item $(\sigma_i\bsigma_N - \sigma_j\bsigma_P) \in \cone(U')$
-	\item $\bsigma_P/\sigma_i \in \conv(V)$
-\end{enumerate}
-Since each $U^l : l \in Z$ is in $C_V$, (1) holds.  We also have:
-\[ \sigma_i\bsigma_N - \sigma_j\bsigma_P =
-	\Psum t_i \Nsum t_j \Uiz U^j - \Nsum t_j \Psum t_i \Ujz U^i =
-	\NPsum t_i t_j(\Uiz U^j - \Ujz U^i) \]
-So (2) holds.  Finally,
-\[ \bsigma_P/\sigma_i = \Psum t_i U^i / \sigma_i = \Psum (t_i \Uiz/\sigma_i)(U^i/\Uiz) \]
-Since $\Psum (t_i \Uiz/\sigma_i) = \sigma_i / \sigma_i = 1$, it follows that $\bsigma_P / \sigma_i \in \conv(V)$.
+\begin{Prop}[V-Cone $\to$ V-Polyhedron]
+	Let $\Pi$ be the identity matrix with the first row deleted.  Then, for any set $C_U = \cone(U)$ there are sets $W$ and $V$ such that
+	\[ \Pi(\cone(V) \cap \hpxz) = \VP{W}{V} \]
+\end{Prop}
+
+\begin{proof}
+	We partition $U$ into the sets:
+	\begin{alignat*}{3}
+		 & P &  & = i & \st & \Uiz > 0 \\
+		 & N &  & = j & \st & \Ujz < 0 \\
+		 & Z &  & = l & \st & \Ulz = 0
+	\end{alignat*}
+	And define two new sets:
+	\begin{align*}
+		W   & = \set{U^l \st l \in Z} \cup \set{\Uiz U^j - \Ujz U^i \st i\in P,\, j\in N} \\
+		V\; & = \set{U^i/\Uiz \st i \in P}
+	\end{align*}
+	Then I claim that
+	\[ C_U = \VP{W}{V} \]
+	Say $\x \in\cone(W)$, and $\y\in\conv(V)$.  Then $\x$ can be written
+	\begin{align*}
+		\x & = \sum_{l\in Z}t_l U^l + \NPsum t_{ij}(\Uiz U^j - \Ujz U^i)      \\
+		   & = \sum_{l\in Z}t_l U^l + \Nsum \left(\Psum t_{ij}\Uiz\right) U^j
+		+ \Psum \left(\Nsum -t_{ij}\Ujz\right) U^i
+	\end{align*}
+	So $\x \in C_U$.  Furthermore,
+	\[ \ip{\e_0}{\x} = \sum_{l\in Z}t_l \Ulz + \NPsum t_{ij}(\Uiz \Ujz - \Ujz \Uiz) = 0\]
+	So $x_0 = 0$.  Similarly, $\y$ can be written:
+	\[ \y = \Psum \lambda_i U^i/\Uiz,\quad\Psum\lambda_i = 1 \]
+	So $\y \in C_U$.  Furthermore,
+	\[ \ip{\e_0}{\y} = \Psum \lambda_i \Uiz/\Uiz = \Psum \lambda_i  = 1\]
+	So $y_0 = 1$ and $x_0 + y_0 = 1$.  It follows that $\x + \y \in C_U$.
+
+	Next, suppose that $\z \in C_U$, then $\z$ can be written
+	\[ \z = \Zsum t_l U^l + \Psum t_i U^i + \Nsum t_j U^j \]
+	It will be convenient to use shorter notation for these sums.  Define the following:
+	\begin{alignat*}{3}
+		\bsigma_Z & = \Zsum t_l U^l, \quad &  & \sigma_l \, & = & \, \Zsum t_l \Ulz \;= 0 \\
+		\bsigma_P & = \Psum t_i U^i, \quad &  & \sigma_i \, & = & \, \Psum t_i \Uiz       \\
+		\bsigma_N & = \Nsum t_j U^j, \quad &  & \sigma_j \, & = & \, \Nsum t_j \Ujz
+	\end{alignat*}
+	Then it holds that
+	\[ \ip{\e_0}{\z} = \sigma_l + \sigma_i + \sigma_j = \sigma_i + \sigma_j = 1
+		\quad\Rightarrow\quad -\sigma_j/\sigma_i = 1 - 1/\sigma_i \]
+	\[ \bsigma_P = \bsigma_P/\sigma_i + (1-1/\sigma_i)\bsigma_P
+		= \bsigma_P/\sigma_i - (\sigma_j/\sigma_i)\bsigma_P \]
+	Using the new notation, we can rewrite $\z$:
+	\[ \z = \bsigma_Z + \bsigma_P + \bsigma_N
+		= \bsigma_Z + \frac{\bsigma_P}{\sigma_i} - \frac{\sigma_j}{\sigma_i}\bsigma_P
+		+ \frac{\sigma_i}{\sigma_i}\bsigma_N
+		= \bsigma_Z + \frac{\bsigma_P}{\sigma_i} +
+		\frac{\sigma_i\bsigma_N - \sigma_j\bsigma_P}{\sigma_i}
+	\]
+	Using \Nameref{cone_closure}, we need only show that
+	\begin{enumerate}
+		\item $\bsigma_Z \in \cone(W)$
+		\item $(\sigma_i\bsigma_N - \sigma_j\bsigma_P) \in \cone(W)$
+		\item $\bsigma_P/\sigma_i \in \conv(V)$
+	\end{enumerate}
+	Since each $U^l : l \in Z$ is in $C_V$, (1) holds.  We also have:
+	\[ \sigma_i\bsigma_N - \sigma_j\bsigma_P =
+		\Psum t_i \Nsum t_j \Uiz U^j - \Nsum t_j \Psum t_i \Ujz U^i =
+		\NPsum t_i t_j(\Uiz U^j - \Ujz U^i) \]
+	So (2) holds.  Finally,
+	\[ \bsigma_P/\sigma_i = \Psum t_i U^i / \sigma_i = \Psum (t_i \Uiz/\sigma_i)(U^i/\Uiz) \]
+	Since $\Psum (t_i \Uiz/\sigma_i) = \sigma_i / \sigma_i = 1$, it follows that $\bsigma_P / \sigma_i \in \conv(V)$.
+\end{proof}
 
 \section{Picture of the Proof}
 Here we show a diagram that represent the proof of the {\MWT}.
@@ -441,8 +449,8 @@ Here we show a diagram that represent the proof of the {\MWT}.
 \newcommand{\CHdesc}{[-\b|A]\smallstack{x_0}{\x} \leq \vec{0}}
 \newcommand{\CVpdesc}{\cone \pmb 0 & I & -I\\ I & A & -A\pme}
 \newcommand{\CHpdesc}{\begin{pmatrix*}[r] \0 & -I \\ I & -U \\ -I & U \end{pmatrix*}\x \leq \0}
-\newcommand{\CVdesc}{\cone\{\smallstack{\vec{0}}{U'}\cup\smallstack{\vec{1}}{V'}\}}
-\newcommand{\PVdesc}{\cone(U) + \conv(V)}
+\newcommand{\CVdesc}{\cone\{\smallstack{\vec{0}}{U}\cup\smallstack{\vec{1}}{V}\}}
+\newcommand{\PVdesc}{\VP{W}{V}}
 \begin{figure}[H]
 	\begin{centering}
 		\begin{tikzpicture}[>=triangle 45]

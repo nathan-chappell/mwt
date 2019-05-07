@@ -78,10 +78,9 @@ makecommand "slicematrix"\
 
 #// fourier_motzkin.h 
 
-makecommand "Lift"\
-             "/typedef Matrix(\*Lift)(const Matrix&);/"\
+makecommand "LiftSelector"\
+            "/enum class LiftSelector { lift_vcone, lift_hcone };/"\
              "$fourier_motzkin_h"
-
 
 #// fourier_motzkin.cpp
 
@@ -123,7 +122,7 @@ makecommand "lifthcone"\
              "$fourier_motzkin_cpp"
 
 makecommand "conetransform"\
-             "/Matrix cone_transform(const Matrix &cone, Lift lift) {/,/$close_brace/"\
+             "/Matrix cone_transform(const Matrix &cone/,/$close_brace/"\
              "$fourier_motzkin_cpp"
 
 makecommand "vconetohcone"\

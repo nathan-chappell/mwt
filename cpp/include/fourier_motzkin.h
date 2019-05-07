@@ -8,6 +8,7 @@ Matrix fourier_motzkin(Matrix, size_t k);
 
 // Fourier Motzkin for each index NOT in slice, then slice the result
 Matrix sliced_fourier_motzkin(Matrix, const std::slice&);
+
 // refactored lift operation
 //
 //  transforms set of column vectors as so:
@@ -40,10 +41,11 @@ Matrix lift_vcone(const Matrix &vcone);
 //
 Matrix lift_hcone(const Matrix &hcone);
 
-typedef Matrix(*Lift)(const Matrix&);
+// used to statically select lift as opposed to using fn pointer
+enum class LiftSelector { lift_vcone, lift_hcone };
 
 // refactored transformation algorithm
-Matrix cone_transform(const Matrix &cone, Lift lift);
+Matrix cone_transform(const Matrix &cone, LiftSelector);
 
 Matrix vcone_to_hcone(Matrix vcone);
 Matrix hcone_to_vcone(Matrix hcone);

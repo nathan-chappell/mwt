@@ -37,13 +37,13 @@
 
 A simple but useful property of cones is that they are closed under addition and positive scaling.
 
-\begin{Prop}\label{prop:closure}
+\begin{Prop}[Closure Property of Cones]\label{cone_closure}
 	Let $C$ be either an H-Cone or a V-Cone, for each $i$ $\x^i \in C$, and $c_i \geq 0$.  Then:
 	\[ \sumi c_i \x^i \in C \]
 \end{Prop}
 
 \begin{proof}
-	First we prove Proposition \ref{prop:closure} for H-Cones, then for V-Cones.
+	First we prove Proposition \ref{cone_closure} for H-Cones, then for V-Cones.
 	If, for each $i$, $A\x^i \leq \0$, then $A(c_i\x^i) = t_iA\x^i \leq \0$, and
 	\[ A\left(\sumi c_i\x^i\right) = \sumi A (c_i\x^i) =
 		\sumi c_i A\x^i \leq \sumi \0 \leq \0 \]
@@ -60,13 +60,13 @@ This proposition will be used in the following way: if we wish to show that $\su
 
 The following theorem is the basic result to be proved in this thesis, which states that V-Polyhedra and H-Polyhedra are two different representations of the same objects.
 
-\begin{Thm}[{\MWT}]{
+\begin{Thm}[{\MWT}]
 		Every V-Polyhedron is an H-Poly-hedron, and every H-Polyhedron is a V-Polyhedron.
-	}\end{Thm}
+\end{Thm}
 
 The proof proceeds by first showing that V-Cones are representable as H-Cones, and H-Cones are representable as V-Cones.  Then it is shown that the case of polyhedra can be reduced to cones.
 
-\begin{Thm}[{\MWT} for Cones]{
+\begin{Thm}[{\MWT} for Cones]
 		Every V-Cone is an H-Cone, and every H-Cone is a V-Cone.
-	}\end{Thm}
+\end{Thm}
 

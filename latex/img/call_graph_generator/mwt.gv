@@ -31,6 +31,12 @@ strict digraph {
 		firstline=13,
 		lastline=20
 	]
+	_Z14vcone_to_vpoly6Matrix [
+		label="vcone_to_vpoly",
+		filename="../../../cpp/src/polyhedra.cpp",
+		firstline=67,
+		lastline=73
+	]
 	_Z14hpoly_to_vpoly6Matrix [
 		label="hpoly_to_vpoly",
 		filename="../../../cpp/src/polyhedra.cpp",
@@ -88,8 +94,8 @@ strict digraph {
 	_Z14hcone_to_vcone6Matrix [
 		label="hcone_to_vcone",
 		filename="../../../cpp/src/fourier_motzkin.cpp",
-		firstline=124,
-		lastline=126
+		firstline=135,
+		lastline=137
 	]
 	_Z12normalized_PRK6Matrix [
 		label="normalized_P",
@@ -109,27 +115,23 @@ strict digraph {
 		firstline=107,
 		lastline=109
 	]
-	_Z14vcone_to_vpoly6Matrix [
-		label="vcone_to_vpoly",
-		filename="../../../cpp/src/polyhedra.cpp",
-		firstline=67,
-		lastline=73
-	]
-	_Z14cone_transformRK6MatrixPFS_S1_E [
+	_Z14cone_transformRK6Matrix12LiftSelector [
 		label="cone_transform",
 		filename="../../../cpp/src/fourier_motzkin.cpp",
 		firstline=112,
-		lastline=118
+		lastline=129
 	]
 	_Z14vcone_to_hcone6Matrix [
 		label="vcone_to_hcone",
 		filename="../../../cpp/src/fourier_motzkin.cpp",
-		firstline=120,
-		lastline=122
+		firstline=131,
+		lastline=133
 	]
 
-	_Z14vcone_to_hcone6Matrix -> _Z14cone_transformRK6MatrixPFS_S1_E
-	_Z14cone_transformRK6MatrixPFS_S1_E -> _Z22sliced_fourier_motzkin6MatrixRKSt5slice
+	_Z14vcone_to_hcone6Matrix -> _Z14cone_transformRK6Matrix12LiftSelector
+	_Z14cone_transformRK6Matrix12LiftSelector -> _Z10lift_hconeRK6Matrix
+	_Z14cone_transformRK6Matrix12LiftSelector -> _Z10lift_vconeRK6Matrix
+	_Z14cone_transformRK6Matrix12LiftSelector -> _Z22sliced_fourier_motzkin6MatrixRKSt5slice
 	_Z10lift_hconeRK6Matrix -> _Z16generalized_liftRK6MatrixRKSt5arrayIdLm5EE
 	_Z9transposeRK6Matrix -> _Z10get_columnRK6Matrixm
 	_Z14vcone_to_vpoly6Matrix -> _Z12normalized_PRK6Matrix
@@ -141,7 +143,7 @@ strict digraph {
 	_Z14vpoly_to_hpoly5VPoly -> _Z14hcone_to_hpoly6Matrix
 	_Z14vpoly_to_hpoly5VPoly -> _Z14vcone_to_hcone6Matrix
 	_Z14vpoly_to_hpoly5VPoly -> _Z14vpoly_to_vcone5VPoly
-	_Z14hcone_to_vcone6Matrix -> _Z14cone_transformRK6MatrixPFS_S1_E
+	_Z14hcone_to_vcone6Matrix -> _Z14cone_transformRK6Matrix12LiftSelector
 	_Z22sliced_fourier_motzkin6MatrixRKSt5slice -> _Z12slice_matrixRK6MatrixRKSt5slice
 	_Z22sliced_fourier_motzkin6MatrixRKSt5slice -> _Z14index_in_slicemRKSt5slice
 	_Z22sliced_fourier_motzkin6MatrixRKSt5slice -> _Z15fourier_motzkin6Matrixm

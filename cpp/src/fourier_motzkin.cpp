@@ -109,18 +109,29 @@ Matrix lift_hcone(const Matrix &hcone) {
 }
 
 // refactored transformation algorithm
-Matrix cone_transform(const Matrix &cone, Lift lift) {
+Matrix cone_transform(const Matrix &cone, LiftSelector lift) {
   if (cone.empty()) {
     throw logic_error{"empty cone for transform"};
   }
-  return sliced_fourier_motzkin(
-    lift(cone), slice(0, cone.d, 1));
+  switch (lift) {
+    case LiftSelector::lift_vcone: {
+      return sliced_fourier_motzkin(
+        lift_vcone(cone), slice(0, cone.d, 1));
+    } break;
+    case LiftSelector::lift_hcone: {
+      return sliced_fourier_motzkin(
+        lift_hcone(cone), slice(0, cone.d, 1));
+    } break;
+    default: {
+      throw std::logic_error{"invalid LiftSelector"};
+    }
+  }
 }
 
 Matrix vcone_to_hcone(Matrix vcone) {
-  return cone_transform(vcone,lift_vcone);
+  return cone_transform(vcone,LiftSelector::lift_vcone);
 }
 
 Matrix hcone_to_vcone(Matrix hcone) {
-  return cone_transform(hcone,lift_hcone);
+  return cone_transform(hcone,LiftSelector::lift_hcone);
 }
