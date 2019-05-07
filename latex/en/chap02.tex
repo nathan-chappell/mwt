@@ -438,52 +438,66 @@ This shows that a V-Polyhedron may be written as an intersection of a V-Cone and
 
 \section{Picture of the Proof}
 Here we show a diagram that represent the proof of the {\MWT}.
-
-\newcommand{\vtohcolor}{violet}
+\definecolor{mygrey}{rgb}{.1,.1,.1}
+\newcommand{\FIGstep}{2}
+\newcommand{\FIGge}{8}
+\newcommand{\FIGgd}{\numexpr \FIGge-\FIGstep}
+\newcommand{\FIGgc}{\numexpr \FIGgd-\FIGstep}
+\newcommand{\FIGgb}{\numexpr \FIGgc-\FIGstep}
+\newcommand{\FIGga}{\numexpr \FIGgb-\FIGstep}
+\newcommand{\ptovcolor}{violet}
 \newcommand{\liftcolor}{blue}
 \newcommand{\dropcolor}{red}
-\newcommand{\dpos}{-2}
-\newcommand{\mhpos}{\numexpr \dpos+1}
-\newcommand{\mlpos}{\numexpr \dpos-1}
-\newcommand{\PHdesc}{A\x \leq \b}
-\newcommand{\CHdesc}{[-\b|A]\smallstack{x_0}{\x} \leq \vec{0}}
-\newcommand{\CVpdesc}{\cone \pmb 0 & I & -I\\ I & A & -A\pme}
-\newcommand{\CHpdesc}{\begin{pmatrix*}[r] \0 & -I \\ I & -U \\ -I & U \end{pmatrix*}\x \leq \0}
-\newcommand{\CVdesc}{\cone\{\smallstack{\vec{0}}{U}\cup\smallstack{\vec{1}}{V}\}}
-\newcommand{\PVdesc}{\VP{W}{V}}
+\newcommand{\VDropdesc}{$\Pi\circ\bigcap$}
+\newcommand{\HDropdesc}{$\Pi$}
+\newcommand{\HPdesc}{\HP{A}{\b}}
+\newcommand{\HPidesc}{\HC{[-\b|A]}}
+\newcommand{\HCdesc}{\HC{A}}
+\newcommand{\HCpdesc}{\pmb \0 & -I \\ I & -U \\ -I & U \pme \x \leq \0}
+\newcommand{\VPdesc}{\VP{U}{V}}
+\newcommand{\VPidesc}{\cone\{\smallstack{\vec{0}}{U}\cup\smallstack{\vec{1}}{V}\}}
+\newcommand{\VCdesc}{\cone(U)}
+\newcommand{\VCpdesc}{\cone \pmb 0 & I & -I\\ I & A & -A\pme}
 \begin{figure}[H]
 	\begin{centering}
 		\begin{tikzpicture}[>=triangle 45]
-			\node (PH) at (-1,0) {\framebox{$\PHdesc$}};
-			\node (CH) at (0,\dpos) {\framebox{$\CHdesc$}};
-			\node (PV) at (9,0) {\framebox{$\PVdesc$}};
-			\node (CV) at (8,\dpos) {\framebox{$\CVdesc$}};
-			\node (CVp) at (4,\mhpos) {\framebox{$\CVpdesc$}};
-			\node (CHp) at (4,\mlpos) {\framebox{$\CHpdesc$}};
-			\draw[<->,bend right=10, color=\vtohcolor]
-			(PH) to (CH);
-			\draw[<->,bend right=10,color=\vtohcolor]
-			(CV) to (PV);
-			\draw[->,bend left=15]
-			(CH) to
-			node[above left,color=\liftcolor]{lift}
-			(CVp);
-			\draw[->,bend left=15]
-			(CVp) to
-			node[above right,color=\dropcolor]{$\bigcap$}
-			(CV);
-			\draw[->,bend left=15]
-			(CV) to
-			node[below right,color=\liftcolor]{lift}
-			(CHp);
-			\draw[->,bend left=15]
-			(CHp) to
-			node[below left,color=\dropcolor]{$\Pi$}
-			(CH);
+			\node (HP)  at (\FIGgd,\FIGge) {\framebox{$\HPdesc$}};
+			\node (HPi) at (\FIGga,\FIGge) {\framebox{$\HPidesc$}};
+			\node (HC)  at (\FIGga,\FIGgc) {\framebox{$\HCdesc$}};
+			\node (HCp) at (\FIGgc,\FIGgb) {\framebox{$\HCpdesc$}};
+			%
+			\node (VP)  at (\FIGgb,\FIGga) {\framebox{$\VPdesc$}};
+			\node (VPi) at (\FIGge,\FIGga) {\framebox{$\VPidesc$}};
+			\node (VC)  at (\FIGge,\FIGgc) {\framebox{$\VCdesc$}};
+			\node (VCp) at (\FIGgc,\FIGgd) {\framebox{$\VCpdesc$}};
+			\draw[<->,color=\ptovcolor] (HP) to node[below]{lift} node[above]{\HDropdesc} (HPi);
+			\draw[<->,color=\ptovcolor] (VP) to node[above]{lift} node[below]{\VDropdesc} (VPi);
+			\draw[-,dashed,color=mygrey]  (HPi) to node[rotate=90,above]{(relabel)} (HC);
+			\draw[-,dashed,color=mygrey]  (VPi) to node[rotate=90,below]{(relabel)} (VC);
+			\draw[->,color=\liftcolor,bend left] (HC)  to node[above left]{lift} (VCp);
+			\draw[->,color=\dropcolor,bend left] (VCp) to node[above right]{\VDropdesc} (VC);
+			\draw[->,color=\liftcolor,bend left] (VC)  to node[below right]{lift} (HCp);
+			\draw[->,color=\dropcolor,bend left] (HCp) to node[below left]{\HDropdesc} (HC);
+			%HP <-> HPi
+			%VP <-> VPi
+			%HPi -  HC
+			%VPi -  VC
+			%HC  -> VCp
+			%VC  -> HCi
+			%VCp -> VC
+			%HCp -> HC
+			%
+			%HPi  <-> HP
+			%|
+			%| ____VCp___
+			%HC_        _VC
+			%   \__HCp_/ |
+			%            |
+			%   VP <->  VPi
 		\end{tikzpicture}
 		\caption{Diagram of the proof $P_H \leftrightarrow P_V$}
 		\label{fig:h_to_v}
 	\end{centering}
 \end{figure}
 
-Figure \ref{fig:h_to_v} shows the flow from an H-Polyhedron to a V-Polyhedron and back.  The \textcolor{\vtohcolor}{colored arrows} are the transformations back and forth from polyhedra to cones.  The black arrows show the transformation between cones.  V-Cones are \textcolor{\liftcolor}{lifted} to H-Cones which need to be \textcolor{\dropcolor}{projected $(\Pi)$}, and H-Cones are \textcolor{\liftcolor}{lifted} to V-Cones which need to be \textcolor{\dropcolor}{intersected $(\bigcap)$} with some coordinate-hyperplanes then projected.
+Figure \ref{fig:h_to_v} shows the flow from an H-Polyhedron to a V-Polyhedron and back.  There are \textcolor{\ptovcolor}{arrows} for transformations back and forth from polyhedra to cones, \textcolor{\liftcolor}{arrows} to show the transformation between cones and intermediate representation, and \textcolor{\dropcolor}{arrows} to show where Fourier Motzkin elimination is applied to reduce these intermediate represenations to standard cones.  V-Cones are \textcolor{\liftcolor}{lifted} to H-Cones which need to be \textcolor{\dropcolor}{projected (\HDropdesc)}, and H-Cones are \textcolor{\liftcolor}{lifted} to V-Cones which need to be \textcolor{\dropcolor}{intersected and projected (\VDropdesc)}.
