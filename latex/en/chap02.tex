@@ -17,10 +17,10 @@ The proof rests on the following two lemmas:
 \end{Lemma}
 
 \begin{proof}
-	Given \Cref{vconelift} and \Cref{hconeproject}, the proof follows simply.  Given a V-Cone, we use \nameref{vconelift}, to get a description involving coordinate-projection of an H-Cone.  Then we can apply \nameref{hconeproject} in order to get an H-Cone.
+	Given \Cref{vconelift} and \Cref{hconeproject}, the proof follows simply.  Given a V-Cone, we use \nameref{vconelift} to get a description involving coordinate-projection of an H-Cone.  Then we can apply \nameref{hconeproject} in order to get an H-Cone.
 \end{proof}
 
-\begin{proof}[\nameref{vconelift}]
+\begin{proof}[Proof of \nameref{vconelift}]
 	We prove that every V-Cone is a coordinate-projection of an H-Cone, by giving an explicit formula.  Let ${\mU}$, and observe that
 	\[ \cone(U) = \set{U\t \st \t \in \R^{\Udim},\, \t \geq \0} =
 		\set{\xv \st (\exists \tv)\,\x = U\t,\, \t \geq \0} \]
@@ -28,19 +28,16 @@ The proof rests on the following two lemmas:
 	\begin{equation}\label{eq:tleqz}
 		\t \geq \0 \Leftrightarrow -I\t \leq \0
 	\end{equation}
-	And using the equality: $a = 0 \Leftrightarrow a \leq 0 \land -a \leq 0$, and block matrix notation, we take the second step.
+	Using the equality: $a = 0 \Leftrightarrow a \leq 0 \land -a \leq 0$, and block matrix notation, we take the second step.
 	\begin{equation}\label{eq:xeqt}
 		\x = U\t \Leftrightarrow \x - U\t = \0 \Leftrightarrow
 		\begin{pmatrix*}[r] I & -U \\ -I & U \end{pmatrix*} \xt \leq \0
 	\end{equation}
 	Comparing \eqref{eq:tleqz} and \eqref{eq:xeqt}, we define a matrix tranform:
-  \begin{Transform}\label{vconelift_transform}
+  \begin{Transform}[V-Cone Lift]\label{vconelift_transform}
+  \[\VLift(U) = \pmb \0 & -I \\ I & -U \\ -I & U \pme \]
   \end{Transform}
-	Comparing \eqref{eq:tleqz} and \eqref{eq:xeqt}, we define a new matrix $A' \in \R^{(\Udim+2d)\times(d+\Udim)}$:
-	\begin{equation}\label{eq:Alift}
-		A' = \begin{pmatrix*}[r] \0 & -I \\ I & -U \\ -I & U \end{pmatrix*}
-	\end{equation}
-	then we can rewrite $\cone(U)$:
+  So we define $A' = \VLift(U)$, then we can rewrite $\cone(U)$:
 	\begin{equation*}
 		\cone(U) = \set{ \xv \St A'\xt \leq \0}
 	\end{equation*}
@@ -52,7 +49,7 @@ The proof rests on the following two lemmas:
 \end{proof}
 
 To prove \nameref{hconeproject}, we use two separate propositions.
-\begin{Prop}\label{proj_0_columns}
+\begin{Prop}[Projecting Null Columns]\label{proj_0_columns}
 	Let $B\in\R^{m'\times(d+\Udim)}$, $B'$ be $B$ with the last $\Udim$ columns deleted, and $\Pi$ the identity matrix with the last $\Udim$ rows deleted (i.e. $B' = \Pi B$).  Furthermore, suppose that the last $\Udim$ columns of $B$ are $\0$.  Then
 	\[ \Pi\left(\set{\y \in \R^{d+\Udim} \st B\y \leq \0}\right) =
 		\set{\x\in\R^d\st B'\x\leq\0} \]
@@ -90,24 +87,18 @@ In order to use the above proposition, we need a matrix with columns which are $
 		 & C_l    &  & = B_l                 & \st & l \in Z          \\
 		 & C_{ij} &  & = \Bik B_j - \Bjk B_i & \st & i \in P, j \in N
 	\end{alignat*}
-	\textit{1} and \textit{2} are clear.  \textit{3} can be seen from:
-	\begin{align}
-		 & \ip{C_l}{\e_k} = 0 \nonumber                                                                        \\
-		 & \ip{C_{ij}}{\e_k} = \ip{\Bik B_j - \Bjk B_i}{\e_k} = \Bik \Bjk - \Bjk \Bik = 0\label{eq:vdropZrows}
-	\end{align}
+	\textit{1} and \textit{2} are clear.  \textit{3} is satisfied for rows indexed by $Z$ by definition  That it holds for the other rows, observe:
+   \[\ip{C_{ij}}{\e_k} = \ip{\Bik B_j - \Bjk B_i}{\e_k} = \Bik \Bjk - \Bjk \Bik = 0\]
 	The right direction of \textit{4} is shown in the following calculations.  Because $\Blk = 0$:
 	\[ \ip{B_l}{\x+t\e_k} = \ip{B_l}{\x} + t\Blk = \ip{B_l}{\x} = \ip{C_l}{\x} \]
-	So:
-	\[ \ip{B_l}{\x+t\e_k} \leq 0 \Rightarrow \ip{C_l}{\x} \leq 0 \]
-	For rows indexed by $P,N$, we observe \eqref{eq:vdropZrows}, and have:
+	So $\ip{B_l}{\x+t\e_k} \leq 0 \Rightarrow \ip{C_l}{\x} \leq 0$.  For rows indexed by $P,N$, because $\Bik \Bjk - \Bjk \Bik = 0$ we have:
 	\[ \ip{\Bik B_j - \Bjk B_i}{\x + t\e_k} = \ip{\Bik B_j - \Bjk B_i}{\x} \]
-	Now, we use property \textit{1}:
+	Because $\Bik$ and $-\Bjk$ are non-negative:
 	\[ \ip{B_i}{\x+t\e_k} \leq 0,\; \ip{B_j}{\x+t\e_k} \leq 0 \Rightarrow
 		\ip{\Bik B_j - \Bjk B_i}{\x + t\e_k} \leq 0\]
-	Therefore
-	\[ \ip{\Bik B_j - \Bjk B_i}{\x} \leq 0 \]
+	Therefore $\ip{\Bik B_j - \Bjk B_i}{\x} \leq 0$, and the right implication is shown.
 
-	Now suppose that $B'\x \leq \0$.  The task is to find a $t$ so that $B\x \leq \0$.  Looking at \eqref{eq:vdropZrows}, any choice of $t$ we make will be okay for rows indexed by $Z$.  So the task is to find a $t$ so that the inequality holds for rows indexed by $P$ and $N$.  Observe
+	Now suppose that $B'\x \leq \0$.  The task is to find a $t$ so that $B\x \leq \0$.  Because rows indexed by $Z$ have $\Blk = 0$, $B'(\x+t\e_k) \leq \0 \Rightarrow B\x \leq \0$.  So the task is to find a $t$ so that the inequality holds for rows indexed by $P$ and $N$.  Observe
 	\begin{alignat*}{3}
 		\faij & \quad & \ip{\Bik B_j - \Bjk B_i}{\x}    & \leq  \; 0                                & \Leftrightarrow \\
 		\faij & \quad & \ip{\Bik B_j}{\x}               & \leq  \; \ip{\Bjk B_i}{\x}                & \Leftrightarrow \\
@@ -117,17 +108,11 @@ In order to use the above proposition, we need a matrix with columns which are $
 	Note that the third inequality changes directions because $\Bjk < 0$.  Now we choose $t$ to lie in this last interval, and show that we can use it to satisfy all of the constraints given by $ B$.  So, we have a $t$ such that
 	\[ \max_{i\in P} \ip{B_i/\Bik}{\x} \leq t \leq \min_{j\in N} \ip{B_j/\Bjk}{\x} \]
 	In particular,
-	\begin{alignat*}{2}
-		(\forall j\in N)\quad & \ip{B_j/\Bjk}{\x}     \; & \geq & \; t \Rightarrow \\
-		(\forall j\in N)\quad & \ip{B_j}{\x} - \Bjk t \; & \leq & \; 0
-	\end{alignat*}
+  \[(\forall j\in N)\quad \ip{B_j/\Bjk}{\x} \geq t \Rightarrow \ip{B_j}{\x} - \Bjk t \leq 0\]
 	Again, the inequality changes directions because $\Bjk < 0$.  Now consider a row $ B_j$ from $ B$:
 	\[ \ip{B_j}{\x-t\e_k} =  B_j {\x} - \Bjk t \leq 0 \]
 	Similarly,
-	\begin{alignat*}{3}
-		(\forall i\in P)\quad & t \; & \geq & \;  B_i/\Bik {\x}     & \Rightarrow \\
-		(\forall i\in P)\quad & 0 \; & \geq & \;  B_i {\x} - \Bik t &
-	\end{alignat*}
+  \[(\forall i\in P)\quad t \geq B_i/\Bik {\x} \Rightarrow 0 \geq B_i {\x} - \Bik t\]
 	Now consider a row $ B_i$ from $ B$:
 	\[ \ip{B_i}{\x-t\e_k} =  B_i {\x} - \Bik t \leq 0 \]
 	So, we've demonstrated that $\x-t\e_k$ satisfies all the constraints from $B$, and the left implication is shown.  So \textit{4} holds.
@@ -143,12 +128,7 @@ In order to use the above proposition, we need a matrix with columns which are $
 	\[ B' = YB \]
 \end{Remark}
 
-Now to prove:
-\begin{enumerate}
-	\item[\Vproj] Every coordinate-projection of an H-Cone is an H-Cone.
-\end{enumerate}
-
-\begin{proof}[proof of \Vproj]
+\begin{proof}[Proof of \nameref{hconeproject}]
 	Here we prove the case that the coordinate projection is onto the first $d$ of $d+p$ coordinates.  Let $\set{\y\in\R^{d+\Udim}:A'\y \leq \0}$ be the H-Cone we need to project, and $\Pi$ the coordinate-projection we need to apply (the identity matrix with the last p columns deleted).  For each $1 \leq k \leq p$ we can use \nameref{fm_hcone} in an incremental manner, starting with $A'$.
 	\begin{align*}
 		 & \text{let } B_0 := A'                                        \\
@@ -196,7 +176,7 @@ With \nameref{vconelift} and \nameref{hconeproject} proven, we are now certain t
 	is called a \em{coordinate-hyperplane}.
 \end{Def}
 
-We will use coordinate-hyperplanes in the following way.  We consider a V-Cone intersected with some coordinate hyperplanes, and write it in the following way:
+This is how coordinate hyperplanes will be used.  We consider a V-Cone intersected with some coordinate hyperplanes, and write it in the following way:
 \begin{equation}\label{eq:coneintform1}
 	\set{\xv \St (\exists \t \geq 0) \xz = U'\t}
 \end{equation}
@@ -206,24 +186,29 @@ If we suppose that $U' \subset \R^{d+\Adim}$, and $\Pi$ is the identity matrix w
 	\cap \dots \cap \set{x_{d+\Adim} = 0}\big)
 \end{equation}
 The proof rests on the following three propostions:
-\begin{itemize}
-	\item[\Hlift] Every H-Cone is a coordinate-projection of a V-Cone intersected with some coordinate hyperplanes.
-	\item[\Hint] Every V-Cone intersected with a coordinate-hyperplane is a V-Cone
-	\item[\Hproj] Every coordinate-projection of a V-Cone is an V-Cone.
-\end{itemize}
+\begin{Lemma}[Lifting an H-Cone]\label{hconelift}
+  Every H-Cone is a coordinate-projection of a V-Cone intersected with some coordinate hyperplanes.
+\end{Lemma}
+\begin{Lemma}[Intersecting a V-Cone]\label{vconeintersect}
+  Every V-Cone intersected with a coordinate-hyperplane is a V-Cone.
+\end{Lemma}
+\begin{Lemma}[Projecting a V-Cone]\label{vconeproject}
+  Every coordinate-projection of a V-Cone is an V-Cone.
+\end{Lemma}
+
 \begin{proof}
-	Given {\Hlift}, {\Hint}, and {\Hproj}, the proof follows simply.  Given an H-Cone, we use {\Hlift} to get a description involving the coordinate-projection of a V-Cone intersected with some coordinate-hyperplanes.  We apply {\Hint} as many times as necessary to elimintate the intersections, then we can apply {\Hproj} in order to get a V-Cone.
+	Given \cref{hconelift}, \cref{vconeintersect}, and \cref{vconeproject}, the proof follows simply.  Given an H-Cone, we use \nameref{hconelift} to get a description involving the coordinate-projection of a V-Cone intersected with some coordinate-hyperplanes.  We apply \nameref{vconeintersect} as many times as necessary to elimintate the intersections, then we can apply \nameref{vconeproject} in order to get a V-Cone.
 \end{proof}
 
-\begin{proof}[Proof of {\Hlift}]
+\begin{proof}[Proof of \nameref{hconelift}]
 	Let $\mA$, we now show that the H-Cone
 	\[\set{\xv \st A\x \leq \0}\]
-	can be written as the projection of a V-Cone intersected with some hyperplanes.  Define $U'$:
-	\[ U' = \set{\zei, \eAj, \neAj, 1 \leq j \leq d,\, 1 \leq i \leq m} \]
-	Note that $U'$ can be written:
-	\begin{equation}\label{eq:Ulift}
-		U' = \begin{pmatrix*}[r] \0 & I & -I \\ I & A & -A \end{pmatrix*}
-	\end{equation}
+	can be written as the projection of a V-Cone intersected with some hyperplanes.  We use the following transform.
+  \begin{Transform}[V-Cone Lift]\label{vconelift_transform}
+  \[\HLift(A) = \pmb \0 & I & -I \\ I & A & -A \pme \]
+  \end{Transform}
+  Define 
+  \[U' = \HLift(A) =  \set{\zei, \eAj, \neAj, 1 \leq j \leq d,\, 1 \leq i \leq m}\]
 	We then claim:
 	\begin{equation}\label{eq:hliftform}
 		\set{\xv \st A\x \leq \0} = \set{\xv \St (\exists \t \geq 0) \xz = U'\t}
@@ -259,7 +244,7 @@ The proof rests on the following three propostions:
 	where $\w \geq \0$.  By \eqref{eq:Axz} we have $A\x \leq \0$.  So \eqref{eq:hliftform} holds.
 \end{proof}
 
-The proof of {\Hint} relies upon the following proposition.
+The proof of \nameref{vconeintersect} relies upon the following proposition.
 \begin{Prop}[Fourier Motzkin Elimination for V-Cones]\label{fm_vcone}
 	Let $Y \in \R^{(d+m)\times n_1}$, $1 \leq k \leq m$, and $\x$ satisfy $x_k = 0$.  Then there exists a matrix $Y' \in \R^{(d+m)\times n_2}$ with the following properties:
 	\begin{enumerate}
@@ -328,17 +313,19 @@ The proof of {\Hint} relies upon the following proposition.
 	Finally, we can conclude that, given $\t \geq \0$, if $Y\t$ has a $0$ in the final coordinate, then we can write it as $ Y'\t'$ where $\t' \geq \0$, and any non-negative linear combination of vectors from $Y'$ can be written as a non-negative linear combination of vetors from $Y$, and will necessarily have the $k$-th coordinate be $0$ by property \textit{3}.  So property \textit{4} holds.
 \end{proof}
 
-\begin{proof}[Proof of {\Hint}]
+\begin{proof}[Proof of \nameref{vconeintersect}]
 	In \nameref{fm_vcone}, the assumption that $x_k = 0$ in property \textit{4} creates the set $\cone(Y) \cap \set{\x \st x_k = 0}$.  This set, by property \textit{4}, is $\cone(Y')$.
 \end{proof}
 
-\begin{proof}[Proof of {\Hproj}]
+\begin{proof}[Proof of \nameref{vconeproject}]
 	We shall prove that the coordinate-projection of a V-Cone is again a V-Cone.  Let $\Pi$ be the relevant projection, then we have:
 	\[ \Pi\set{U\t \st \t \geq \0} = \set{\Pi(U\t) \st \t \geq \0} =
 		\set{(\Pi U)\t \st \t \geq \0} \]
 	The last equality follows from associativity of matrix multiplication.  Therefore,
 	\[ \Pi\big(\cone(U)\big) = \cone\big(\Pi U\big) \]
 \end{proof}
+
+Having shown that H-Cones are V-Cones, we complete the proof of the {\MWT} for cones is complete.
 
 \section{Reducing Polyhedra to Cones}
 
@@ -360,7 +347,7 @@ The proof of {\Hint} relies upon the following proposition.
 	\[	A\x \leq \b \Leftrightarrow -\b + A\x \leq \0 \Leftrightarrow
 		\big[-\b|A\big]\onex \leq \0 \]
 	Note that
-	\[\set{\x \st \big[-\b|A\big]\onex \leq \0} = \HC{\big[-\b|A\big]} \cap \hpxz \]
+	\[\set{\x\st\big[-\b|A\big]\onex\leq\0} = \set{\xx\st\big[-\b|A\big]\xx\leq\0} \cap \hpxz \]
 	It follows that
 	\[ \HP{A}{\b} = \HC{\big[-\b|A\big]} \cap \hpxz \]
 \end{proof}
@@ -379,7 +366,7 @@ This shows that a V-Polyhedron may be written as an intersection of a V-Cone and
 
 \begin{Prop}[V-Cone $\to$ V-Polyhedron]
 	Let $\Pi$ be the identity matrix with the first row deleted.  Then, for any set $C_U = \cone(U)$ there are sets $W$ and $V$ such that
-	\[ \Pi(\cone(V) \cap \hpxz) = \VP{W}{V} \]
+	\[ \cone(V) \cap \hpxz = \VP{W}{V} \]
 \end{Prop}
 
 \begin{proof}

@@ -100,6 +100,8 @@
 \newcommand{\set}[1]{\left\{#1\right\}}
 \DeclareMathOperator{\cone}{cone}
 \DeclareMathOperator{\conv}{conv}
+\DeclareMathOperator{\VLift}{T_V}
+\DeclareMathOperator{\HLift}{T_H}
 \newcommand{\ip}[2]{\left\langle #1, #2 \right\rangle}
 
 %special letters
@@ -144,18 +146,18 @@
 \newcommand{\mA}{A \in \mspaceA}
 \newcommand{\mB}{B \in \mspaceB}
 \newcommand{\mC}{B' \in \mspaceC}
-\newcommand{\xt}{\begin{pmatrix*}\x\\ \t\end{pmatrix*}}
-\newcommand{\xw}{\begin{pmatrix*}\x\\ \w\end{pmatrix*}}
-\newcommand{\xAx}{\begin{pmatrix*}\x\\ A\x\end{pmatrix*}}
-\newcommand{\xz}{\begin{pmatrix*}\x\\ \0\end{pmatrix*}}
-\newcommand{\xx}{\begin{pmatrix*}x_0\\ \x\end{pmatrix*}}
-\newcommand{\onex}{\begin{pmatrix*} 1\\ \x\end{pmatrix*}}
-\newcommand{\zw}{\begin{pmatrix*}\0\\ \w\end{pmatrix*}}
-\newcommand{\eAj}{\begin{pmatrix*}\e_j\\ A^j\end{pmatrix*}}
-\newcommand{\neAj}{\begin{pmatrix*}[r]-\e_j\\ -A^j\end{pmatrix*}}
-\newcommand{\ee}{\begin{pmatrix*} \0 \\ 1 \end{pmatrix*}}
-\newcommand{\zei}{\begin{pmatrix*} \0 \\ \e_i \end{pmatrix*}}
-\newcommand{\lcone}{\begin{pmatrix*} \0 & \vec{1} \\ U & V \end{pmatrix*}}
+\newcommand{\xt}{\pmb  \x\\ \t\pme }
+\newcommand{\xw}{\pmb  \x\\ \w\pme }
+\newcommand{\xAx}{\pmb \x\\ A\x\pme }
+\newcommand{\xz}{\pmb  \x\\ \0\pme }
+\newcommand{\xx}{\pmb  x_0\\ \x\pme }
+\newcommand{\onex}{\pmb 1\\ \x\pme }
+\newcommand{\zw}{\pmb  \0\\ \w\pme }
+\newcommand{\eAj}{\pmb \e_j\\ A^j\pme }
+\newcommand{\neAj}{\pmb -\e_j\\ -A^j\pme }
+\newcommand{\ee}{\pmb  \0 \\ 1 \pme }
+\newcommand{\zei}{\pmb \0 \\ \e_i \pme }
+\newcommand{\lcone}{\pmb  \0 & \vec{1} \\ U & V \pme }
 \newcommand{\xjp}{x_j^+}
 \newcommand{\xjm}{x_j^-}
 \newcommand{\Yi}{Y^i_{k}}
@@ -200,8 +202,6 @@
 %text macros
 \newcommand{\MWT}{Minkowski-Weyl Theorem}
 
-\newcommand{\Vlift}{(V1)}
-\newcommand{\Vproj}{(V2)}
 \newcommand{\Hlift}{\textit{H1}}
 \newcommand{\Hint}{\textit{H2}}
 \newcommand{\Hproj}{\textit{H3}}
