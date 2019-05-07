@@ -6,17 +6,21 @@
 	Let $I$ be the identity matrix.  Then the matrix $I'$ formed by deleting some rows from $I$ is called a \textbf{coordinate-projection}.
 \end{Def}
 
-The proof rests on the following two propostions:
-\begin{itemize}
-	\item[\Vlift] Every V-Cone is a coordinate-projection of an H-Cone.
-	\item[\Vproj] Every coordinate-projection of an H-Cone is an H-Cone.
-\end{itemize}
+The proof rests on the following two lemmas:
+
+\begin{Lemma}[Lifting a V-Cone]\label{vconelift}
+	 Every V-Cone is a coordinate-projection of an H-Cone.
+\end{Lemma}
+
+\begin{Lemma}[Projecting an H-Cone]\label{hconeproject}
+	 Every coordinate-projection of an H-Cone is an H-Cone.
+\end{Lemma}
 
 \begin{proof}
-	Given {\Vlift} and {\Vproj}, the proof follows simply.  Given a V-Cone, we use {\Vlift}, to get a description involving coordinate-projection of an H-Cone.  Then we can apply {\Vproj} in order to get an H-Cone.
+	Given \Cref{vconelift} and \Cref{hconeproject}, the proof follows simply.  Given a V-Cone, we use \nameref{vconelift}, to get a description involving coordinate-projection of an H-Cone.  Then we can apply \nameref{hconeproject} in order to get an H-Cone.
 \end{proof}
 
-\begin{proof}[Proof of {\Vlift}]
+\begin{proof}[\nameref{vconelift}]
 	We prove that every V-Cone is a coordinate-projection of an H-Cone, by giving an explicit formula.  Let ${\mU}$, and observe that
 	\[ \cone(U) = \set{U\t \st \t \in \R^{\Udim},\, \t \geq \0} =
 		\set{\xv \st (\exists \tv)\,\x = U\t,\, \t \geq \0} \]
@@ -29,6 +33,9 @@ The proof rests on the following two propostions:
 		\x = U\t \Leftrightarrow \x - U\t = \0 \Leftrightarrow
 		\begin{pmatrix*}[r] I & -U \\ -I & U \end{pmatrix*} \xt \leq \0
 	\end{equation}
+	Comparing \eqref{eq:tleqz} and \eqref{eq:xeqt}, we define a matrix tranform:
+  \begin{Transform}\label{vconelift_transform}
+  \end{Transform}
 	Comparing \eqref{eq:tleqz} and \eqref{eq:xeqt}, we define a new matrix $A' \in \R^{(\Udim+2d)\times(d+\Udim)}$:
 	\begin{equation}\label{eq:Alift}
 		A' = \begin{pmatrix*}[r] \0 & -I \\ I & -U \\ -I & U \end{pmatrix*}
@@ -41,10 +48,10 @@ The proof rests on the following two propostions:
 	\begin{equation}\label{eq:vconelift}
 		\cone(U) = \Pi\left(\set{ \y \in \R^{d+\Udim} \st A'\y \leq \0}\right)
 	\end{equation}
-	This is a coordinate projection of an H-Cone, and {\Vlift} is shown.
+	This is a coordinate projection of an H-Cone, and \nameref{vconelift} is shown.
 \end{proof}
 
-To prove {\Vproj}, we use two separate propositions.
+To prove \nameref{hconeproject}, we use two separate propositions.
 \begin{Prop}\label{proj_0_columns}
 	Let $B\in\R^{m'\times(d+\Udim)}$, $B'$ be $B$ with the last $\Udim$ columns deleted, and $\Pi$ the identity matrix with the last $\Udim$ rows deleted (i.e. $B' = \Pi B$).  Furthermore, suppose that the last $\Udim$ columns of $B$ are $\0$.  Then
 	\[ \Pi\left(\set{\y \in \R^{d+\Udim} \st B\y \leq \0}\right) =
@@ -126,13 +133,15 @@ In order to use the above proposition, we need a matrix with columns which are $
 	So, we've demonstrated that $\x-t\e_k$ satisfies all the constraints from $B$, and the left implication is shown.  So \textit{4} holds.
 \end{proof}
 
-\paragraph{Remark:}  \label{rem:fm} Proposition \ref{fm_hcone} highlights the properties of the matrix $B'$.  Upon close inspection, we can create a Matrix $Y$ such that $B' = YB$, and every element of $Y$ is non-negative.  Create the following set of row vectors $Y$
-\begin{alignat*}{2}
-	 & \e_l                  & \st & l \in Z          \\
-	 & \Bik \e_j - \Bjk \e_i & \st & i\in P,\; j\in N
-\end{alignat*}
-Since the basis vectors simply select rows during matrix multiplication, it is clear that
-\[ B' = YB \]
+\begin{Remark}[Fourier Motzkin Matrix]\label{fm_matrix}
+	 \nameref{fm_hcone} highlights the properties of the matrix $B'$.  Upon close inspection, we can create a Matrix $Y$ such that $B' = YB$, and every element of $Y$ is non-negative.  Create the following set of row vectors $Y$
+	\begin{alignat*}{2}
+		 & \e_l                  & \st & l \in Z          \\
+		 & \Bik \e_j - \Bjk \e_i & \st & i\in P,\; j\in N
+	\end{alignat*}
+	Since the basis vectors simply select rows during matrix multiplication, it is clear that
+	\[ B' = YB \]
+\end{Remark}
 
 Now to prove:
 \begin{enumerate}
@@ -140,7 +149,7 @@ Now to prove:
 \end{enumerate}
 
 \begin{proof}[proof of \Vproj]
-	Here we prove the case that the coordinate projection is onto the first $d$ of $d+p$ coordinates.  Let $\set{\y\in\R^{d+\Udim}:A'\y \leq \0}$ be the H-Cone we need to project, and $\Pi$ the coordinate-projection we need to apply (the identity matrix with the last p columns deleted).  For each $1 \leq k \leq p$ we can use proposition \ref{fm_hcone} in an incremental manner, starting with $A'$.
+	Here we prove the case that the coordinate projection is onto the first $d$ of $d+p$ coordinates.  Let $\set{\y\in\R^{d+\Udim}:A'\y \leq \0}$ be the H-Cone we need to project, and $\Pi$ the coordinate-projection we need to apply (the identity matrix with the last p columns deleted).  For each $1 \leq k \leq p$ we can use \nameref{fm_hcone} in an incremental manner, starting with $A'$.
 	\begin{align*}
 		 & \text{let } B_0 := A'                                        \\
 		 & \text{for } 1 \leq k \leq p                                  \\
@@ -150,7 +159,7 @@ Now to prove:
 		 & \text{return } B_p
 	\end{align*}
 
-	Consider the resulting $B$.  Property \textit{2} holds throughout, so $B$ is finite.  After each iteration, property \textit{3} holds for $k$, so the $k$-th column is $\0$.  Since each iteration only results from non-negative combinations of the result of the previous iteration (property \textit{1}), once a column is $\0$ it remains so.  Therefore, at the end of the process, the last $p$ columns of $B$ are all $\0$.  Then, by proposition \ref{proj_0_columns}, we can apply $\Pi$ to $B$ by simply deleting the last $p$ columns of $B$.  Denote this resulting matrix $A$.  We still need to check that
+	Consider the resulting $B$.  Property \textit{2} holds throughout, so $B$ is finite.  After each iteration, property \textit{3} holds for $k$, so the $k$-th column is $\0$.  Since each iteration only results from non-negative combinations of the result of the previous iteration (property \textit{1}), once a column is $\0$ it remains so.  Therefore, at the end of the process, the last $p$ columns of $B$ are all $\0$.  Then, by \nameref{proj_0_columns}, we can apply $\Pi$ to $B$ by simply deleting the last $p$ columns of $B$.  Denote this resulting matrix $A$.  We still need to check that
 	\begin{equation}\label{eq:V2equal}
 		\Pi\set{\y\in\R^{d+\Udim}\st A'\y\leq\0} = \set{\x\in\R^{d}\st A\x\leq\0}
 	\end{equation}
@@ -159,7 +168,7 @@ Now to prove:
 		A'\y & \leq \0 \Rightarrow A(\Pi(\y)) \leq \0 \label{V2seteqright}                                                           \\
 		A\x  & \leq \0 \Rightarrow (\exists t_1)\dots(\exists t_p) A'(\x+t_1\e_{d+1}+\cdots+t_p\e_{d+p}) \leq \0 \label{V2seteqleft}
 	\end{align}
-	The key observation of this verification utilizes property \textit{4} of proposition \ref{fm_hcone}:
+	The key observation of this verification utilizes property \textit{4} of \nameref{fm_hcone}:
 	\[ (\exists t)B(\x + t\e_k) \leq \0 \Leftrightarrow B'\x \leq \0 \]
 	In what follows, let $\x = \sum_{1 \leq j \leq d}x_j\e_j$.  The above property is applied sequentially to the sets $B_k$ as follows:
 	\begin{alignat*}{2}
@@ -172,10 +181,10 @@ Now to prove:
 		(\exists t_p)                                                   & \quad B_{p-1}(\x + t_p\e_{d+p})  \leq \0 & \Leftrightarrow      \\
 		                                                                & \quad B_{p}\x  \leq \0                   &
 	\end{alignat*}
-	Because $A' = B_0$, and $A$ is $B_p$ with the last $p$ columns deleted, \eqref{V2seteqright} and \eqref{V2seteqleft} hold, therefore \eqref{eq:V2equal} holds, and the proof of {\Vproj} is complete, and we've shown that a coordinate projection of an H-Cone is again an H-Cone.
+	Because $A' = B_0$, and $A$ is $B_p$ with the last $p$ columns deleted, \eqref{V2seteqright} and \eqref{V2seteqleft} hold, therefore \eqref{eq:V2equal} holds, and the proof of \nameref{hconeproject} is complete, and we've shown that a coordinate projection of an H-Cone is again an H-Cone.
 \end{proof}
 
-With {\Vlift} and {\Vproj} proven, we are now certain that any V-Cone is also an H-Cone.
+With \nameref{vconelift} and \nameref{hconeproject} proven, we are now certain that any V-Cone is also an H-Cone.
 
 \section{Every H-Cone is a V-Cone}
 
@@ -280,7 +289,7 @@ The proof of {\Hint} relies upon the following proposition.
 	Before moving on to the proof, we first note how we may write our vectors.
 	\[  Y\t = \Zsum t_k  Y^k + \Psum t_i  Y^i + \Nsum t_j  Y^j \]
 	\[  Y'\t = \Zsum t_k  Y^k + \NPsum t_{ij} (\Yi Y^j - \Yj Y^i) \]
-	Then, by proposition \ref{cone_closure} (cone closure), to show that the proposition is true, we need only show that, given any $t_i, t_j \geq 0$ ($t_{ij} \geq 0)$, there exists $t_{ij} \geq 0$ ($t_i, t_j \geq 0$) such that
+	Then, by \nameref{cone_closure} (cone closure), to show that the proposition is true, we need only show that, given any $t_i, t_j \geq 0$ ($t_{ij} \geq 0)$, there exists $t_{ij} \geq 0$ ($t_i, t_j \geq 0$) such that
 	\begin{equation} \label{eq:coneEq}
 		\Psum t_i  Y^i + \Nsum t_j  Y^j = \NPsum t_{ij} (\Yi Y^j - \Yj Y^i)
 	\end{equation}
@@ -320,7 +329,7 @@ The proof of {\Hint} relies upon the following proposition.
 \end{proof}
 
 \begin{proof}[Proof of {\Hint}]
-	In proposition \ref{fm_vcone}, the assumption that $x_k = 0$ in property \textit{4} creates the set $\cone(Y) \cap \set{\x \st x_k = 0}$.  This set, by property \textit{4}, is $\cone(Y')$.
+	In \nameref{fm_vcone}, the assumption that $x_k = 0$ in property \textit{4} creates the set $\cone(Y) \cap \set{\x \st x_k = 0}$.  This set, by property \textit{4}, is $\cone(Y')$.
 \end{proof}
 
 \begin{proof}[Proof of {\Hproj}]

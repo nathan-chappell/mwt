@@ -189,11 +189,13 @@
 \usepackage{thmtools,cleveref}
 
 \declaretheorem[name=Theorem,style=theorem,shaded={bgcolor=white,rulewidth=1pt,rulecolor=black}]{Thm}
-\declaretheorem[name=Proposition,style=theorem,shaded]{Prop}
-\declaretheorem[name=Definition,style=definition,shaded]{Def}
+\declaretheorem[name=Proposition,style=theorem,parent=section,shaded={bgcolor={rgb}{.90,.86,.90}}]{Prop}
+\declaretheorem[name=Lemma,style=theorem,parent=section,shaded={bgcolor={rgb}{.90,.86,.90}}]{Lemma}
+\declaretheorem[name=Definition,style=definition,parent=section,shaded={bgcolor={rgb}{.94,.94,.94}}]{Def}
 \declaretheorem[name=Equivalence Criteria,style=plain,shaded]{EqCriteria}
 \declaretheorem[name=Test,style=definition,shaded={bgcolor=white,rulewidth=1pt,rulecolor=black}]{Test}
 \declaretheorem[name=Remark,style=definition,shaded={bgcolor=white,rulewidth=1pt,rulecolor=black}]{Remark}
+\declaretheorem[name=Transform,style=plain,shaded]{Transform}
 
 %text macros
 \newcommand{\MWT}{Minkowski-Weyl Theorem}

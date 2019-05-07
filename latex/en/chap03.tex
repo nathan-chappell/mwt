@@ -117,7 +117,7 @@ The line:
 \lstFMEMove
 Moves $Z$ into the result.  The lines:
 \lstFMEConvolute
-Convolutes the vectors in the way described in Propositions \ref{fm_hcone} and \ref{fm_vcone} (concerning projecting an H-Cone and intersecting a V-Cone with a coordinate-hyperplane), and push them into the result \lsti{Matrix}.  In particular, it creates the sets which correspond to
+convolute the vectors in the way described in \Nameref{fm_hcone} and \Nameref{fm_vcone} (concerning projecting an H-Cone and intersecting a V-Cone with a coordinate-hyperplane), and push them into the result \lsti{Matrix}.  In particular, it creates the sets which correspond to
 \[ \set{\Bik B_j - \Bjk B_i \st i \in P,\, j \in N}, \quad
 	\set{\Yi Y^j - \Yj Y^i \st i \in P,\, j\in N} \]
 \lsti{sliced_fourier_motzkin} applies \lsti{fourier_motzkin} to \lsti{Matrix M} for each ${k \not\in \mli{s}}$, then slices the resulting \lsti{Matrix} using \lsti{slice_matrix} and \lsti{s}.  This is the realization of the algorithms indicated by the proofs of either direction of the {\MWT} for cones.
