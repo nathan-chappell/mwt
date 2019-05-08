@@ -58,6 +58,10 @@ Let's denote $(\forall \v \in V)(\exists \v'\in V') : \v \simeq \v'$ as $V \sqsu
 	We now have a method for testing the program.  First, we hand-craft an H-Cone $\HC{A}$ based on some extreme set $V$, then run our program to get a set $V'$, with the alleged property that $\cone(V') = \HC{A}$.  If we confirm \Cref{eq_hc_vc}, then our program has succeeded.
 \end{Test}
 
+\begin{Remark}[Pointed V-Cones]\label{pointed_vcones}
+  Note that not all V-Cones will have a corresponding extreme set to represent them.  For example, $\cone(1,-1)$ is a cone in $\R$, but any representation will require a positive and negative element, so $0$ can be summed to with non-zero coefficients.  In general, the V-Cones which have an extreme represenation have the origin as a vertex, and are known as the \textit{Pointed Cones}.  See appendix A for more details.
+\end{Remark}
+
 \subsection{Farkas Lemma}
 The procedure for the other direction is \textit{almost} identical, but there is a slight catch.  Call a set of row vectors \textbf{extreme} if no row is a non-negative combination of the other.  We would be able to use \Cref{eq_hc_vc} to say something similar about an extreme set of row vectors $A$, if we could say that:
 
@@ -142,6 +146,10 @@ So we have the following.
 \begin{Test}[V-Cone $\to$ H-Cone]\label{test_vc_to_hc}
 	We now have a method for testing the program.  First, we hand-craft an V-Cone $\cone{V}$ based on some extreme set $A$, then run our program to get a set $A'$, with the alleged property that $\cone(V') = \HC{A}$.  If we confirm \Cref{eq_vc_hc}, then our program has succeeded.
 \end{Test}
+
+\begin{Remark}[Pointed V-Cones]\label{pointed_vcones}
+  Note that not all H-Cones will have a corresponding extreme set to represent them.  For example, $\y = 0, \x \geq 0$ is the same as $\y = 0, \x + \y \geq 0$, but they are not equivalent.  In general, the H-Cones which have an extreme represenation include a linearly independent set of vectors, and are known as the \textit{Full-Dimensional Cones}.  See appendix A for more details.
+\end{Remark}
 
 \section{Testing H-Polyhedron $\to$ V-Polyhedron}
 
