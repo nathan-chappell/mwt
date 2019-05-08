@@ -1,0 +1,436 @@
+\chapter{Testing}
+
+In the next sections, the methods used for testing the program described above will be discussed.
+
+\paragraph{Notation:} Let $AU \leq \b$ be shorthand for $(\forall \u\in U) A\u \leq \b$.
+
+\section{Testing H-Cone $\to$ V-Cone}
+Suppose we have an H-Cone $C_A= \HC{A}$, and would like to test if a V-Cone $C_{V'} = \cone(V')$ represents the same set.  It's easy to check that
+\[ AV'\leq\0 \Rightarrow C_{V'} \subseteq C_A\]
+It's not clear what to do to check if $C_A\subseteq C_{V'}$.  Suppose we had a set $V$, and we knew that $C_A= \cone(V)$, and that $C_A= C_{V'} \Rightarrow V \subseteq V'$.  Then we'd have the following situation:
+\begin{alignat*}{2}
+	 & AV'\leq\0 \;      & \Rightarrow & \; C_{V'} \subseteq C_A \\
+	 & V \subseteq V' \; & \Rightarrow & \; C_A\subseteq C_{V'}  \\
+	 & C_{V'} = C_A \;   & \Rightarrow & \; V \subseteq V'       \\
+	 & C_{V'} = C_A \;   & \Rightarrow & \; AV'\leq\0
+\end{alignat*}
+
+The problem is now to come up with such a set $V$.  We will need to relax the requirements on $V$ a little bit, but not in a way that reduces its utility.  The set is desribed in the next proposition, but first we introduce the notion of equivalence vectors:
+
+\begin{Def}[vector equivalence]
+	Let $\u,\v \in \R^d$, and suppose that $\u/\norm{\u} = \v/\norm{\v}$.  Then say that $\u,\v$ are equivalent, and write:
+	\[ \u \simeq \v \]
+\end{Def}
+
+\begin{Def}[Extreme]
+	Let $V \in \R^{d\times n}$.  $V$ is \textit{extreme} if, for any $\t\geq\0$ and $\v = V\e_k$, the following holds:
+  \[V\t = \v \Rightarrow \t = \e_k \]
+\end{Def}
+
+\begin{Prop}\label{extreme_v}
+	Let $V \in \R^{d\times n}$ be extreme, and $C = \cone(V)$.  Then
+	\[ C = \cone(V') \Rightarrow (\forall \v \in V)(\exists \v'\in V') : \v \simeq \v' \]
+\end{Prop}
+
+\begin{proof}
+	Let $\v \in V$, so that $\v = V\e_k$.  Since $C = \cone(V')$, there exists a matrix $A$ with all non-negative entries such that $V' = VA$.  There is also a non-negative $\b$ such that $\v = V'\b$.  Then $\v = (VA)\b = V(A\b)$.  Since $A$ and $\b$ contain only non-negative entries, so does $A\b$.  Since $V$ is extreme, $A\b$ must be the basis vector $\e_k$.  Then if $i \neq k$, $\e_i^T(A\b) = 0$, or $(\e_i^TA)\b = \sum_j A_i^j b_j = 0$.  Since $A_i^j, b_j \geq 0$, we have:
+	\begin{alignat*}{3}
+		(\forall i \neq k) & \quad & A_i^j > 0 \; & \Rightarrow & \; b_j = 0   \\
+		(\forall i \neq k) & \quad & b_j > 0   \; & \Rightarrow & \; A_i^j = 0
+	\end{alignat*}
+	Furthermore, we have $\ip{A_k}{\b} = 1$, so for some $l$, $A_k^l,b_l > 0$.  Then,
+	\[ (\forall i \neq k)\quad A_i^l = 0 \]
+	Now let $\b'=\e_l/A_k^l$.  Then it immediately follows that $\ip{A_k}{\b'} = 1$.  Also,
+	\[ (\forall i \neq k)\quad A_i^l = 0 \quad \Rightarrow\quad \ip{A_i}{\b'} = A_i^l/A_k^l = 0\]
+	We conclude that $A\b' = \e_k = A\b$, and that $\v = V(A\b) = V(A\b') = (VA)\b' = U(\e_l/A_k^l)$.  If $\v' = U\e_l$, that is $\v'$ is the $l$-th vector of $U$, then $\v = \v'/A_k^l$, or
+	\[ \v/\norm{\v} = (\v'/A_k^l)/\norm{\v'/A_k^l} = \v'/\norm{\v'} \]
+	So $\v \simeq \v'$.
+\end{proof}
+
+Let's denote $(\forall \v \in V)(\exists \v'\in V') : \v \simeq \v'$ as $V \sqsubseteq V'$.  Then, considering the discussion before the proposition, we have the following result.
+
+\begin{EqCriteria}[H-Cone $\to$ V-Cone]\label{eq_hc_vc}
+	Say $V \in \R^{d\times n}$ is extreme, and let $C_A = \HC{A} = \cone(V)$.  Then
+	\[ C_A = \cone(V') \;\Leftrightarrow\; AV'\leq\0,\, V \sqsubseteq V' \]
+\end{EqCriteria}
+
+\begin{Test}[H-Cone $\to$ V-Cone]\label{test_hc_to_vc}
+	We now have a method for testing the program.  First, we hand-craft an H-Cone $\HC{A}$ based on some extreme set $V$, then run our program to get a set $V'$, with the alleged property that $\cone(V') = \HC{A}$.  If we confirm \Cref{eq_hc_vc}, then our program has succeeded.
+\end{Test}
+
+\subsection{Farkas Lemma}
+The procedure for the other direction is \textit{almost} identical, but there is a slight catch.  Call a set of row vectors \textbf{extreme} if no row is a non-negative combination of the other.  We would be able to use \Cref{eq_hc_vc} to say something similar about an extreme set of row vectors $A$, if we could say that:
+
+\begin{Thm}[Dual Cone]\label{dual_cone}
+	\[ \HC{A} = \HC{A'} \Leftrightarrow \cone(A^T) = \cone(A'^T) \]
+\end{Thm}
+
+To prove this proposition, we use the Farkas Lemma:
+
+\begin{Prop}[The Farkas Lemma]\label{farkas_lemma}
+	Let $U \in \R^{d\times n}$.  Precisely one of the following is true:
+	\[ (\exists \t \geq \0) : \x = U\t \]
+	\[ (\exists \y) : U^T\y \leq 0,\; \ip{\x}{\y} > 0 \]
+\end{Prop}
+
+\begin{proof}  That both can't be true can be seen by:
+	\[ \x = U\t \quad\Rightarrow\quad \y^T\x = \y^T U\t \quad\Rightarrow\quad 0 \neq 0 \]
+	To see that at least one is true we must reconsider the process of converting a V-Cone to an H-Cone.  First, from $\cone(U)$ we create the following matrix:
+	\[ A = \begin{pmatrix*}[r] \0 & -I \\ I & -U \\ -I & U \end{pmatrix*}  \]
+	By the way $A$ is constructed,
+	\begin{equation}\label{eq:flcone}
+		(\exists \t) : A \xt \leq \0 \Leftrightarrow (\exists \t\geq\0)\; \x = U\t
+	\end{equation}
+	In the proof of the transformation, we use \Nameref{fm_hcone} to transform that matrix $A$.  The \Nameref{fm_matrix} promises a sequence of matrices $Y_{d+1}, \dots, Y_{d+n}$ with certain properties.  Let $Y = (Y_{d+n})(Y_{d+(n-1)})\dots(Y_{d+1})$, then it can be said of $Y$:
+	\begin{enumerate}
+		\item Every element of $Y$ is non-negative.
+		\item $Y$ is finite.
+		\item The last $n$ columns of $YA$ are all $\0$.
+		\item \((\exists t_{d+1},\dots,t_{d+n})A(\x + \sum_{i=d+1}^{d+n} t_i\e_i) \leq \0
+		      \Leftrightarrow (YA)\x \leq \0 \)
+	\end{enumerate}
+	Note that here $\x \in \R^{d+n}$.  $A$ has three blocks of rows, which can be labeled with $Z,P,N$ in a fairly obvious way.  Then, $Y$ can be broken up into three blocks of columns, so that
+	\[ Y = (Y_Z \; Y_P \; Y_N) \]
+	Where each of $Y_Z,Y_P,Y_N \geq \0$.  Consolidating what is known about $A$ and $Y$,
+	\[ YA = (Y_Z \; Y_P \; Y_N) \begin{pmatrix*}[r] \0 & -I \\ I & -U \\ -I & U \end{pmatrix*}
+		= (Y' \; \0) \]
+	Here, we have let $Y' = Y_P - Y_N$.  Then it follows that
+	\[ \0 = -Y_Z - Y_P(U) + Y_N(U) = -Y_Z - Y'(U) \;\Rightarrow\; Y_Z = - Y'U
+		\;\Rightarrow\; Y'U \leq \0 \]
+	Then it holds that, for any row $\y' \in Y'$:
+	\begin{equation}\label{eq:flneg}
+		\y'U \leq \0
+	\end{equation}
+	It is also true that
+	\[ (YA)\xt = (Y'\;\0)\xt = Y'\x \]
+	We also have
+	\begin{equation}\label{eq:flconst}
+		(\exists \t) : A \xt \leq \0 \Leftrightarrow
+		(YA)\xt \leq \0 \Leftrightarrow
+		Y'\x \leq \0
+	\end{equation}
+	Note that here $\x \in \R^d$.  So, if given some $\x$, the left side of \eqref{eq:flconst} is not satisfied, then neither is the right, and there must be some row $\y' \in Y'$ such that the following holds:
+	\begin{equation}\label{eq:flconstbrk} \ip{\y'}{\x} > 0 \end{equation}
+	Then we conclude that, if the right side of \eqref{eq:flcone} fails, then there is a vector $\y' \in Y'$ satisfying \eqref{eq:flneg} and \eqref{eq:flconstbrk}.
+\end{proof}
+
+\section{Testing V-Cone $\to$ H-Cone}
+
+Now we can prove \nameref{dual_cone}:
+\[ \HC{A} = \HC{A'} \Leftrightarrow \cone(A^T) = \cone(A'^T) \]
+
+\begin{proof}
+	First suppose that $\cone(A^T) = \cone(A'^T)$.  Then there exists a non-negative matrix $B$ such that $A'^T = A^TB$.  Then $A\x \leq \0 \Rightarrow B^TA\x\leq \0 \Rightarrow A'\x\leq\0$.  Precisely the same reasoning shows that $A'\x\leq\0 \Rightarrow A\x\leq\0$, and we conclude that $\cone(A^T) = \cone(A'^T) \Rightarrow \HC{A} = \HC{A'}$.
+
+	Next suppose that $\cone(A^T) \neq \cone(A'^T)$, that is, let $\z \in \cone(A), \z \not\in\cone(A')$.  We must show that $\HC{A} \neq \HC{A'}$.  By the Farkas Lemma, we have a $\y$ such that $\ip{\y}{\z} > 0,\; A'\y \leq \0$.  Clearly this means that $\y \in \HC{A'}$.  Since $\z \in \cone(A)$, there is some $(\t \geq \0): \z^T = \t^T A$.  Then if $A\y\leq\0$, we would have $\ip{\y}{\z} = \t^T A\y \leq 0 < \ip{\y}{\z}$, a contradiction.  So we conclude that $\y\not\in\HC{A}$.
+\end{proof}
+
+Now, as before, we suppose that we have a set $V$ and $A$, where $A$ is extreme, and we know that $C = \cone(V) = \HC{A}$.  We have the following situation:
+\begin{alignat*}{2}
+	 & C = \HC{A'}    \;   & \Rightarrow & \; A \sqsubseteq A'    \\
+	 & C = \HC{A'}    \;   & \Rightarrow & \; A'V\leq\0           \\
+	 & A \sqsubseteq A' \; & \Rightarrow & \; \HC{A'} \subseteq C \\
+	 & A'V\leq\0  \;       & \Rightarrow & \; C \subseteq \HC{A'}
+\end{alignat*}
+So we have the following.
+
+\begin{EqCriteria}[V-Cone $\to$ H-Cone]\label{eq_vc_hc}
+	Let $A\in\R^{m\times d}$ be extreme, and $C_V = \cone(V) = \HC{A}$.  Then
+	\[ C_V = \HC{A'} \;\Leftrightarrow\; A'V\leq\0,\; A \sqsubseteq A' \]
+\end{EqCriteria}
+
+\begin{Test}[V-Cone $\to$ H-Cone]\label{test_vc_to_hc}
+	We now have a method for testing the program.  First, we hand-craft an V-Cone $\cone{V}$ based on some extreme set $A$, then run our program to get a set $A'$, with the alleged property that $\cone(V') = \HC{A}$.  If we confirm \Cref{eq_vc_hc}, then our program has succeeded.
+\end{Test}
+
+\section{Testing H-Polyhedron $\to$ V-Polyhedron}
+
+Say we have an H-Polyhedron $P_{A,\b} = \HP{A}{\b}$, and wish to check that our program correctly calculates a $V'$ and $U'$ such that $P_{A,\b} = \VP{U'}{V'}$.  Again, we shall use the notion of extremity and show that under certain circumstances we can use extreme sets to demonstrate the validity of our algorithm.  In this case, the definition of extreme is a little more complicated, but it asserts that a set $U$ is extreme as before, and that no element of another set $V$ can be expressed as a non-trival sum of a convex combination of $V$ and a non-negative linear combination of members of $U$.
+
+\begin{Def}[Extreme Pair]{ A pair of sets $U\in\R^{d\times n}, V\in\R^{d\times p}$ is called an \textit{extreme pair} if for any $\u = U\e_k, \v = V\e_l$ the following is true:
+		\begin{alignat*}{1}
+			 & \t \geq \0,\; \u = U\t \Rightarrow \t = \e_k                              \\
+			 & \t \geq \0, \blambda \geq \0, \ip{\blambda}{\1} = 1, \v = U\t + V\blambda
+			\Rightarrow \t = \0, \blambda = \e_l
+		\end{alignat*}
+	}\end{Def}
+
+Let us now consider the set $U$ in the expression $\HP{A}{b} = \VP{U}{V}$.
+
+\begin{Prop}[Characterstic Cone]\label{characteristic_cone}
+	Suppose that $P = \HP{A}{b} = \VP{U}{V}$.  Then
+	\[ \cone(U) = \HC{A} \]
+\end{Prop}
+
+\begin{proof}
+	We show that the following three statements are equivalent:
+	\begin{enumerate}
+		\item $A\r\leq\0$
+		\item $(\forall \x\in P)(\forall \alpha > 0)\;\x + \alpha\r \in P$
+		\item $\r \in \cone(U)$
+	\end{enumerate}
+	$(1 \Rightarrow 2)$. $\x\in P$ means that $A\x\leq\b$, and $A\r\leq\0$ means that $A(\x+\alpha\r) \leq A\x \leq \b$.\\
+	$(\neg 1 \Rightarrow \neg 2)$.  Suppose $\ip{A_i}{\r} > 0$, then let $\alpha > (b_i - \ip{A_i}{\x})/\ip{A_i}{\r}$.  We have:
+	\[ \ip{A_i}{\x + \alpha\r} > \ip{A_i}{\x} +
+		\frac{b_i\ip{A_i}{\r} - \ip{A_i}{\x}\ip{A_i}{\r}}{\ip{A_i}{\r}} = b_i \]
+	$(3 \Rightarrow 2)$.  This is essentially the definition of $\VP{U}{V}$.\\
+	$(2 \Rightarrow 3)$.  Now for the real work.  Suppose that (2) holds, but $\r\not\in\cone(U)$.  Then by the Farkas Lemma, we have a $\y$ that satisfies $(\forall \r\in U)\,\ip{\r}{\y}\leq 0,\; \ip{\y}{\r} > 0$.  From (2) we construct a sequence: $(\x_n) = \v+n\cdot\r$.  Then it is clear that the sequence $\ip{\y}{\x_n} \to \infty$.  It is also clear that $(\forall n)\,\x_n \in P$.  We now need the following:
+	\begin{itemize}
+		\item A linear, real-valued function on the set $\conv(V)$ achieves its maximal value at some $\bar\v \in V$.
+	\end{itemize}
+	To see this is true, suppose that the linear function is given by $\ip{\y}{\cdot}$, and that $\bar\v$ is an element of $V$ such that $(\forall \v \in V)\,\ip{\y}{\bar\v} \geq \ip{\y}{\v}$.  Then, for any $\r \in \conv(V)$, $\r = \sum_{\v\in V} \lambda_v\v$ where $\sum \lambda_v = 1 \Rightarrow \lambda_v \leq 1$, and it follows
+	\[\ip{\y}{\r} = \ip{\y}{\sum_{\v\in V}\lambda_v v} = \sum_{v\in V} \lambda_v\ip{\y}{\v}
+		\leq \sum_{v\in V}\lambda_v\ip{\y}{\bar\v} = \ip{\y}{\bar\v} \]
+	Now consider the maximum value of the function $\ip{\y}{\cdot}$ on $P$.  Since any element of $P$ can be written $\r + \v \st \r\in\cone(U),\,\v\in\conv(V)$, and $(\forall\r\in U) \ip{\y}{\r} \leq 0$, we can find the maximum value on $\conv(V)$.  However, $\ip{\y}{\cdot}$ achievs its maximal value on $\conv(V)$ at some $\bar\v\in V$, which is a contradiction with the fact that $\ip{\y}{\x_n} \to \infty$, so we conclude that $\r\in\cone(U)$.
+\end{proof}
+
+\begin{Remark}[Characteristic Cone]\label{characteristic_cone}  Note that $(2)$ in the proof above is independent of $A$ and $U$.  This means that the cone of a polyhedron is independent of its representation, i.e. if $\VP{U}{V} = \VP{U'}{V'}$, then $\cone(U) = \cone(U')$, while it is not necessarily true that $\conv(V) = \conv(V')$.  Similarly, if $\HP{A}{\b} = \HP{A'}{\b'}$, the it holds that $\HC{A} = \HC{A'}$.
+\end{Remark}
+
+\begin{Prop}\label{conv_conv}
+	A convex combination of convex combinations is another convex combination
+\end{Prop}
+\begin{proof}
+	Let $\Lambda$ represent a collection of convex combinations, that is, $\vec{1}^T\Lambda = \vec{1}^T$, and let $\blambda\geq\0,\,\1^T\blambda = 1$ be a convex combinator.  Then $\Lambda\blambda = \blambda'$ where $\blambda'\geq\0,\,\1^T\blambda'=1$.  That $\blambda'\geq\0$ is clear, then just note that $\1^T\blambda' = \1^T\Lambda\blambda = \1^T\blambda = 1$.
+\end{proof}
+
+\begin{Prop}[Minkowski Sums]\label{minkowski_formula}
+	The following two statements hold
+	\begin{enumerate}
+		\item $A \subseteq B, C\subseteq D \Rightarrow A + C \subseteq B + D$
+		\item $P + \cone(U) + \cone(U) = P + \cone(U)$
+	\end{enumerate}
+\end{Prop}
+
+\begin{proof}
+	(1) $a\in A \Rightarrow a\in B,\; c\in C\Rightarrow c\in D$.  Taken together, $a+c \in B+D$.\\
+	(2) $\t,\t'\geq\0 \Rightarrow p + U\t + U\t' = p + U(\t+\t') = p + U\t'', \t''\geq\0$.
+\end{proof}
+
+\begin{EqCriteria}\label{eq_hp_vp}
+	Suppose that there is an extreme pair $U,V$ such that $P_{A,\b} = \HP{A}{b} = \VP{U}{V}$.  Then the following are equivalent:
+	\begin{enumerate}
+		\item $P_{A,\b} = \VP{U'}{V'}$
+		\item $U \sqsubseteq U',\; V \subseteq V',\; AU'\leq\0,\, AV'\leq\b$
+	\end{enumerate}
+\end{EqCriteria}
+
+\begin{proof}
+	$(2 \Rightarrow 1)$.  There's not too much to say about this direction, it's mostly just collecting some straightforward observations and results.
+	\begin{itemize}
+		\item[(a)] $U \sqsubseteq U' \Rightarrow \cone(U) \subseteq \cone(U')$
+		\item[(b)] $V \subseteq V' \Rightarrow \conv(V) \subseteq \conv(V')$
+		\item[(c)] (a) + (b) $\Rightarrow P_{A,\b} \subseteq \VP{U'}{V'}$
+		\item[(d)] $AU'\leq\0 \Rightarrow \cone(U') \subseteq \cone(U)$
+		\item[(e)] $AV'\leq\b \Rightarrow \conv(V') \subseteq P_{A,\b}$
+		\item[(f)] (d) + (e) $\Rightarrow \VP{U'}{V'} \subseteq P_{A,\b} + \cone(U) = P_{A,\b}$
+		\item (c) + (f) $\Rightarrow (2 \Rightarrow 1)$
+	\end{itemize}
+	(a) and (b) are clear, (c) uses \Cref{minkowski_formula}, (d) requires \nameref{characteristic_cone}, (e) is clear, and (f) uses \Cref{minkowski_formula}.
+
+	$(1 \Rightarrow 2)$.  This direction is a little more interesting.  First we observe:
+	\[ \cone(U) = \HC{A} = \cone(U') \Rightarrow U \sqsubseteq U' \]
+	The equalities follow from \nameref{characteristic_cone}, and the implication follows from \Cref{eq_hc_vc}.  Note that the extremeness of $U$ and the Farkas lemma are both used here.  Since we know that $\cone(U) = \cone(U')$, we also know that $\VP{U'}{V'} = \VP{U}{V'}$.  Next, we consider $V$ and exploit its extremeness.  Since $P_{A,\b} = \VP{U}{V'}$, each $\v'\in V'$ can be written $U\t + V\blambda$, where $\t \geq \0$ and $\blambda$ is a convex combinator.  We combine these into matrices $T$ and $\Lambda$, so $V' = UT + V\Lambda$.  But it is also true that every $\v\in V$ can be written as
+	\[ \v = U\t + V'\blambda = U\t + (UT + V\Lambda)\blambda = U\t' + V\blambda' \]
+	Where $\t'\geq\0$, and $\blambda'$ is a convex combinator.  Because $U,V$ is an extreme pair, we have that $\t'=\0$, and $\blambda = \e_k$ for some $k$.  Because $U$ is extreme, it does not contain $\0$, and so $\t = \0$.  This puts us at $\v = V'\blambda = V\Lambda\blambda = V\blambda'$, and $\blambda' = \e_k$.  In order that $\blambda' = \e_k$, for every column of $\Lambda$ corresponding to a positive entry in $\blambda$, only one row may contain a positive entry, and that entry must be $1$.  Then instead of $\blambda$, use instead $\e_l$ where $\Lambda_k^l = 1$.  Then $\Lambda\blambda = \Lambda\e_l$, so $V\Lambda\blambda = V\Lambda\e_l = V'\e_l=\v'$ where $\v'\in V'$.  Then $\v \in V'$.
+
+	That $AV'\leq\b$ is obvious, and that $AU'\leq\0$ is mentioned in the remarks after \Cref{characteristic_cone}.
+\end{proof}
+
+\begin{Test}[H-Polyhedron $\to$ V-Polyhedron]\label{test_hp_to_vp}
+	We now have a method for testing the program.  First, we hand-craft an H-Polyhedron $\HP{A}{\b}$ based on some extreme pair $(U,V)$, then run our program to get the pair $(U',V')$, with the alleged property that $\HP{A}{\b} = \VP{U'}{V'}$.  If we confirm \Cref{eq_hp_vp}, then our program has succeeded.
+\end{Test}
+
+\section{Testing V-Polyhedron $\to$ H-Polyhedron}
+Now we suppose we have a V-Polyhedron $P_{U,V} = \VP{U}{V}$, and would like to test the program which returns a matrix-vector pair $A',\b'$ where supposedly $P_{U,V} = \HP{A'}{\b'}$.  Again, we will start off with a pair $A,\b$ where we know that $P_{U,V} = \HP{A}{\b}$, where $A,\b$ satisfy some nice properties, and use those properties to test if $P_{U,V} = \HP{A'}{\b'}$.  In order to demonstrate these properties, the Farkas Lemma will be used, but in different forms.  We want to use \Cref{eq_vc_hc}, but first we have to check:
+
+\begin{Prop}\label{homogenization_cone}
+	The following statements are equivalent:
+	\begin{enumerate}
+		\item $\HP{A}{\b} = \HP{A'}{\b'}$
+		\item $\set{\xx \big| \pmb -1 & \0 \\ -\b & A \pme \xx \leq \0} =
+			      \set{\xx \big| \pmb -1 & \0 \\ -\b' & A' \pme \xx \leq \0}$
+	\end{enumerate}
+\end{Prop}
+
+\begin{proof}
+	$(2 \Rightarrow 1)$.  Just set $x_0 = 1$, and move $\b,\b'$ to the right side of the inequalities.
+	$(\neg 2 \Rightarrow \neg 1)$.  Suppose that:
+	\[ \pmb -1 & \0 \\ -\b & A \pme \xx \leq \0,\quad
+		\pmb -1 & \0 \\ -\b' & A' \pme \xx \not\leq \0 \]
+	Observe that, by the way these sets are constructed, $x_0 \geq 0$.  If $x_0 = 0$, then we have $\HC{A} \neq \HC{A'}$, which, by the remark following \Cref{characteristic_cone} means that $\HP{A}{\b} \neq \HP{A'}{\b'}$.  If $x_0 > 0$, then we have:
+	\[ A\x \leq x_0\b,\;A'\x\not\leq x_0\b' \Rightarrow A(\x/x_0)\leq\b,\;A'(\x/x_0)\not\leq\b' \]
+	So $\HP{A}{\b} \neq \HP{A'}{\b'}$.
+\end{proof}
+
+Now, combining the results of \Nameref{characteristic_cone} and \cref{homogenization_cone}, we have the following result:
+
+\begin{Prop}\label{dual_homogenization_cone}
+	The following two statement are equivalent:
+	\begin{enumerate}
+		\item $\HP{A}{\b} = \HP{A'}{\b'}$
+		\item $\cone \pmb -\b^T & -1 \\ A^T & \0 \pme = \cone \pmb -\b'^T & -1 \\ A'^T & \0 \pme$
+	\end{enumerate}
+\end{Prop}
+%\begin{proof} This immediately follows from propositions \ref{homogenization_cone} and \ref{dual cone}.  \end{proof}
+
+\subsection{Extreme H-Polyhedra Pairs}
+\begin{Def}[Extreme Pair]{
+		A pair $A,\b$ is called \textbf{extreme} if $\HP{A}{\b}$ is non-empty, and
+		\[ \t \geq \0,\, \t^T(A,b) = (A_i,b_i) \Rightarrow [\t \neq \0 \Rightarrow \t = \e_i] \]
+	}\end{Def}
+
+Of course, we want to say that if $P = \HP{A}{\b}$ where $(A,\b)$ is an extreme pair, and $P = \HP{A'}{\b'}$, then, by \Cref{dual_homogenization_cone}, $(A,\b) \sqsubseteq (A',\b')$.  The catch is that the cones in \Cref{dual_homogenization_cone} have a strange form.  What we want to be true turns out to be so, but before we can prove this fact, we need a property of extreme pairs, which requires a new form of the Farkas Lemma.
+
+\subsection{Farkas Lemma: Round 2}
+
+Let us restate the conclusion of the Farkas Lemma:
+\newcommand{\xor}{\;\Leftrightarrow\;\neg}
+\[ \exists \t\geq\0 \st U\t = \x \xor \exists \y\st \y^TU\leq\0,\, \y^T\x > 0 \]
+If we let $U = (A,-A,I)$, and  we get a new form:
+\[ \exists \t \geq\0 \st (A,-A,I)\t = \x \xor \exists \y\st \y^T(A,-A,I)\leq\0,\, \y^T\x > 0 \]
+Then breaking apart $\t = (\t_P,\t_N,\t_I)$, we have
+\[ (A,-A,I)\pmb \t_P\\ \t_N\\ \t_I \pme = \x \Rightarrow A(\t_P - \t_N) = \x - \t_I \]
+If we let $\t_P - \t_N = \z$, then $\z$ is no longer constrained by $\t \geq\0$, and we have that $A\z \leq \x$.  Since $\y^T A \leq \0$ and $-\y^T A\leq \0$, it must be that $\y^T A = \0$.  Combining these results, relabeling $\x$ as $\b$ and $\z$ as $\x$, and $\y$ as $-\y$, we see a new form of Farkas Lemma:
+\begin{Thm}[Farkas Lemma 2]\label{FL2}
+	\[ \exists \x \st A\x \leq \b \xor \exists \y\geq\0 \st \y^TA = \0,\, \y^T\b < 0 \]
+\end{Thm}
+This form tells us that an H-Polyhedron is non-empty, or we can create an inequality that is impossible to solve from it's matrix.  The next form shows a similar result, but this time it is for a specific $\x$, not implying the emptyness of the Polyhedra, just the constraints' failure to be satisfied at a specific point.
+%
+%First observe that (using \eqref{FL2})
+%\[ A\x \not\leq \b \Leftrightarrow \neg \exists \z\st
+%	\pmb A\\I\\-I\pme \z \leq \pmb \b\\ \x\\ -\x \pme \Leftrightarrow
+%	\exists \y\geq\0\st \y^T\pmb A\\I\\-I\pme =\0,\, \y^T\pmb \b\\ \x\\ -\x \pme < 0\]
+%Splitting up $\y$ into components like we did before with $\t$, we can rewrite this as
+%
+%\begin{equation} \label{eq:FL3}
+%	A\x \not\leq \b \Leftrightarrow \exists \y\st \y^T A = \w,\, \y^T \b < \w^T\b
+%\end{equation}
+
+We can now prove some useful properties of extreme pairs.
+
+\begin{Prop}\label{extreme_Ab_pair_properties}
+	Let $A,\b$ be an extreme pair.  Then the following holds:
+	\begin{alignat*}{6}
+		\t\geq\0,\,\t^T A \, & = & \, \0  \, & \Rightarrow & \, [\t & \neq & \, \0 \,   & \Rightarrow & \, \ip{\t}{\b} \, & > & \, 0 ]   \\
+		\t\geq\0,\,\t^T A \, & = & \, A_i \, & \Rightarrow & \, [\t & \neq & \, \e_i \, & \Rightarrow & \, \ip{\t}{\b} \, & > & \, b_i ]
+	\end{alignat*}
+\end{Prop}
+
+\begin{proof}
+	Suppose that $\t^T A = \0,\, \t\neq\0$.  Next suppose that $\ip{\t}{\b} = 0$.  Then $(\t + \e_i)(A,b) = (A_i,b_i)$, but $\t+\e_i \neq \e_i$, a contradiction.  Next suppose that ${\ip{\t}{\b} < 0}$.  Then we have that $\exists \t\geq\0,\,\t^T A = \0,\,\t^T \b < 0$, which by \nameref{FL2} means that $\HP{A}{b}$ is empty, a contradiction.  So the first property is proven.
+
+	Now suppose that $\t^T A = A_i, \t\neq\e_i$.  Then we know that $\t^T \b \neq b_i$, but if $\ip{\t}{\b} < 0$, we'd have that $(\t - \e_i)^T A = \0, (\t-\e_i)^T\b < 0$, contradicting the first property.
+\end{proof}
+
+We are now prepared to prove the following proposition.
+
+\begin{Prop}\label{extreme_Ab}
+	Suppose that $\HP{A}{\b} = \HP{A'}{\b'}$, where $(A,\b)$ is an extreme pair.  Then $(A,\b) \sqsubseteq (A',\b')$.
+\end{Prop}
+
+\begin{proof}
+	It suffices to show that $\pmb -\b^T & -1 \\ A^T & \0 \pme$ is extreme, for then:
+	\[\pmb -\b^T & -1 \\ A^T & \0 \pme \sqsubseteq \pmb -\b'^T & -1 \\ A'^T & \0 \pme \Rightarrow
+		\pmb -\b^T \\ A^T \pme \sqsubseteq \pmb -\b'^T \\ A'^T \pme \Rightarrow
+		(A,\b) \sqsubseteq (A',\b')
+	\]
+	So, suppose that $(\t,t) \geq \0$, $\pmb -\b^T & -1 \\ A^T & \0 \pme(\t,t) = \pmb -b_i \\ A^T_i\pme$.  We must show that $\t = \e_i$, $t = 0$.  Suppose that it's not.  Then we have $\t^T A = A_i$, and by \Cref{extreme_Ab_pair_properties} $\ip{\t}{-\b} < b_i$.  Since $-t \leq 0$, $\ip{\t}{-\b} - t < b_i$, a contradiction.  So we have shown that $\t = \e_i$, in which case $t = 0$, and the proposition follows.
+\end{proof}
+
+Suppose that we have a $(U,V)$ and $(A,\b)$ such that $P_{UV} = \VP{U}{V} = \HP{A}{\b}$, and $(A,\b)$ is an extreme pair.  We run our program and get a new pair $(A',\b')$.  Denote $P_{A',\b'} := \HP{A'}{\b'}$.  We would like to verify that $P_{UV} = P_{A',\b'}$.  We have the following:
+\begin{alignat*}{2}
+	 & A'U\leq\0,\, A'V\leq\b'     & \;\Rightarrow\; & P_{UV} \subseteq P_{A',\b'}  \\
+	 & (A,\b) \sqsubseteq (A',\b') & \;\Rightarrow\; & P_{A',\b'} \subseteq P_{UV} \\
+	 & P_{UV} = P_{A',\b'}         & \;\Rightarrow\; & A'U\leq\0,\, A'V\leq\b'      \\
+	 & P_{UV} = P_{A',\b'}         & \;\Rightarrow\; & (A,\b) \sqsubseteq (A',\b')
+\end{alignat*}
+The last line uses \Cref{extreme_Ab}.  So we conclude:
+
+\begin{EqCriteria}\label{eq_vp_hp}
+Suppose that there is an extreme pair $(A,\b)$ such that $P_{UV} = \VP{U}{V} = \HP{A}{b}$.  Then the following are equivalent:
+\[ P_{UV} = \HP{A'}{\b'} \Leftrightarrow A'U\leq\0,\,A'V\leq\b',\,(A,\b)\sqsubseteq (A',\b') \]
+\end{EqCriteria}
+
+\begin{Test}[V-Polyhedron $\to$ H-Polyhedron]\label{test_vp_to_hp}
+	We now have a method for testing the program.  First, we hand-craft a V-Polyhedron $\VP{U}{V}$ based on some extreme pair $(A,\b)$, then run our program to get the pair $(A',\b')$, with the alleged property that $\VP{U}{V} = \HP{A'}{\b'}$.  If we confirm \Cref{eq_vp_hp}, then our program has succeeded.
+\end{Test}
+
+\section{\filename{test\_functions.h}}
+
+The following types are defined for running tests of the different algorithms.  They are expected to be given a descriptive name, the object on which the test will be run, and a \lsti{key} with which the result of the test will be compared.  The \lsti{key} object is one of the extreme objects described above.
+\lsthconetestcasea
+\lstvconetestcasea
+\lsthpolytestcaseb
+\lstvpolytestcaseb
+
+\section{\filename{test\_functions.cpp}}
+
+The dot-product and norm (in terms of dot product).
+\lstoperator
+\lstnorm
+
+\lsti{approximately_zero} is used during tests to avoid issues involving floating point rounding errors.  For example, \lsti{1/6.0 * 2.5 - 5/12.0 == 0} will give \lsti{false}, while \lsti{approximately_zero(1/6.0 * 2.5 - 5/12.0)} will return \lsti{true}.  Test cases are used where intermediate calculations don't depend on such high accuracy, and these discrepencies can be ignored.
+
+\lsti{approximately_zero(c) == true} is be denoted $\mli{c} \approx 0$.
+\lstapproximatelyzeroa
+
+Tests $c < 0 \lor c \approx 0$.
+\lstapproximatelyltzero
+
+Tests $\norm{\v} \approx 0$.  This is be denoted $\v \approx \0$.
+\lstapproximatelyzerob
+
+Tests $\u/\norm{\u} - \v/\norm{\v} \approx \0 $.  This is be denoted $\u \simeq \v$.
+\lstisequivalent
+
+Tests $\u - \v \approx \0$.  This is be denoted $\u \approx \v$.
+\lstisequal
+
+Tests $(\exists \u \in U) \st \v \simeq \u$.
+\lsthasequivalentmember
+
+Tests $(\exists \u \in U) \st \v \approx \u$.
+\lsthasequalmember
+
+Tests $(\forall v \in V)(\exists \u \in U) \st \v \simeq \u$.  This is be denoted $V \sqsubseteq U$.
+\lstsubsetmodeq
+
+Tests $(\forall v \in V)(\exists \u \in U) \st \v \approx \u$.  This is be denoted $V \subseteq U$.
+\lstsubset
+
+Given a \mli{Vector constraint} and \mli{Vector ray}, tests if \\
+\lsti{approximately_lt_zero(ray * constraint)}.  Note that if the constraint is of the form $\ip{A_i}{\v} \leq b$ for some value $b$, then this tests $\ip{A_i}{\mli{ray}}\leq\0$.
+\lstraysatisfieda
+
+Test $A\v \leq \0$
+\lstraysatisfiedb
+
+Test $AV \leq \0$
+\lstrayssatisfied
+
+Test $\ip{A_i}{\v} \leq b_i$
+\lstvecsatisfieda
+
+Test $A\v \leq \b$
+\lstvecsatisfiedb
+
+Test $AV \leq \b$
+\lstvecssatisfied
+
+Given an H-Cone $C = \HC{A} = \cone(U)$ where $U$ is extreme, and a \lsti{Matrix} $U'$, determines if $C = \cone(U')$.
+Similarly, given a V-Cone $C = \cone(U) = \HC{A}$ where $A$ is extreme, and a \lsti{Matrix} $A'$, determines if $C = \HC{A'}$.
+\lstequivalentconerep
+
+Given an H-Polytope $P = \HP{A}{\b} = \VP{U}{V}$ where $U$ and $V$ are extreme, and a pair $(U',V')$, determines if $P = \VP{U'}{V'}$.
+\lstequivalenthpolyrep
+
+Given a V-Polytope $P = \VP{U}{V} = \HP{A}{\b}$ where $A$ is extreme, and a \lsti{Matrix} $(A',\b')$, determines if $P = \HP{A'}{\b'}$.
+\lstequivalentvpolyrep
+
+%\lsthconetestcaseb
+%\lstvconetestcaseb
+%\lsthpolytestcasea
+%\lstvpolytestcasea
+
+
