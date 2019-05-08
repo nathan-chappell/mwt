@@ -109,7 +109,8 @@ Matrix lift_hcone(const Matrix &hcone) {
 }
 
 // refactored transformation algorithm
-Matrix cone_transform(const Matrix &cone, LiftSelector lift) {
+Matrix cone_transform(const Matrix &cone, 
+                      LiftSelector lift) {
   if (cone.empty()) {
     throw logic_error{"empty cone for transform"};
   }

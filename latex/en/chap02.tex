@@ -204,7 +204,7 @@ The proof rests on the following three propostions:
 	Let $\mA$, we now show that the H-Cone
 	\[\set{\xv \st A\x \leq \0}\]
 	can be written as the projection of a V-Cone intersected with some hyperplanes.  We use the following transform.
-  \begin{Transform}[V-Cone Lift]\label{vconelift_transform}
+  \begin{Transform}[H-Cone Lift]\label{hconelift_transform}
   \[\HLift(A) = \pmb \0 & I & -I \\ I & A & -A \pme \]
   \end{Transform}
   Define 
@@ -280,7 +280,7 @@ The proof of \nameref{vconeintersect} relies upon the following proposition.
 	\end{equation}
 
 	\newcommand{\coneEqSat}{\quad\mathrm{\;such\; that\; \eqref{eq:coneEq}\; holds}}
-	\begin{Prop}[Sum Mixture]
+	\begin{Prop}[Sum Mixture]\label{sum_mixture}
 		Suppose that
 		\[ \Psum t_i  Y^i_{d+1} + \Nsum t_j  Y^j_{d+1} = 0\quad\quad \Yj < 0 < \Yi \]
 		Then the following holds
@@ -290,7 +290,7 @@ The proof of \nameref{vconeintersect} relies upon the following proposition.
 		\end{alignat*}
 	\end{Prop}
 
-	\begin{proof}[Sum Mixture]
+	\begin{proof}[Proof of \cref{sum_mixture}]
 		First note that if all $t_i = 0,t_j = 0$, then choosing $t_{ij} = 0$ satisfies \eqref{eq:coneEq}, likewise if all $t_{ij} = 0$, then $t_i = 0, t_j = 0$ satisfies \eqref{eq:coneEq}.  So suppose that some $t_i \neq 0, t_j \neq 0, t_{ij} \neq 0$.
 
 		The right hand side of \eqref{eq:coneEq} can be written
@@ -325,7 +325,7 @@ The proof of \nameref{vconeintersect} relies upon the following proposition.
 	\[ \Pi\big(\cone(U)\big) = \cone\big(\Pi U\big) \]
 \end{proof}
 
-Having shown that H-Cones are V-Cones, we complete the proof of the {\MWT} for cones is complete.
+Having shown that H-Cones are V-Cones, the proof of the {\MWT} for cones is complete.
 
 \section{Reducing Polyhedra to Cones}
 
@@ -347,9 +347,9 @@ Having shown that H-Cones are V-Cones, we complete the proof of the {\MWT} for c
 	\[	A\x \leq \b \Leftrightarrow -\b + A\x \leq \0 \Leftrightarrow
 		\big[-\b|A\big]\onex \leq \0 \]
 	Note that
-	\[\set{\x\st\big[-\b|A\big]\onex\leq\0} = \set{\xx\st\big[-\b|A\big]\xx\leq\0} \cap \hpxz \]
+	\[\set{\x\St\big[-\b|A\big]\onex\leq\0} = \LHC \cap \hpxz \]
 	It follows that
-	\[ \HP{A}{\b} = \HC{\big[-\b|A\big]} \cap \hpxz \]
+	\[ \HP{A}{\b} = \LHC \cap \hpxz \]
 \end{proof}
 
 \subsection{V-Polyhedra $\leftrightarrow$ V-Cone}
@@ -364,7 +364,7 @@ Having shown that H-Cones are V-Cones, we complete the proof of the {\MWT} for c
 
 This shows that a V-Polyhedron may be written as an intersection of a V-Cone and the hyperplane $\hpxz$.  It is more difficult to show that, given a V-Cone, that you can intersect it with the hyperplane $\hpxz$ and get a V-Polyhedron out of it.
 
-\begin{Prop}[V-Cone $\to$ V-Polyhedron]
+\begin{Prop}[V-Cone $\to$ V-Polyhedron]\label{vcone_to_vpoly}
 	Let $\Pi$ be the identity matrix with the first row deleted.  Then, for any set $C_U = \cone(U)$ there are sets $W$ and $V$ such that
 	\[ \cone(V) \cap \hpxz = \VP{W}{V} \]
 \end{Prop}
@@ -447,11 +447,12 @@ Here we show a diagram that represent the proof of the {\MWT}.
 \newcommand{\VDropdesc}{$\Pi\circ\bigcap$}
 \newcommand{\HDropdesc}{$\Pi$}
 \newcommand{\HPdesc}{\HP{A}{\b}}
-\newcommand{\HPidesc}{\HC{[-\b|A]}}
+\newcommand{\HPidesc}{\LHC}
 \newcommand{\HCdesc}{\HC{A}}
 \newcommand{\HCpdesc}{\pmb \0 & -I \\ I & -U \\ -I & U \pme \x \leq \0}
 \newcommand{\VPdesc}{\VP{U}{V}}
-\newcommand{\VPidesc}{\cone\{\smallstack{\vec{0}}{U}\cup\smallstack{\vec{1}}{V}\}}
+%\newcommand{\VPidesc}{\cone\{\smallstack{\vec{0}}{U}\cup\smallstack{\vec{1}}{V}\}}
+\newcommand{\VPidesc}{\cone\pmb\vec{0}&\vec{1}\\{U}&{V}\pme}
 \newcommand{\VCdesc}{\cone(U)}
 \newcommand{\VCpdesc}{\cone \pmb 0 & I & -I\\ I & A & -A\pme}
 \begin{figure}[H]

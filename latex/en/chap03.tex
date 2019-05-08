@@ -47,7 +47,7 @@ The types \lsti{Vector} and \lsti{Vectors} are used in the representation of pol
 
 The \lsti{class Matrix} implements a subset of what a \textit{C++ Container} should.  It is the primary type for representing polyhedra, and directly represents Cones, as well as H-Polyhedra.  The interface is designed to enforce the following invariant:
 \[ (\forall \mli{v} \in \mli{vectors})\, \mli{v.size() == d} \]
-The \textit{factory} function \lsti{read_Matrix} is provided to read a \lsti{Matrix} from an \lsti{istream}.  It is necessary because the value of \lsti{d} can't be known before reading some of the stream.
+The factory function \lsti{read_Matrix} is provided to read a \lsti{Matrix} from an \lsti{istream}.  It is necessary because the value of \lsti{d} can't be known before reading some of the stream.
 \lstMatrix
 
 The \lsti{struct VPoly} gather two \lsti{Matrix}s needed to represent a V-Polyhedron.  The \lsti{Matrix U} corresponds to the rays that generate the cone, and the \lsti{Matrix V} corresponds to the points, i.e.
@@ -123,13 +123,11 @@ convolute the vectors in the way described in \Nameref{fm_hcone} and \Nameref{fm
 \lsti{sliced_fourier_motzkin} applies \lsti{fourier_motzkin} to \lsti{Matrix M} for each ${k \not\in \mli{s}}$, then slices the resulting \lsti{Matrix} using \lsti{slice_matrix} and \lsti{s}.  This is the realization of the algorithms indicated by the proofs of either direction of the {\MWT} for cones.
 \lstslicedfouriermotzkin
 
-When transforming an H-Cone to a V-Cone, it first must be written as a V-Cone of a new matrix, then it is intersected with coordinate-hyperplanes and projected.  Similarly, when a V-Cone is transformed into an H-Cone, it must be written as and H-Cone of a new matrix then projected with coordinate-projections.  The transformations are described in \eqref{eq:Alift} and \eqref{eq:Ulift}, and summarized here:
-\[
-	A \to \begin{pmatrix*}[r] \0 & -I \\ I & -U \\ -I & U \end{pmatrix*} \quad
-	U \to \begin{pmatrix*}[r] \0 & I & -I \\ I & A & -A \end{pmatrix*}
-\]
+When transforming an H-Cone to a V-Cone, it first must be written as a V-Cone of a new matrix, then it is intersected with coordinate-hyperplanes and projected.  Similarly, when a V-Cone is transformed into an H-Cone, it must be written as and H-Cone of a new matrix then projected with coordinate-projections.  The transformations are described in \nameref{vconelift_transform} and \nameref{hconelift_transform}, and summarized here:
+  \[\HLift(A) = \pmb \0 & I & -I \\ I & A & -A \pme \quad 
+    \VLift(U) = \pmb \0 & -I \\ I & -U \\ -I & U \pme \]
 Note that the tranformation of $U$ can be written:
-\[ U \to \begin{pmatrix*}[r] \0 & I \\ I & A \\ -I & -A \end{pmatrix*}^T \]
+  \[\HLift(A) = \pmb \0 & I & -I \\ -I & -U & U \pme^T \]
 
 Remembering that a \lsti{Matrix} is either a collection of row \textit{or} column \lsti{Vector}s, it is not surprising that these two transformations can be written as one function of a \lsti{Matrix} and some coefficients.  In \lsti{generalized_lift}, the coefficients are given as an \lsti{array<double, 5> C}, so the overall transformation can be illustrated as:
 \newcommand{\CA}[1]{\mli{C[#1]}}
@@ -175,11 +173,11 @@ These very simple transforms are done with the \lsti{cshift} function, which ``c
 	\end{pmatrix} \]
 \lstvpolytovcone
 
-\lsti{normalized_P} calculates the $V$ in \eqref{eq:cvtopv}.  Let $\Pi$ be the identity matrix with the $0$-th row deleted, and $P = \set{\u \in U : u_0 > 0}$. then this is the result of:
-\[ \Pi(\cone(P) \cap \set{x_0 = 1}) \]
+\lsti{normalized_P} takes the members of \texttt{U} that have $x_0 > 0$, scaled by $1/x_0$.  Let $\Pi$ be the identity matrix with the $0$-th row deleted, and $P = \set{\u \in U : u_0 > 0}$. then this is the result of:
+\[ \Pi\left(\set{\x/x_0 : \x\in P} \cap \set{x_0 = 1}\right) \]
 \lstnormalizedP
 
-\lsti{vcone_to_vpoly} implements the full tranformation in \eqref{eq:cvtopv}.
+\lsti{vcone_to_vpoly} implements \nameref{vcone_to_vpoly}.
 \lstvconetovpoly
 
 \lsti{hpoly_to_vpoly} and \lsti{vpoly_to_hpoly} implement the complete transformations promised by the file.
