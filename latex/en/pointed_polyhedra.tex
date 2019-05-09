@@ -1,0 +1,104 @@
+% pointed_polyhedra.tex
+
+\chapter{Pointed and Full-Dimensional Polyhedra}
+
+In this appendix, pointed and full dimensional polyhedra are defined, and they are shown to correspond to the polyhedra which have extreme representations.
+
+\begin{Def}[Vertex]
+	Let $P$ be a polyhedron.  A point $\v \in P$ is called a \textit{vertex} if, for any $\epsilon > 0$, $\u \neq \0$, at least one of the following is true:
+	\begin{align*}
+		\v + \epsilon\u \not\in P \\
+		\v - \epsilon\u \not\in P \\
+	\end{align*}
+\end{Def}
+
+\begin{Def}[Full-Dimensional]
+	Let $P \subseteq \R^d$ be a polyhedron.  $P$ is called \textit{full-dimensional} if there is a set $Z$ of are $d$ linearly independent vectors such that $Z \subseteq P$.
+\end{Def}
+
+\section{Pointed Cones}
+
+We suppose that, given a V-Cone $\cone(U)$, that $\0\not\in U$.  This prevents dealing with useless edge cases, and the convention that $\cone(\emptyset) = \0$ prevents any questions about dealing with empty sets.  Similarly, we suppose that for any H-Cone defined by a matrix $A$, it has only non-zero rows.  The h-cone defined by an empty matrix can be taken to be the entire space.
+
+\begin{Def}[Pointed V-Cone]
+	A V-Cone $C$ is called \textit{pointed} if the origin is a vertex of $C$.
+\end{Def}
+
+\begin{Lemma}[Extreme Sets are Independent]\label{extreme_independence}
+	Let $U$ be some matrix, and $\u = U\e_k$.  Then the following holds:
+	\[[(\t\geq\0,\; \u = U\t) \Rightarrow \t=\e_k] \;\Rightarrow\;
+		[(\t\geq\0,\;\0=U\t) \Rightarrow \t=\0]\]
+\end{Lemma}
+
+\begin{proof}
+	Say $\0 = U\t$.  Then
+	\[ \u = \u+\0 = U(\e_k+\t) \Rightarrow [\e_k+\t = \e_k] \Rightarrow \t = \0 \]
+\end{proof}
+
+\begin{Prop}[Extreme and Pointed V-Cones]\label{extreme_vcones}
+	The pointed V-Cones are precisely the V-Cones representable by an extreme set.
+\end{Prop}
+
+\begin{Lemma}[Pointed Cones are independent]\label{pointed_independence}
+	Let $C = \cone(U)$.  Then the following two statements are equivalent.
+	\begin{enumerate}
+		\item $C$ is pointed
+		\item $(\t\geq\0,\,0=U\t)\Rightarrow \t=\0$
+	\end{enumerate}
+\end{Lemma}
+
+\begin{proof}
+	$(2\Rightarrow 1)$.  Suppose $C$ is not pointed, but (2) holds.  Then $\exists \u\in C\st -\u\in C$.  Then $\exists \t_1,\t_2 \geq \0$ such that $\u = U\t_1$, and $-\u = U\t_2$.  Then $\t_1,\t_2 \neq \0$, and $\t_1 + \t_2 \neq \0$, and $\0 = \u-\u = U(\t_1+\t_2)$, a contradiction.\\
+	$(\neg 2\Rightarrow \neg 1)$.  Suppose that $\exists \t\geq\0\st\t\neq\0$, $U\t=\0$.  Since $\0\not\in U$, there are at least two non-zero entries of $\t$.  Suppose that $t$ is a non-zero element, $\t'$ is $\t$ with that element deleted, $\u$ is the entry of $U$ corresponding to that element, and $U'$ is $U$ with $\u$ deleted.  Then $\t',t$ are both non-negative and non-zero, and $\0 = U\t = U'\t' + \u t$.  Note that both $U'\t',\u t \in C$.  Since $U'\t' = -\u t$, $C$ is not pointed.
+\end{proof}
+
+\begin{proof}[Proof of \nameref{extreme_vcones}]
+	\Cref{pointed_independence} and \Cref{extreme_independence} show that if a set does not generate a pointed cone, then it is not extreme.
+
+	Next let $C = \cone(U)$ be pointed, where $U$ is not extreme.  That is,
+	\[(\exists \u\in U)\; \u=U\e_i,\, \u = U\t,\, \t\neq\e_i \]
+	We show that we can remove $\u$ from $U$ without affecting the $C$.  We then conclude that we can continue to reduce $U$ until it is extreme.\\
+	Let $U' = U\setminus\set{\u}$, so that $\u = U'\t' + t\e_i$ where $\t'\geq\0$, $t\geq 0$.  We consider two cases:
+	\begin{align*}
+		(0\leq t<1) & \quad (1-t)\u = U'\t' \Rightarrow \u = U'\t'/(1-t) \Rightarrow \u \in \cone(U') \\
+		(1 \leq t)  & \quad U(\t'+(t-1)\e_i)=\0 \Rightarrow \t'+(t-1)\e_i=\0 \Rightarrow \t'=\0,t=1
+	\end{align*}
+	That $C$ is pointed is used twice in the second line.  The result of the second line is that $\t=\e_i$, a contradiction.
+\end{proof}
+
+\section{Full-Dimensional Cones}
+
+\begin{Prop}[Extreme and Pointed H-Cones]\label{extreme_hcones}
+	The full-dimensional H-Cones are precisely the H-Cones representable by an extreme set.
+\end{Prop}
+
+\begin{Lemma}[Full-Dimensional Cones are independent]\label{full_independence}
+	Let $C = \HC{A}$.  Then the following two statements are equivalent.
+	\begin{enumerate}
+		\item $C$ is full-dimensional
+		\item $(\t\geq\0,\,\t^T A=\0)\Rightarrow \t=\0$
+	\end{enumerate}
+\end{Lemma}
+
+\begin{proof}
+  $(1\Rightarrow 2)$.  Let $V$ be a linearly-independent set spanning the whole space contained in $C$, that is $AV\leq\0$.  Because $A$ has only non-zero rows, and $V$ is linearly-independent, for any row $A_i$ of $A$ it holds that $\ip{A_i}{V} \neq 0$.  Since $\t\geq\0$ and $AV\leq\0$:
+  \[ \t^T(AV) = \0 \;\Rightarrow\; (\forall i,j)\,(AV)_i^j \neq 0 \Rightarrow t_i = 0\]
+  Since every row of $AV$ contains a non-zero element, $\t=\0$.\\
+  $(\neg 1\Rightarrow\neg 2)$.  If $C$ is not full-dimensional, then there is a non-trivial orthogonal compliment $O$ to the span of $C$.  Let $\z\in O$, $\z\neq\0$, then $A\x\leq\0 \Rightarrow \z^T\x = 0$.  Then there is a $\y_1\geq\0$ such that $\y_1^T A = \z$.  If there were not, then, by \nameref{farkas_lemma}:
+  \[ (\exists \x)\;A\x\leq\0, \x^T\z > 0 \]
+  which contradicts $\z\in O$.  Since $-\z\in O$, there is also a $\y_2\geq\0$ such that $\y_2^T A = -\z$.  Since $\z\neq\0$, and $\y_1,\y_2\geq\0$, $\y_1+\y_2\neq\0$, and $(\y_1+\y_2)^T A = \z-\z = \0$.
+\end{proof}
+
+\begin{proof}[Proof of \nameref{extreme_hcones}]
+	\Cref{full_independence} and \Cref{extreme_independence} show that if a set does not generate a full-dimensional cone, then it is not extreme.\\
+  We show that, given a full dimensional H-Cone $\HC{A}$, if $A$ is not extreme, then we can remove a row, implying that $A$ can be reduced to an extreme set.  Suppose that $\exists\t\geq\0$, $A_i = \t^T A$, and $\t\neq\e_i$.  Let $A'$ be $A$ with the $i$-th row deleted, and $A_i = \t'^T A' + tA_i$.  Then
+  \begin{align}
+  &\0 = \t'^T A' + (t-1)A_i \label{rxhc1}\\
+  &(1-t)A_i = \t'^T A' \label{rxhc2}
+  \end{align}
+  We need to show that $A\x\leq\0 \Leftrightarrow A'\x\leq\0$.  The right implication is clear.  If we can show that $(\exists\y\geq\0)\;\y^T A'=A_i$, then the left implication will be shown.  If there is no such $\y$, then, by \nameref{farkas_lemma}:
+  \[(\exists\x)\; A'\x\leq\0,\, \x^T A_i > 0 \]
+  Suppose that $t \geq 1$, then by \eqref{rxhc1} $\0 = (\t'+(t-1)\e_i)^T A$.  By \nameref{full_independence}, $\t'+(t-1)\e_i = \0$, so $\t'=\0, t=1$, and $\t = \e_i$, a contradiction.  Otherwise, $0\leq t < 1$.  Then by \eqref{rxhc2}:
+  \[\t'^T A' = (1-t)A_i \quad\quad \t'^T A'\x \leq 0 < (1-t)A_i\x \]
+  Which is another contradiction, so we see that $A'\x\leq\0 \Leftrightarrow A\x\leq\0$.
+\end{proof}
