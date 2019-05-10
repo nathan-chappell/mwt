@@ -193,7 +193,7 @@
 
 \declaretheorem[name=Theorem,style=theorem,shaded={bgcolor=white,rulewidth=1pt,rulecolor=black}]{Thm}
 \declaretheorem[name=Proposition,style=theorem,parent=section,shaded={bgcolor={rgb}{.90,.86,.90}}]{Prop}
-\declaretheorem[name=Lemma,style=theorem,parent=section,shaded={bgcolor={rgb}{.90,.86,.90}}]{Lemma}
+\declaretheorem[name=Lemma,style=theorem,sibling=Prop,shaded={bgcolor={rgb}{.90,.86,.90}}]{Lemma}
 \declaretheorem[name=Definition,style=definition,parent=section,shaded={bgcolor={rgb}{.94,.94,.94}}]{Def}
 \declaretheorem[name=Equivalence Criteria,style=plain,shaded]{EqCriteria}
 \declaretheorem[name=Test,style=definition,shaded={bgcolor=white,rulewidth=1pt,rulecolor=black}]{Test}
@@ -202,10 +202,6 @@
 
 %text macros
 \newcommand{\MWT}{Minkowski-Weyl Theorem}
-
-\newcommand{\Hlift}{\textit{H1}}
-\newcommand{\Hint}{\textit{H2}}
-\newcommand{\Hproj}{\textit{H3}}
 
 \newcommand{\cppSourceDir}{../../cpp}
 \newcommand{\smallstack}[2]{\left(\begin{smallmatrix}#1 \\ #2\end{smallmatrix}\right)}

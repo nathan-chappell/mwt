@@ -1,6 +1,6 @@
 \chapter{Testing}
 
-In the next sections, the methods used for testing the program described above will be discussed.
+In the next sections, the methods used for testing the program described above will be discussed.  It will be convenient to assume that sets representing row vectors and cone-generators do not contain $\0$.  This results in no loss of generality, only the annoyance of constantly assuming some triviality does not occur.
 
 \paragraph{Notation:} Let $AU \leq \b$ be shorthand for $(\forall \u\in U) A\u \leq \b$.
 
@@ -15,55 +15,143 @@ It's not clear what to do to check if $C_A\subseteq C_{V'}$.  Suppose we had a s
 	 & C_{V'} = C_A \;   & \Rightarrow & \; AV'\leq\0
 \end{alignat*}
 
-The problem is now to come up with such a set $V$.  We will need to relax the requirements on $V$ a little bit, but not in a way that reduces its utility.  The set is desribed in the next proposition, but first we introduce the notion of equivalence vectors:
+The problem is now to come up with such a set $V$, and to determine when such a set may or may not exist for a given cone.  We will need to relax the requirements on $V$ a little bit, but not in a way that reduces its utility.  First, we consider a \textit{minimal} set generating a cone.
 
-\begin{Def}[vector equivalence]
-	Let $\u,\v \in \R^d$, and suppose that $\u/\norm{\u} = \v/\norm{\v}$.  Then say that $\u,\v$ are equivalent, and write:
-	\[ \u \simeq \v \]
+\begin{Def}[Minimal Generating Set]
+	A set $V$ is called \textit{minimal} for $\cone(V)$ if
+	\[ (\forall \v \in V)\; \cone(V\setminus\{\v\}) \subset \cone(V) \]
 \end{Def}
 
-\begin{Def}[Extreme]
-	Let $V \in \R^{d\times n}$.  $V$ is \textit{extreme} if, for any $\t\geq\0$ and $\v = V\e_k$, the following holds:
-  \[V\t = \v \Rightarrow \t = \e_k \]
-\end{Def}
-
-\begin{Prop}\label{extreme_v}
-	Let $V \in \R^{d\times n}$ be extreme, and $C = \cone(V)$.  Then
-	\[ C = \cone(V') \Rightarrow (\forall \v \in V)(\exists \v'\in V') : \v \simeq \v' \]
+\begin{Prop}\label{v_not_minimal}
+	If a set $V$ is not minimal for $\cone(V)$ then
+	\[\exists \v\in V,\, \t\geq\0,\, \v=V\e_i,\,\t\neq\e_i:\quad \v = V\t \]
+  That is, there is a member of $V$ which is a non-trivial non-negative linear combination of elements of V.
 \end{Prop}
 
 \begin{proof}
-	Let $\v \in V$, so that $\v = V\e_k$.  Since $C = \cone(V')$, there exists a matrix $A$ with all non-negative entries such that $V' = VA$.  There is also a non-negative $\b$ such that $\v = V'\b$.  Then $\v = (VA)\b = V(A\b)$.  Since $A$ and $\b$ contain only non-negative entries, so does $A\b$.  Since $V$ is extreme, $A\b$ must be the basis vector $\e_k$.  Then if $i \neq k$, $\e_i^T(A\b) = 0$, or $(\e_i^TA)\b = \sum_j A_i^j b_j = 0$.  Since $A_i^j, b_j \geq 0$, we have:
-	\begin{alignat*}{3}
-		(\forall i \neq k) & \quad & A_i^j > 0 \; & \Rightarrow & \; b_j = 0   \\
-		(\forall i \neq k) & \quad & b_j > 0   \; & \Rightarrow & \; A_i^j = 0
-	\end{alignat*}
-	Furthermore, we have $\ip{A_k}{\b} = 1$, so for some $l$, $A_k^l,b_l > 0$.  Then,
-	\[ (\forall i \neq k)\quad A_i^l = 0 \]
-	Now let $\b'=\e_l/A_k^l$.  Then it immediately follows that $\ip{A_k}{\b'} = 1$.  Also,
-	\[ (\forall i \neq k)\quad A_i^l = 0 \quad \Rightarrow\quad \ip{A_i}{\b'} = A_i^l/A_k^l = 0\]
-	We conclude that $A\b' = \e_k = A\b$, and that $\v = V(A\b) = V(A\b') = (VA)\b' = U(\e_l/A_k^l)$.  If $\v' = U\e_l$, that is $\v'$ is the $l$-th vector of $U$, then $\v = \v'/A_k^l$, or
-	\[ \v/\norm{\v} = (\v'/A_k^l)/\norm{\v'/A_k^l} = \v'/\norm{\v'} \]
-	So $\v \simeq \v'$.
+	Say $\cone(V\setminus\{\v\}) = \cone(V)$ where $\v=V\e_i$.  Then $\exists \t\geq\0$ such that $\v=(V\setminus\{\v\})\t$.  Let $\t'$ be $\t$ with a $0$ in the position corresponding to $\v$ in $V$.  Then $\v=V\t$.
 \end{proof}
 
-Let's denote $(\forall \v \in V)(\exists \v'\in V') : \v \simeq \v'$ as $V \sqsubseteq V'$.  Then, considering the discussion before the proposition, we have the following result.
+Is the converse true?  That is, is it true that, if $V$ is minimal, then
+\begin{equation} 
+  \t\geq\0,\,\v=V\e_i,\; [\v=V\t \Rightarrow \t=\e_i]\, \label{vmin_implies}
+\end{equation}
+Not quite.  There is one catch, if there is some 
+\begin{equation}
+  \t\geq\0,\,\t\neq\0,\,V\t=\0  \label{not_pointed}
+\end{equation}
+then \eqref{vmin_implies} fails.  So, for what cones does \eqref{not_pointed} fail?  It turns out that there is a useful class of cones called \textit{pointed} having this property.
+
+\begin{Def}[Vertex]
+	Let $P$ be a polyhedron.  A point $\v \in P$ is called a \textit{vertex} if, for any $\u \neq \0$, at least one of the following is true:
+	\begin{align*}
+		\v + \u \not\in P \\
+		\v - \u \not\in P
+	\end{align*}
+\end{Def}
+
+\begin{Def}[Pointed Cones]
+  A cone is called \textit{pointed} if it has a vertex.
+\end{Def}
+
+\begin{Prop} The following statements are equivalent.
+  \begin{enumerate}
+    \item $\cone(V)$ is pointed.
+    \item $\t\geq\0,\,\t\neq\0,\; [V\t=\0 \Rightarrow \t=\0]$
+  \end{enumerate}
+\end{Prop}
+
+\begin{proof}
+  First, observe that, due to \nameref{cone_closure}, if a cone has a vertex, then it is the origin.  Suppose that the origin is a vertex, but that (2) fails.  Since $\0\not\in V$, $\t$ has at least two non-zero elements, let one be $t_i$.  Then $\0 = V(t_i\e_i) + V(\t-t_i\e_i)$.  Let $\u=V(t_i\e_i$.  Clearly $\u\neq\0$, and also $\u,-\u\in C$.  Then the origin is not a vertex, a contradiction.  
+  
+  Next, suppose that $\0$ is not a vertex, then $\exists\t_1,\t_2\geq\0$, $\t_{1,2}\neq\0$, $\u=V\t_1$, $-\u=V\t_2$.  Then $\t_1+\t_2\geq\0$, $\t_1+\t_2\neq\0$, and $V(\t_1+\t_2)=\0$.
+\end{proof}
+
+Now we can consider the converse of \Cref{v_not_minimal}.
+
+\begin{Prop}\label{min_vcone_generators}
+  Suppose that $\cone(V)$ is pointed.  Then the following two statements are equivalent:
+  \begin{enumerate}
+    \item V is minimal
+    \item $\t\geq\0,\,\v=V\e_i,\; [\v=V\t \Rightarrow \t=\e_i]$
+  \end{enumerate}
+\end{Prop}
+
+\begin{proof}
+  $(\neg 1 \Rightarrow \neg 2)$ is \Cref{v_not_minimal}.  So suppose that $\t\geq\0,\,\v=V\e_i$, and $\v=V\t$.  If $0\leq t_i < 1$, then $\v = V(\t-t_i\e_i)/(1-t_i)$, and $\v\in \cone(V\setminus\{\v\} $, which would mean that $V$ is not minimal.  Suppose that $t_i\geq 1$.  Then $\t-\e_i\geq\0$, and $\0=V(\t-\e_i)$.  Because $V$ is pointed, $\0=\t-\e_i$, so $\t=\e_i$.
+\end{proof}
+
+\Cref{min_vcone_generators} gives us a way to characterize the minimal sets generating V-Cones.  Clearly, there is not a unique minimal set generating any V-Cone.  However, we can relax the requirement of unicity to equivalence, in the following way.
+
+\begin{Def}[vector equivalence]
+	Let $\u,\v \in \R^d$, non-zero, and suppose that $\u/\norm{\u} = \v/\norm{\v}$.  Then say that $\u,\v$ are \textit{equivalent}, and write $\u \simeq \v$.  If for every $\u\in U$ there is a $\v\in V$ such that $\u\simeq\v$, write $ U \sqsubseteq V$.  Write $U \simeq V$ if $U \sqsubseteq V$ and $V \sqsubseteq U$.
+\end{Def}
+
+\begin{Prop}\label{vector_equivalence}
+  Then the following two statements are equivalent:
+  \begin{enumerate}
+    \item $\v\simeq\u$
+    \item $(\exists t>0)\;\v=t\u$
+  \end{enumerate}
+\end{Prop}
+
+\begin{proof}
+  $(1\Rightarrow 2)$.  Let $t=\norm{\v}/\norm{\u}$.  Then $t>0$, and $\v=t\u$.\\
+  $(2\Rightarrow 1)$.  $\v/\norm{\v} = t\u/\norm{t\u} = \u/\norm{\u}$
+\end{proof}
+
+We now show that the minimal sets generating pointed V-Cones are essentially unique.
+
+\begin{Prop}\label{min_pointed_generators}
+  Suppose that $V$ is minimal, and $\cone(V) = \cone(V')$ is pointed.  Then $V\sqsubseteq V'$.  It follows that if $V'$ is also minimal, then $V\simeq V'$.
+\end{Prop}
+
+We'll use this short lemma in the proof of the above proposition.
+
+\begin{Lemma}\label{non_negative_sums_to_e}
+	Suppose $A$ is a non-negative matrix, $\b\geq\0$, and $A\b = \e_i$.  Then there exists an $l$, $t>0$ such that $A(t\e_l) = \e_i$
+\end{Lemma}
+
+\begin{proof}
+	Since $A$ and $\b$ are non-negative, the following holds:
+	\begin{align}
+		%&(\forall j,k\neq i)\; A_k^j > 0 \Rightarrow b_j = 0 \label{Ajk_neq_0}\\
+		 & (\forall j,k\neq i)\; b_j   > 0 \Rightarrow A_k^j = 0 \label{bk_neq_0}
+	\end{align}
+	Since $A\b=\e_i$, there is some $b_l > 0$, and $A_k^l > 0$.  \eqref{bk_neq_0} shows that the entire column is zero except for the entry in row $i$, so $A(\e_l/A_k^l) = \e_i$.
+\end{proof}
+
+\begin{proof}[Proof of \Cref{min_pointed_generators}]
+  Let $\v\in V$, $\v=V\e_i$.  If we can show that there is some $\v'\in V'$ such that $\v\simeq\v'$, then we're done.  Since $\cone(V)=\cone(V')$, there is a non-negative matrix $A$ such that $V'=VA$.  Furthermore, there is a non-negative vector $\b$ such that $\v=V'\b$.  Then $\v=V'\b=(VA)\b=V(A\b)$.  By \Cref{min_vcone_generators}, $A\b=\e_i$.  By \Cref{non_negative_sums_to_e}, there is a $t>0,l$ such that $A\b=A(t\e_l)$.  Then $\v=VA(t\e_l)=tV'\e_l=t\v'$ where $\v'\in V'$.  By \Cref{vector_equivalence}, $\v\simeq\v'$.
+\end{proof}
+
+So now we know that pointed cones have essentially unique generating sets.  We now turn to the question of using this knowledge to create a test for the program.  We suppose that we have a minimal generating set $V$ for some pointed V-Cone $C$, and have created a matrix $A$ so that $C = \HC{A} = \cone(V)$.  We run the program and get a set $V'$, and need to check if $\cone(V') = C$.  If $AV'\leq\0$, then $\cone(V')\subseteq C$.  If $V\sqsubseteq V'$, then $C \subseteq \cone(V')$.  Similarly, $\cone(V') = \cone(V)$, then $V\sqsubseteq V'$, and $AV'\leq\0$.  So we propose the following equivalence criteria.
 
 \begin{EqCriteria}[H-Cone $\to$ V-Cone]\label{eq_hc_vc}
-	Say $V \in \R^{d\times n}$ is extreme, and let $C_A = \HC{A} = \cone(V)$.  Then
+	Say $V$ is a minimal generating set the pointed V-Cone $C$, and suppose $C = \HC{A} = \cone(V)$.  Then
 	\[ C_A = \cone(V') \;\Leftrightarrow\; AV'\leq\0,\, V \sqsubseteq V' \]
 \end{EqCriteria}
 
 \begin{Test}[H-Cone $\to$ V-Cone]\label{test_hc_to_vc}
-	We now have a method for testing the program.  First, we hand-craft an H-Cone $\HC{A}$ based on some extreme set $V$, then run our program to get a set $V'$, with the alleged property that $\cone(V') = \HC{A}$.  If we confirm \Cref{eq_hc_vc}, then our program has succeeded.
+	We now have a method for testing the program.  First, we hand-craft an H-Cone $\HC{A}$ based on minimal set $V$ for some pointed V-Cone. We then run our program to get a set $V'$, with the alleged property that $\cone(V') = \HC{A}$.  If we confirm \Cref{eq_hc_vc}, then our program has succeeded.
 \end{Test}
 
-\begin{Remark}[Pointed V-Cones]\label{pointed_vcones}
-  Note that not all V-Cones will have a corresponding extreme set to represent them.  For example, $\cone(1,-1)$ is a cone in $\R$, but any representation will require a positive and negative element, so $0$ can be summed to with non-zero coefficients.  In general, the V-Cones which have an extreme represenation have the origin as a vertex, and are known as the \textit{Pointed Cones}.  See appendix A for more details.
+\begin{Remark}
+  Can we test the program for non-pointed cones?  Yes, but it is slightly more complicated.  Instead of prior knowledge of a minimal generating set for the cone, we also need to know what the largest linear subspace $L$ contained in the cone.  If we project away this linear subspace, then we will have a pointed cone.  Given another set $V'$, we may project away this subspace from $V'$ using a projection matrix, and use \Cref{test_hc_to_vc}.  Then we need to see if $\cone(V')$ spans $L$.  This can be done with fourier-motzkin elimination, but unfortunately we are trying to test the implementation of fourier-motzkin elimination.
+
+  It may still be worthwhile to do such tests, but it should be noted that a test isn't designed to prove a program correct, only prove it incorrect.  If we analyze the program well and test the fourier-motzkin elimination extensively, then the added complexity of the more general testing may not be worth it.  As of now this is left as a possible future extension of the program.
 \end{Remark}
 
+\begin{Remark}
+  While not important for testing the program, one may ask if pointed cones are the only cones with essentially unique generating sets.  The answer is no, for any line has an essentially unique generating set, but is not pointed.  However, this is the only exception.  It isn't hard to see that, given a non-pointed cone, if it occupies more than one-dimension, then it must at least occupy a half-plane, and a halfplane has uncountably many non-equivalent generators.  So, technically, the \Cref{test_hc_to_vc} would work for one-dimensional non-pointed cones (lines).
+\end{Remark}
+
+NEW TO HERE
+\hrule
+\section{Testing V-Cone $\to$ H-Cone}
+
 \subsection{Farkas Lemma}
-The procedure for the other direction is \textit{almost} identical, but there is a slight catch.  Call a set of row vectors \textbf{extreme} if no row is a non-negative combination of the other.  We would be able to use \Cref{eq_hc_vc} to say something similar about an extreme set of row vectors $A$, if we could say that:
+The procedure for the other direction is \textit{almost} identical, but there is a slight catch.  Call a set of row vectors \textbf{minimal} if no row is a non-negative combination of the other.  We would be able to use \Cref{eq_hc_vc} to say something similar about an minimal set of row vectors $A$, if we could say that:
 
 \begin{Thm}[Dual Cone]\label{dual_cone}
 	\[ \HC{A} = \HC{A'} \Leftrightarrow \cone(A^T) = \cone(A'^T) \]
@@ -129,7 +217,7 @@ Now we can prove \nameref{dual_cone}:
 	Next suppose that $\cone(A^T) \neq \cone(A'^T)$, that is, let $\z \in \cone(A), \z \not\in\cone(A')$.  We must show that $\HC{A} \neq \HC{A'}$.  By the Farkas Lemma, we have a $\y$ such that $\ip{\y}{\z} > 0,\; A'\y \leq \0$.  Clearly this means that $\y \in \HC{A'}$.  Since $\z \in \cone(A)$, there is some $(\t \geq \0): \z^T = \t^T A$.  Then if $A\y\leq\0$, we would have $\ip{\y}{\z} = \t^T A\y \leq 0 < \ip{\y}{\z}$, a contradiction.  So we conclude that $\y\not\in\HC{A}$.
 \end{proof}
 
-Now, as before, we suppose that we have a set $V$ and $A$, where $A$ is extreme, and we know that $C = \cone(V) = \HC{A}$.  We have the following situation:
+Now, as before, we suppose that we have a set $V$ and $A$, where $A$ is minimal, and we know that $C = \cone(V) = \HC{A}$.  We have the following situation:
 \begin{alignat*}{2}
 	 & C = \HC{A'}    \;   & \Rightarrow & \; A \sqsubseteq A'    \\
 	 & C = \HC{A'}    \;   & \Rightarrow & \; A'V\leq\0           \\
@@ -139,23 +227,24 @@ Now, as before, we suppose that we have a set $V$ and $A$, where $A$ is extreme,
 So we have the following.
 
 \begin{EqCriteria}[V-Cone $\to$ H-Cone]\label{eq_vc_hc}
-	Let $A\in\R^{m\times d}$ be extreme, and $C_V = \cone(V) = \HC{A}$.  Then
+	Let $A\in\R^{m\times d}$ be minimal, and $C_V = \cone(V) = \HC{A}$.  Then
 	\[ C_V = \HC{A'} \;\Leftrightarrow\; A'V\leq\0,\; A \sqsubseteq A' \]
 \end{EqCriteria}
 
 \begin{Test}[V-Cone $\to$ H-Cone]\label{test_vc_to_hc}
-	We now have a method for testing the program.  First, we hand-craft an V-Cone $\cone{V}$ based on some extreme set $A$, then run our program to get a set $A'$, with the alleged property that $\cone(V') = \HC{A}$.  If we confirm \Cref{eq_vc_hc}, then our program has succeeded.
+	We now have a method for testing the program.  First, we hand-craft an V-Cone $\cone{V}$ based on some minimal set $A$, then run our program to get a set $A'$, with the alleged property that $\cone(V') = \HC{A}$.  If we confirm \Cref{eq_vc_hc}, then our program has succeeded.
 \end{Test}
 
-\begin{Remark}[Pointed V-Cones]\label{pointed_vcones}
-  Note that not all H-Cones will have a corresponding extreme set to represent them.  For example, $\y = 0, \x \geq 0$ is the same as $\y = 0, \x + \y \geq 0$, but they are not equivalent.  In general, the H-Cones which have an extreme represenation include a linearly independent set of vectors, and are known as the \textit{Full-Dimensional Cones}.  See appendix A for more details.
+\begin{Remark}[Pointed V-Cones]%\label{pointed_vcones}
+	Note that not all H-Cones will have a corresponding minimal set to represent them.  For example, $\y = 0, \x \geq 0$ is the same as $\y = 0, \x + \y \geq 0$, but they are not equivalent.  In general, the H-Cones which have an minimal represenation include a linearly independent set of vectors, and are known as the \textit{Full-Dimensional Cones}.  See appendix A for more details.
 \end{Remark}
 
 \section{Testing H-Polyhedron $\to$ V-Polyhedron}
 
-Say we have an H-Polyhedron $P_{A,\b} = \HP{A}{\b}$, and wish to check that our program correctly calculates a $V'$ and $U'$ such that $P_{A,\b} = \VP{U'}{V'}$.  Again, we shall use the notion of extremity and show that under certain circumstances we can use extreme sets to demonstrate the validity of our algorithm.  In this case, the definition of extreme is a little more complicated, but it asserts that a set $U$ is extreme as before, and that no element of another set $V$ can be expressed as a non-trival sum of a convex combination of $V$ and a non-negative linear combination of members of $U$.
+Say we have an H-Polyhedron $P_{A,\b} = \HP{A}{\b}$, and wish to check that our program correctly calculates a $V'$ and $U'$ such that $P_{A,\b} = \VP{U'}{V'}$.  Again, we shall use the notion of minimality and show that under certain circumstances we can use minimal sets to demonstrate the validity of our algorithm.  In this case, the definition of minimal is a little more complicated, but it asserts that a set $U$ is minimal as before, and that no element of another set $V$ can be expressed as a non-trival sum of a convex combination of $V$ and a non-negative linear combination of members of $U$.
 
-\begin{Def}[Extreme Pair]{ A pair of sets $U\in\R^{d\times n}, V\in\R^{d\times p}$ is called an \textit{extreme pair} if for any $\u = U\e_k, \v = V\e_l$ the following is true:
+\subsection{Minimal V-Polyhedra Pairs}
+\begin{Def}[Minimal Pair]{ A pair of sets $U\in\R^{d\times n}, V\in\R^{d\times p}$ is called an \textit{minimal pair} if for any $\u = U\e_k, \v = V\e_l$ the following is true:
 		\begin{alignat*}{1}
 			 & \t \geq \0,\; \u = U\t \Rightarrow \t = \e_k                              \\
 			 & \t \geq \0, \blambda \geq \0, \ip{\blambda}{\1} = 1, \v = U\t + V\blambda
@@ -216,7 +305,7 @@ Let us now consider the set $U$ in the expression $\HP{A}{b} = \VP{U}{V}$.
 \end{proof}
 
 \begin{EqCriteria}\label{eq_hp_vp}
-	Suppose that there is an extreme pair $U,V$ such that $P_{A,\b} = \HP{A}{b} = \VP{U}{V}$.  Then the following are equivalent:
+	Suppose that there is an minimal pair $U,V$ such that $P_{A,\b} = \HP{A}{b} = \VP{U}{V}$.  Then the following are equivalent:
 	\begin{enumerate}
 		\item $P_{A,\b} = \VP{U'}{V'}$
 		\item $U \sqsubseteq U',\; V \subseteq V',\; AU'\leq\0,\, AV'\leq\b$
@@ -238,15 +327,15 @@ Let us now consider the set $U$ in the expression $\HP{A}{b} = \VP{U}{V}$.
 
 	$(1 \Rightarrow 2)$.  This direction is a little more interesting.  First we observe:
 	\[ \cone(U) = \HC{A} = \cone(U') \Rightarrow U \sqsubseteq U' \]
-	The equalities follow from \nameref{characteristic_cone}, and the implication follows from \Cref{eq_hc_vc}.  Note that the extremeness of $U$ and the Farkas lemma are both used here.  Since we know that $\cone(U) = \cone(U')$, we also know that $\VP{U'}{V'} = \VP{U}{V'}$.  Next, we consider $V$ and exploit its extremeness.  Since $P_{A,\b} = \VP{U}{V'}$, each $\v'\in V'$ can be written $U\t + V\blambda$, where $\t \geq \0$ and $\blambda$ is a convex combinator.  We combine these into matrices $T$ and $\Lambda$, so $V' = UT + V\Lambda$.  But it is also true that every $\v\in V$ can be written as
+	The equalities follow from \nameref{characteristic_cone}, and the implication follows from \Cref{eq_hc_vc}.  Note that the minimality of $U$ and the Farkas lemma are both used here.  Since we know that $\cone(U) = \cone(U')$, we also know that $\VP{U'}{V'} = \VP{U}{V'}$.  Next, we consider $V$ and exploit its minimality.  Since $P_{A,\b} = \VP{U}{V'}$, each $\v'\in V'$ can be written $U\t + V\blambda$, where $\t \geq \0$ and $\blambda$ is a convex combinator.  We combine these into matrices $T$ and $\Lambda$, so $V' = UT + V\Lambda$.  But it is also true that every $\v\in V$ can be written as
 	\[ \v = U\t + V'\blambda = U\t + (UT + V\Lambda)\blambda = U\t' + V\blambda' \]
-	Where $\t'\geq\0$, and $\blambda'$ is a convex combinator.  Because $U,V$ is an extreme pair, we have that $\t'=\0$, and $\blambda = \e_k$ for some $k$.  Because $U$ is extreme, it does not contain $\0$, and so $\t = \0$.  This puts us at $\v = V'\blambda = V\Lambda\blambda = V\blambda'$, and $\blambda' = \e_k$.  In order that $\blambda' = \e_k$, for every column of $\Lambda$ corresponding to a positive entry in $\blambda$, only one row may contain a positive entry, and that entry must be $1$.  Then instead of $\blambda$, use instead $\e_l$ where $\Lambda_k^l = 1$.  Then $\Lambda\blambda = \Lambda\e_l$, so $V\Lambda\blambda = V\Lambda\e_l = V'\e_l=\v'$ where $\v'\in V'$.  Then $\v \in V'$.
+	Where $\t'\geq\0$, and $\blambda'$ is a convex combinator.  Because $U,V$ is an minimal pair, we have that $\t'=\0$, and $\blambda = \e_k$ for some $k$.  Because $U$ is minimal, it does not contain $\0$, and so $\t = \0$.  This puts us at $\v = V'\blambda = V\Lambda\blambda = V\blambda'$, and $\blambda' = \e_k$.  In order that $\blambda' = \e_k$, for every column of $\Lambda$ corresponding to a positive entry in $\blambda$, only one row may contain a positive entry, and that entry must be $1$.  Then instead of $\blambda$, use instead $\e_l$ where $\Lambda_k^l = 1$.  Then $\Lambda\blambda = \Lambda\e_l$, so $V\Lambda\blambda = V\Lambda\e_l = V'\e_l=\v'$ where $\v'\in V'$.  Then $\v \in V'$.
 
 	That $AV'\leq\b$ is obvious, and that $AU'\leq\0$ is mentioned in the remarks after \Cref{characteristic_cone}.
 \end{proof}
 
 \begin{Test}[H-Polyhedron $\to$ V-Polyhedron]\label{test_hp_to_vp}
-	We now have a method for testing the program.  First, we hand-craft an H-Polyhedron $\HP{A}{\b}$ based on some extreme pair $(U,V)$, then run our program to get the pair $(U',V')$, with the alleged property that $\HP{A}{\b} = \VP{U'}{V'}$.  If we confirm \Cref{eq_hp_vp}, then our program has succeeded.
+	We now have a method for testing the program.  First, we hand-craft an H-Polyhedron $\HP{A}{\b}$ based on some minimal pair $(U,V)$, then run our program to get the pair $(U',V')$, with the alleged property that $\HP{A}{\b} = \VP{U'}{V'}$.  If we confirm \Cref{eq_hp_vp}, then our program has succeeded.
 \end{Test}
 
 \section{Testing V-Polyhedron $\to$ H-Polyhedron}
@@ -282,13 +371,16 @@ Now, combining the results of \Nameref{characteristic_cone} and \cref{homogeniza
 \end{Prop}
 %\begin{proof} This immediately follows from propositions \ref{homogenization_cone} and \ref{dual cone}.  \end{proof}
 
-\subsection{Extreme H-Polyhedra Pairs}
-\begin{Def}[Extreme Pair]{
-		A pair $A,\b$ is called \textbf{extreme} if $\HP{A}{\b}$ is non-empty, and
-		\[ \t \geq \0,\, \t^T(A,b) = (A_i,b_i) \Rightarrow [\t \neq \0 \Rightarrow \t = \e_i] \]
+\subsection{Minimal H-Polyhedra Pairs}
+\begin{Def}[Minimal Pair]{\label{min_hpair}
+		A pair $A,\b$ is called \textbf{minimal} if $\HP{A}{\b}$ is non-empty, and
+		\begin{align*}
+			 & \t \geq \0,\, \t^T A = A_i \Rightarrow \t^T b \geq b_i                             \\
+			 & \t \geq \0,\, \t^T(A,b) = (A_i,b_i) \Rightarrow [\t \neq \0 \Rightarrow \t = \e_i] \\
+		\end{align*}
 	}\end{Def}
 
-Of course, we want to say that if $P = \HP{A}{\b}$ where $(A,\b)$ is an extreme pair, and $P = \HP{A'}{\b'}$, then, by \Cref{dual_homogenization_cone}, $(A,\b) \sqsubseteq (A',\b')$.  The catch is that the cones in \Cref{dual_homogenization_cone} have a strange form.  What we want to be true turns out to be so, but before we can prove this fact, we need a property of extreme pairs, which requires a new form of the Farkas Lemma.
+Of course, we want to say that if $P = \HP{A}{\b}$ where $(A,\b)$ is an minimal pair, and $P = \HP{A'}{\b'}$, then, by \Cref{dual_homogenization_cone}, $(A,\b) \sqsubseteq (A',\b')$.  The catch is that the cones in \Cref{dual_homogenization_cone} have a strange form.  What we want to be true turns out to be so, but before we can prove this fact, we need a property of minimal pairs, which requires a new form of the Farkas Lemma.
 
 \subsection{Farkas Lemma: Round 2}
 
@@ -315,10 +407,10 @@ This form tells us that an H-Polyhedron is non-empty, or we can create an inequa
 %	A\x \not\leq \b \Leftrightarrow \exists \y\st \y^T A = \w,\, \y^T \b < \w^T\b
 %\end{equation}
 
-We can now prove some useful properties of extreme pairs.
+We can now prove some useful properties of minimal pairs.
 
-\begin{Prop}\label{extreme_Ab_pair_properties}
-	Let $A,\b$ be an extreme pair.  Then the following holds:
+\begin{Prop}\label{minimal_Ab_pair_properties}
+	Let $A,\b$ be an minimal pair.  Then the following holds:
 	\begin{alignat*}{6}
 		\t\geq\0,\,\t^T A \, & = & \, \0  \, & \Rightarrow & \, [\t & \neq & \, \0 \,   & \Rightarrow & \, \ip{\t}{\b} \, & > & \, 0 ]   \\
 		\t\geq\0,\,\t^T A \, & = & \, A_i \, & \Rightarrow & \, [\t & \neq & \, \e_i \, & \Rightarrow & \, \ip{\t}{\b} \, & > & \, b_i ]
@@ -326,47 +418,49 @@ We can now prove some useful properties of extreme pairs.
 \end{Prop}
 
 \begin{proof}
-	Suppose that $\t^T A = \0,\, \t\neq\0$.  Next suppose that $\ip{\t}{\b} = 0$.  Then $(\t + \e_i)(A,b) = (A_i,b_i)$, but $\t+\e_i \neq \e_i$, a contradiction.  Next suppose that ${\ip{\t}{\b} < 0}$.  Then we have that $\exists \t\geq\0,\,\t^T A = \0,\,\t^T \b < 0$, which by \nameref{FL2} means that $\HP{A}{b}$ is empty, a contradiction.  So the first property is proven.
+	Suppose that $\t^T A = \0,\, \t\neq\0$.  Next suppose that $\ip{\t}{\b} = 0$.  Then $(\t + \e_i)(A,b) = (A_i,b_i)$, but $\t+\e_i \neq \e_i$, a contradiction.  Next suppose that ${\ip{\t}{\b} < 0}$.  Then we have that $\exists \t\geq\0,\,\t^T A = \0,\,\t^T \b < 0$, which by \nameref{FL2} means that $\HP{A}{b}$ is empty, but minimal pairs do not represent empy polyhedra.  So the first property is proven.
 
-	Now suppose that $\t^T A = A_i, \t\neq\e_i$.  Then we know that $\t^T \b \neq b_i$, but if $\ip{\t}{\b} < 0$, we'd have that $(\t - \e_i)^T A = \0, (\t-\e_i)^T\b < 0$, contradicting the first property.
+	Now suppose that $\t^T A = A_i, \t\neq\e_i$.  Then by \Cref{min_hpair} we know that $\t^T \b \geq b_i$, so say $\ip{\t}{\b} = 0$.  If $t_i\geq 1$, then $\t-\e_i\geq \0$, and
+	\[(\t - \e_i)^T A = \0, (\t-\e_i)^T\b < 0\]
+	contradicting the first property.  Otherwise $0\leq t_i < 1$, so let $\t' = (\t-t_i\e_i)/(1-t_i)$.  Then $\t'^T A = A_i$, and $\t'^T\b = 0$, again contradicting the first property.
 \end{proof}
 
 We are now prepared to prove the following proposition.
 
-\begin{Prop}\label{extreme_Ab}
-	Suppose that $\HP{A}{\b} = \HP{A'}{\b'}$, where $(A,\b)$ is an extreme pair.  Then $(A,\b) \sqsubseteq (A',\b')$.
+\begin{Prop}\label{minimal_Ab}
+	Suppose that $\HP{A}{\b} = \HP{A'}{\b'}$, where $(A,\b)$ is an minimal pair.  Then $(A,\b) \sqsubseteq (A',\b')$.
 \end{Prop}
 
 \begin{proof}
-	It suffices to show that $\pmb -\b^T & -1 \\ A^T & \0 \pme$ is extreme, for then:
+	It suffices to show that $\pmb -\b^T & -1 \\ A^T & \0 \pme$ is minimal, for then:
 	\[\pmb -\b^T & -1 \\ A^T & \0 \pme \sqsubseteq \pmb -\b'^T & -1 \\ A'^T & \0 \pme \Rightarrow
 		\pmb -\b^T \\ A^T \pme \sqsubseteq \pmb -\b'^T \\ A'^T \pme \Rightarrow
 		(A,\b) \sqsubseteq (A',\b')
 	\]
-	So, suppose that $(\t,t) \geq \0$, $\pmb -\b^T & -1 \\ A^T & \0 \pme(\t,t) = \pmb -b_i \\ A^T_i\pme$.  We must show that $\t = \e_i$, $t = 0$.  Suppose that it's not.  Then we have $\t^T A = A_i$, and by \Cref{extreme_Ab_pair_properties} $\ip{\t}{-\b} < b_i$.  Since $-t \leq 0$, $\ip{\t}{-\b} - t < b_i$, a contradiction.  So we have shown that $\t = \e_i$, in which case $t = 0$, and the proposition follows.
+	So, suppose that $(\t,t) \geq \0$, $\pmb -\b^T & -1 \\ A^T & \0 \pme(\t,t) = \pmb -b_i \\ A^T_i\pme$.  We must show that $\t = \e_i$, $t = 0$.  Suppose that it's not.  Then we have $\t^T A = A_i$, and by \Cref{minimal_Ab_pair_properties} $\ip{\t}{-\b} < b_i$.  Since $-t \leq 0$, $\ip{\t}{-\b} - t < b_i$, a contradiction.  So we have shown that $\t = \e_i$, in which case $t = 0$, and the proposition follows.
 \end{proof}
 
-Suppose that we have a $(U,V)$ and $(A,\b)$ such that $P_{UV} = \VP{U}{V} = \HP{A}{\b}$, and $(A,\b)$ is an extreme pair.  We run our program and get a new pair $(A',\b')$.  Denote $P_{A',\b'} := \HP{A'}{\b'}$.  We would like to verify that $P_{UV} = P_{A',\b'}$.  We have the following:
+Suppose that we have a $(U,V)$ and $(A,\b)$ such that $P_{UV} = \VP{U}{V} = \HP{A}{\b}$, and $(A,\b)$ is an minimal pair.  We run our program and get a new pair $(A',\b')$.  Denote $P_{A',\b'} := \HP{A'}{\b'}$.  We would like to verify that $P_{UV} = P_{A',\b'}$.  We have the following:
 \begin{alignat*}{2}
-	 & A'U\leq\0,\, A'V\leq\b'     & \;\Rightarrow\; & P_{UV} \subseteq P_{A',\b'}  \\
+	 & A'U\leq\0,\, A'V\leq\b'     & \;\Rightarrow\; & P_{UV} \subseteq P_{A',\b'} \\
 	 & (A,\b) \sqsubseteq (A',\b') & \;\Rightarrow\; & P_{A',\b'} \subseteq P_{UV} \\
-	 & P_{UV} = P_{A',\b'}         & \;\Rightarrow\; & A'U\leq\0,\, A'V\leq\b'      \\
+	 & P_{UV} = P_{A',\b'}         & \;\Rightarrow\; & A'U\leq\0,\, A'V\leq\b'     \\
 	 & P_{UV} = P_{A',\b'}         & \;\Rightarrow\; & (A,\b) \sqsubseteq (A',\b')
 \end{alignat*}
-The last line uses \Cref{extreme_Ab}.  So we conclude:
+The last line uses \Cref{minimal_Ab}.  So we conclude:
 
 \begin{EqCriteria}\label{eq_vp_hp}
-Suppose that there is an extreme pair $(A,\b)$ such that $P_{UV} = \VP{U}{V} = \HP{A}{b}$.  Then the following are equivalent:
-\[ P_{UV} = \HP{A'}{\b'} \Leftrightarrow A'U\leq\0,\,A'V\leq\b',\,(A,\b)\sqsubseteq (A',\b') \]
+	Suppose that there is an minimal pair $(A,\b)$ such that $P_{UV} = \VP{U}{V} = \HP{A}{b}$.  Then the following are equivalent:
+	\[ P_{UV} = \HP{A'}{\b'} \Leftrightarrow A'U\leq\0,\,A'V\leq\b',\,(A,\b)\sqsubseteq (A',\b') \]
 \end{EqCriteria}
 
 \begin{Test}[V-Polyhedron $\to$ H-Polyhedron]\label{test_vp_to_hp}
-	We now have a method for testing the program.  First, we hand-craft a V-Polyhedron $\VP{U}{V}$ based on some extreme pair $(A,\b)$, then run our program to get the pair $(A',\b')$, with the alleged property that $\VP{U}{V} = \HP{A'}{\b'}$.  If we confirm \Cref{eq_vp_hp}, then our program has succeeded.
+	We now have a method for testing the program.  First, we hand-craft a V-Polyhedron $\VP{U}{V}$ based on some minimal pair $(A,\b)$, then run our program to get the pair $(A',\b')$, with the alleged property that $\VP{U}{V} = \HP{A'}{\b'}$.  If we confirm \Cref{eq_vp_hp}, then our program has succeeded.
 \end{Test}
 
 \section{\filename{test\_functions.h}}
 
-The following types are defined for running tests of the different algorithms.  They are expected to be given a descriptive name, the object on which the test will be run, and a \lsti{key} with which the result of the test will be compared.  The \lsti{key} object is one of the extreme objects described above.
+The following types are defined for running tests of the different algorithms.  They are expected to be given a descriptive name, the object on which the test will be run, and a \lsti{key} with which the result of the test will be compared.  The \lsti{key} object is one of the minimal objects described above.
 \lsthconetestcasea
 \lstvconetestcasea
 \lsthpolytestcaseb
@@ -426,14 +520,14 @@ Test $A\v \leq \b$
 Test $AV \leq \b$
 \lstvecssatisfied
 
-Given an H-Cone $C = \HC{A} = \cone(U)$ where $U$ is extreme, and a \lsti{Matrix} $U'$, determines if $C = \cone(U')$.
-Similarly, given a V-Cone $C = \cone(U) = \HC{A}$ where $A$ is extreme, and a \lsti{Matrix} $A'$, determines if $C = \HC{A'}$.
+Given an H-Cone $C = \HC{A} = \cone(U)$ where $U$ is minimal, and a \lsti{Matrix} $U'$, determines if $C = \cone(U')$.
+Similarly, given a V-Cone $C = \cone(U) = \HC{A}$ where $A$ is minimal, and a \lsti{Matrix} $A'$, determines if $C = \HC{A'}$.
 \lstequivalentconerep
 
-Given an H-Polytope $P = \HP{A}{\b} = \VP{U}{V}$ where $U$ and $V$ are extreme, and a pair $(U',V')$, determines if $P = \VP{U'}{V'}$.
+Given an H-Polytope $P = \HP{A}{\b} = \VP{U}{V}$ where $U$ and $V$ are minimal, and a pair $(U',V')$, determines if $P = \VP{U'}{V'}$.
 \lstequivalenthpolyrep
 
-Given a V-Polytope $P = \VP{U}{V} = \HP{A}{\b}$ where $A$ is extreme, and a \lsti{Matrix} $(A',\b')$, determines if $P = \HP{A'}{\b'}$.
+Given a V-Polytope $P = \VP{U}{V} = \HP{A}{\b}$ where $A$ is minimal, and a \lsti{Matrix} $(A',\b')$, determines if $P = \HP{A'}{\b'}$.
 \lstequivalentvpolyrep
 
 %\lsthconetestcaseb
