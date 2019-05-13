@@ -156,7 +156,7 @@ So now we know that pointed cones have essentially unique generating sets.  We n
 
 In this section we create a method in the vein of \nameref{test_hc_to_vc}, but for testing the program transforming V-Cones to H-Cones.  This section is almost identical to the previous, with the exception of requiring the Farkas Lemma.
 
-\begin{Def}[Minimal Set]
+\begin{Def}[Minimal Set of Constraints]
 	A set $A$ is called \textit{minimal} for $\HC{A}$ if
 	\[ (\forall A_i \in A)\; \HC{A\setminus\set{A_i}} \supset \HC{A} \]
 \end{Def}
@@ -322,7 +322,7 @@ Say we know that $C = \HC{A} = \cone(V)$ is full-dimensional, with $A$ minimal. 
 
 \begin{Remark}
 	Can we test the program for non-full-dimensional cones?  (TODO finish this remark).
-  %Yes, but again, it is slightly more complicated.  Instead of prior knowledge of a minimal generating of constraints set for the cone, we also need to know what the largest set of independent constraints $B$ such that $B\x=\0$ is valid for the cone.  If we project away constraints from $A$ not orthogonal to all members of $B$, then we will have a pointed cone.  This can be done with a modified fourier-motzkin elimination.  Given another set $A'$, we may project away this subspace from $V'$ using a projection matrix, and use \Cref{test_hc_to_vc}.  Then we need to see if $\cone(V')$ spans $L$.  This can be done with a modified fourier-motzkin elimination, but unfortunately we are trying to test the implementation of fourier-motzkin elimination.
+	%Yes, but again, it is slightly more complicated.  Instead of prior knowledge of a minimal generating of constraints set for the cone, we also need to know what the largest set of independent constraints $B$ such that $B\x=\0$ is valid for the cone.  If we project away constraints from $A$ not orthogonal to all members of $B$, then we will have a pointed cone.  This can be done with a modified fourier-motzkin elimination.  Given another set $A'$, we may project away this subspace from $V'$ using a projection matrix, and use \Cref{test_hc_to_vc}.  Then we need to see if $\cone(V')$ spans $L$.  This can be done with a modified fourier-motzkin elimination, but unfortunately we are trying to test the implementation of fourier-motzkin elimination.
 
 	As of now this is left as a possible future extension of the program.
 \end{Remark}
@@ -333,14 +333,196 @@ Say we know that $C = \HC{A} = \cone(V)$ is full-dimensional, with $A$ minimal. 
 
 \paragraph{Generalizing to Polyhedra}  In the following sections we generalize \Cref{test_hc_to_vc} and \Cref{test_vc_to_hc} to polyhedra.
 
+\section{Testing H-Polyhedron $\to$ V-Polyhedron}
+
+Say we have an H-Polyhedron $P_{A,\b} = \HP{A}{\b}$, and wish to check that our program correctly calculates a $V'$ and $U'$ such that $P_{A,\b} = \VP{U'}{V'}$.  Again, we shall use the notion of minimality and show that under certain circumstances we can use minimal sets to demonstrate the validity of our algorithm.  First, we consider the case of a V-Polyhedron with no cone.
+
+\subsection{Polytopes}
+
+First we consider the special case of a V-Polyhedron given by $P = \conv(V)$.
+
+\begin{Def}[Minimal Set for Polytopes]
+	A set $V$ is called \textit{minimal} for the polytope $\conv(V)$ if:
+	\[(\forall \v\in V)\; \conv(V\setminus\set{\v}) \subset \conv(V)\]
+\end{Def}
+
+\begin{Prop}\label{min_conv}
+	$V$ is minimal for $\conv(V)$ if and only if $V$ is the set of vertices of $\conv(V)$.
+\end{Prop}
+
+We will need:
+
+\begin{Prop}\label{conv_conv}
+	A convex combination of convex combinations is another convex combination
+\end{Prop}
+
+\begin{proof}
+	Let $\Lambda$ represent a collection of convex combinations, that is, $\vec{1}^T\Lambda = \vec{1}^T$, and let $\blambda\geq\0,\,\1^T\blambda = 1$ be a convex combinator.  Then $\Lambda\blambda = \blambda'$ where $\blambda'\geq\0,\,\1^T\blambda'=1$.  That $\blambda'\geq\0$ is clear, then just note that $\1^T\blambda' = \1^T\Lambda\blambda = \1^T\blambda = 1$.
+\end{proof}
+
+\begin{proof}[Proof of \Cref{min_conv}]
+	First, suppose that $V$ is not minimal.  Then there is a $v\in V$ that satisfies $\conv(V\setminus\set{\v}) = \conv(V)$.  Denote $V'=V\setminus\set{\v}$.  Then $\v=V'\blambda'$, where there is some $\lambda_i$ with $0 < \lambda_i < 1$.  Let $\u = V'(\e_i-\blambda')$.  Then
+	\[ \v-\lambda_i\u = V'\blambda' - \lambda_iV'(\e_i-\blambda')
+		= (1-\lambda_i)V'\blambda' + \lambda_iV'\e_i\]
+	By \Cref{conv_conv}, the right hand side of this equation is a convex combination of members of $V'$, so $\v-\lambda_i\u \in \conv(V')$.   Similarly,
+	\[ \v+\lambda_i\u = V'\blambda' - \lambda_iV'(\e_i-\blambda') = V'(\blambda'-\lambda_i\e_i) + V'(\lambda_i\blambda') \]
+	Consider $(\blambda'-\lambda_i\e_i)$.  Note that this expression is non-negative, and sums to $1-\lambda_i$.  Next note that $\lambda_i\blambda'$ is non-negative, and sums to $\lambda_i$.  This means that the right hand side of the equation is a convex combination of $V'$, so $\v+\lambda_i\u\in\conv(V')$, and $\v$ is not a vertex.\\
+	Next, suppose that $\v\in V$ is not a vertex, and let $V'=V\setminus\set{\v}$.  Then there is some non-zero $\u$ such that $\v+\u\in\conv(V)$, $\v-\u\in\conv(V)$.  First, let $\alpha,\beta > 0$, and consider $\v+\alpha\u$ and $\v-\beta\u$.  Observe that
+	\[ \frac{\beta(\v+\alpha\u)}{\alpha+\beta} + \frac{\alpha(\v-\beta\u)}{\alpha+\beta} =
+		\frac{\alpha\v+\beta\v}{\alpha+\beta} = \v \]
+	This shows that we can positively scale $\alpha$ and $\beta$, and still get $\v$ as a convex combination of the result.  So we search for positive $\alpha$ and $\beta$ that give a point of $\conv(V')$, which by \Cref{conv_conv} shows that $\v\in\conv(V')$ so $V$ is not minimal.  First observe that $\v+\u = V\blambda$ for some $\blambda$.  Then let $\blambda' = \blambda - \lambda_i\e_i$, so $\u+\v = V'\blambda' + \lambda_i\v$, and $\u = V'(\blambda') + (\lambda_i-1)\v$  Then
+	\[ \v + \alpha\u = \v + \alpha(\lambda_i-1)\v + \alpha V'\blambda' \]
+	So we let $\alpha = 1/(1-\lambda_i)$, and the term in $\v$ disappears, while $\blambda'/(1-\lambda_i)$ is a convex combination.  Similarly, we have $\v-\u = V\bmu$, and $\u = \v(1-\mu_i)-V'\bmu'$.  Then
+	\[\v - \beta\u = \v(1-\beta(1-\mu_i)) + \beta V'\bmu' \]
+	So let $\beta = 1/(1-\mu_i)$, so the right hand side is a convex combination of members of $V'$.
+\end{proof}
+
+\subsection{Characterstic Cone}
+
+Now we consider the set $\cone(U)$ in $\cone(U) + \conv(V)$.  The next proposition shows that it is essntially unique for any given Polyhedron.
+
+\begin{Prop}[Characterstic Cone]\label{characteristic_cone}
+	Suppose that $P = \HP{A}{b} = \VP{U}{V}$.  Then the following three statements are equivalent:
+	\begin{enumerate}
+		\item $A\r\leq\0$
+		\item $(\forall \x\in P)(\forall \alpha > 0)\;\x + \alpha\r \in P$
+		\item $\r \in \cone(U)$
+	\end{enumerate}
+\end{Prop}
+
+\begin{proof}
+	$(1 \Rightarrow 2)$. $\x\in P$ means that $A\x\leq\b$, and $A\r\leq\0$ means that $A(\x+\alpha\r) \leq A\x \leq \b$.\\
+	$(\neg 1 \Rightarrow \neg 2)$.  Suppose $\ip{A_i}{\r} > 0$, then let $\alpha > (b_i - \ip{A_i}{\x})/\ip{A_i}{\r}$.  We have:
+	\[ \ip{A_i}{\x + \alpha\r} > \ip{A_i}{\x} +
+		\frac{b_i\ip{A_i}{\r} - \ip{A_i}{\x}\ip{A_i}{\r}}{\ip{A_i}{\r}} = b_i \]
+	$(3 \Rightarrow 2)$.  This is essentially the definition of $\VP{U}{V}$.\\
+	$(2 \Rightarrow 3)$.  Now for the real work.  Suppose that (2) holds, but $\r\not\in\cone(U)$.  Then by the Farkas Lemma, we have a $\y$ that satisfies $(\forall \r\in U)\,\ip{\r}{\y}\leq 0,\; \ip{\y}{\r} > 0$.  From (2) we construct a sequence: $(\x_n) = \v+n\cdot\r$.  Then it is clear that the sequence $\ip{\y}{\x_n} \to \infty$.  It is also clear that $(\forall n)\,\x_n \in P$.  We now need the following:
+	\begin{Prop}\label{max_linear_func}
+		A linear, real-valued function on the set $\conv(V)$ achieves its maximal value at some $\bar\v \in V$.
+	\end{Prop}
+	\begin{proof}
+		To see this is true, suppose that the linear function is given by $\ip{\y}{\cdot}$, and that $\bar\v$ is an element of $V$ such that $(\forall \v \in V)\,\ip{\y}{\bar\v} \geq \ip{\y}{\v}$.  Then, for any $\r \in \conv(V)$, $\r = \sum_{\v\in V} \lambda_v\v$ where $\sum \lambda_v = 1 \Rightarrow \lambda_v \leq 1$, and it follows
+		\[\ip{\y}{\r} = \ip{\y}{\sum_{\v\in V}\lambda_v v} = \sum_{v\in V} \lambda_v\ip{\y}{\v}
+			\leq \sum_{v\in V}\lambda_v\ip{\y}{\bar\v} = \ip{\y}{\bar\v} \]
+	\end{proof}
+	Now consider the maximum value of the function $\ip{\y}{\cdot}$ on $P$.  Since any element of $P$ can be written $\r + \v \st \r\in\cone(U),\,\v\in\conv(V)$, and $(\forall\r\in U) \ip{\y}{\r} \leq 0$, we can find the maximum value on $\conv(V)$.  However, $\ip{\y}{\cdot}$ achievs its maximal value on $\conv(V)$ at some $\bar\v\in V$, which is a contradiction with the fact that $\ip{\y}{\x_n} \to \infty$, so we conclude that $\r\in\cone(U)$.
+\end{proof}
+
+\begin{Remark}[Characteristic Cone]\label{re_characteristic_cone}  Note that $(2)$ in the proof above is independent of $A$ and $U$.  This means that the cone of a polyhedron is independent of its representation, i.e. if $\VP{U}{V} = \VP{U'}{V'}$, then $\cone(U) = \cone(U')$, while it is not necessarily true that $\conv(V) = \conv(V')$.  Similarly, if $\HP{A}{\b} = \HP{A'}{\b'}$, the it holds that $\HC{A} = \HC{A'}$.
+\end{Remark}
+
+\subsection{Minimal V-Polyhedra Pairs}
+
+\begin{Def}
+	A pair $(U,V)$ is said to be \textit{minimal} for $\cone(U) + \conv(V)$ if
+	\begin{align}
+		 & (\forall \u\in U)\;\cone(U\setminus\set{\u}) \subset \cone(U) + \conv(V) \\
+		 & (\forall \v\in V)\;\cone(V\setminus\set{\v}) \subset \cone(U) + \conv(V)
+	\end{align}
+\end{Def}
+
+As before, the pair may not be essentially unique.  This can happen if $U$ is not pointed.  So we will consider only pointed cones for $\cone(U)$.
+
+\begin{Prop}\label{u_min}
+	If $(U,V)$ is minimal, then $U$ is minimal for $\cone(U)$.
+\end{Prop}
+
+\begin{proof}
+	By \Cref{re_characteristic_cone}, $\cone(U) + \conv(V) = \cone(U') + \conv(V)$ if and only if $\cone(U) = \cone(U')$.  So this means that the minimality of $U$ is only dependent on $U$.
+\end{proof}
+
+Now we consider the vertices of $\cone(U) + \conv(V)$.
+
+\begin{Prop}\label{v_t_must_be_z}
+	If $\v$ is a vertex of $\VP{U}{V}$, then $[\v = U\t + V\blambda] \Rightarrow \t = \0$.
+\end{Prop}
+
+\begin{proof}
+	If $\v$ can be written with some non-zero contribution from $\cone(U)$, then you may decrease this contribution by some amount while staying in $\cone(U) + \conv(V)$, and you may increase the contribution by the same amount, so $\v$ is not a vertex.
+\end{proof}
+
+It will be useful to refer to the property of a set $V$ such that no member of $V$ may be written with a non-zero contribution from $\cone(U)$.  We will call it $U$-free.
+
+\begin{Prop}\label{v_is_vert}
+	If $\v$ is a vertex of $\VP{U}{V}$, then $\v$ is a vertex of $\conv(V)$.
+\end{Prop}
+
+\begin{proof}
+	By \Cref{v_t_must_be_z}, $\v\in\conv(V)$.  If $\v$ is not a vertex of $\conv(V)$, then because $\conv(V) \subseteq \cone(U) + \conv(V)$ it can't be a vertex of $P$.
+\end{proof}
+
+Now we can show the following.
+\begin{Prop}\label{v_min}
+	Suppose that $(U,V)$ is a minimal pair for $\VP{U}{V}$.  Then $V$ is the set of vertices of $\VP{U}{V}$.
+\end{Prop}
+
+\begin{proof}
+	By \Cref{v_t_must_be_z}, if $\v$ is a vertex of $P$, then it must be a vertex of $V$.  Clearly, $V$ is minimal for $V$, and is precisely the vertices of $\conv(V)$.  The only question is if the vertices of $V$ are the vertices of $P$.  Suppose that $\v$ is a vertex of $\conv(V)$.  Then we must show that for any $\u\neq\0$, if $\v+\u\in P$ then $\v-\u\not\in P$.  Suppose that $\u\in\cone(U)$.  Then, since $V$ is $U$-free, $\v-\u\not\in P$, otherwise $\v=(\v-\u)+\u$ and $V$ is not $U$-free.  If $\u\not\in\cone(U)$, then if $\v+\u\in P$, $\v+\u\in\conv(V)$.  Then because $\v$ is a vertex of $\cone(V)$, $\v-\u\not\in\conv(V)$.
+\end{proof}
+
+\begin{Prop}
+	Let $P = \cone(U)+ \cone(V)$.  Then the following are equivalent
+	\begin{enumerate}
+		\item $(U,V)$ is minimal for $P$
+		\item $U$ is minimal for $\cone(U)$, $V$ is the vertex set of $P$
+		\item $U$ is minimal for $\cone(U)$, $V$ is the vertex set of $\conv(V)$, and $V$ is $U$-free
+	\end{enumerate}
+\end{Prop}
+
+\begin{proof}
+	$(1 \Rightarrow 2)$.  This combines the results of \Cref{u_min} and \Cref{v_min}\\
+	$(2 \Rightarrow 3)$.  That $V$ is $U$-free follows from \Cref{v_t_must_be_z}.  By \Cref{v_is_vert}, the vertex set of $P$ is a subset of the vertices of $\conv(V)$.  Let $\v$ be a vertex of $\conv(V)$, we must show that it is a vertex of $P$.  Because it is a vertex of $\conv(V)$, if $\v+\u\in\conv(V)$ then $\v-\u\not\in\conv(V)$.  Say $\v+\u\in\conv(V)+\cone(U)$.  Then $\u$ must have some non-zero contribution of $\cone(U)$.  If $\v-\u\in P$, then $\v$ could be written as $(\v+\u)/2 + (\v-\u)/2$, which has an overall positive contribution from $\cone(U)$, meaning that $V$ is not $U$-free.\\
+	$(3 \Rightarrow 1)$.  Since $V$ is the vertex set of $\conv(V)$, if $\v\in V$ is also in $\VP{U}{V\setminus\set{\v}}$, then $\v$ can be written with a non-negative contribution from $\cone(U)$, so $V$ is not $U$-free.  Next let $\u\in U$, and $U'=U\setminus\set{\u}$.  We must find a point in $\VP{U}{V}$ that is not in $\VP{U'}{V}$.  Because $\u \not\in\cone(U')$, there is an $\x$ that satisfies: $\x^T U' \leq \0$, and $\x^T \u > 0$.  By \Cref{max_linear_func}, there is some maximum value $c$ such that $(\forall \x\in\conv(V)) \x^T \u <= c$.  This means that $\set{\x^T \y : \y \in \VP{U'}{V}}$ is upper-bounded by $c$.  But the set $\set{\x^T \y : \y \in \VP{U}{V}}$ is unbounded, since $\x^T \u > 0$.  So we can conlude that $\VP{U'}{V} \subset \VP{U}{V}$.  We conclude that $(U,V)$ are minimal.
+\end{proof}
+
+Now we see that the minimal pairs for V-Polyhedra are essentially unique.
+
+\begin{Prop}
+	Let $(U,V)$ be minimal for $P = \VP{U}{V} = \VP{U'}{V'}$.  Then $U\sqsubseteq U'$, and $V\subseteq V'$.
+\end{Prop}
+
+\begin{proof}
+	Since $\cone(U) = \cone(U')$, and $U$ is minimal for $\cone(U)$, by \Cref{eq_hc_vc} $U\sqsubseteq U'$.  By \Cref{v_is_vert} every vertex of $P$ must be a vertex of $V'$, and because $V$ contains precisely the vertices of $P$, $V\subseteq V'$.
+\end{proof}
+
+Say we know that $P = \VP{U}{V} = \HP{A}{\b}$, with $U,V$ minimal, and $U$ pointed.  We have another pair $(U',V')$, and let $P'=\VP{U'}{V'}$.  We want to test if $P = P'$.  We have the following:
+\begin{alignat*}{2}
+	 & AU'\leq\0 \;        & \Rightarrow & \; \cone(U') \sqsubseteq \cone(U) \\
+	 & AV'\leq\b \;        & \Rightarrow & \; \conv(V') \subseteq P          \\
+	 & U \sqsubseteq U' \; & \Rightarrow & \; \cone(U) \subseteq \cone(U')   \\
+	 & V \subseteq V'   \; & \Rightarrow & \; \conv(V) \subseteq \conv(V')   \\
+	 & P' = P \;           & \Rightarrow & \; AU\leq\0                       \\
+	 & P' = P \;           & \Rightarrow & \; AV\leq\b                       \\
+	 & P' = P \;           & \Rightarrow & \; U \sqsubseteq U'               \\
+	 & P' = P \;           & \Rightarrow & \; V \subseteq V'                 
+\end{alignat*}
+
+The first two lines imply that $P'\subseteq P$, while the next two imply that $P\subseteq P'$.  We now have the ability to create an equivalence criteria.
+
+\begin{EqCriteria}[V-Cone $\to$ H-Cone]\label{eq_hp_vp}
+	Say $(U,V)$ is a minimal pair for $P = \HP{A}{\b}$ (with pointed $\cone(U)$), and suppose $P' = \cone(U') + \conv(V')$.  Then
+	\[ P = P' \;\Leftrightarrow\; AU\leq\0,\, AV\leq\b,\, V\subseteq V',\, U\sqsubseteq U'\]
+\end{EqCriteria}
+
+\begin{Test}[H-Polyhedron $\to$ V-Polyhedron]\label{test_hp_to_vp}
+	We now have a method for testing the program.  First, we hand-craft an H-Polyhedron $\HP{A}{\b}$ based on a minimal pair $(U,V)$ for some pointed V-Polyhedron. We then run our program to get a pair $(U',V')$, with the alleged property that $\VP{U'}{V'} = \VP{U}{V}$.  If we confirm \Cref{eq_hp_vp}, then our program has succeeded.
+\end{Test}
+
+\section{Testing V-Polyhedron $\to$ H-Polyhedron}
+
+%%%
+\begin{Prop}
+	The set $\cone(U) + \conv(V)$ is pointed if and only if $\conv(U)$ is pointed.
+\end{Prop}
+
+\begin{proof}
+	If $\cone(U)$ is not pointed, then there is some $\u,-\u \in \cone(U)$, so $\cone(U) +\conv(V)$ can have no vertex.
+\end{proof}
 END
 \hrule
 
-\section{Testing H-Polyhedron $\to$ V-Polyhedron}
+In this case, the definition of minimal is a little more complicated, but it asserts that a set $U$ is minimal as before, and that no element of another set $V$ can be expressed as a non-trival sum of a convex combination of $V$ and a non-negative linear combination of members of $U$.
 
-Say we have an H-Polyhedron $P_{A,\b} = \HP{A}{\b}$, and wish to check that our program correctly calculates a $V'$ and $U'$ such that $P_{A,\b} = \VP{U'}{V'}$.  Again, we shall use the notion of minimality and show that under certain circumstances we can use minimal sets to demonstrate the validity of our algorithm.  In this case, the definition of minimal is a little more complicated, but it asserts that a set $U$ is minimal as before, and that no element of another set $V$ can be expressed as a non-trival sum of a convex combination of $V$ and a non-negative linear combination of members of $U$.
-
-\subsection{Minimal V-Polyhedra Pairs}
 \begin{Def}[Minimal Pair]{ A pair of sets $U\in\R^{d\times n}, V\in\R^{d\times p}$ is called an \textit{minimal pair} if for any $\u = U\e_k, \v = V\e_l$ the following is true:
 		\begin{alignat*}{1}
 			 & \t \geq \0,\; \u = U\t \Rightarrow \t = \e_k                              \\
@@ -350,44 +532,6 @@ Say we have an H-Polyhedron $P_{A,\b} = \HP{A}{\b}$, and wish to check that our 
 	}\end{Def}
 
 Let us now consider the set $U$ in the expression $\HP{A}{b} = \VP{U}{V}$.
-
-\begin{Prop}[Characterstic Cone]\label{characteristic_cone}
-	Suppose that $P = \HP{A}{b} = \VP{U}{V}$.  Then
-	\[ \cone(U) = \HC{A} \]
-\end{Prop}
-
-\begin{proof}
-	We show that the following three statements are equivalent:
-	\begin{enumerate}
-		\item $A\r\leq\0$
-		\item $(\forall \x\in P)(\forall \alpha > 0)\;\x + \alpha\r \in P$
-		\item $\r \in \cone(U)$
-	\end{enumerate}
-	$(1 \Rightarrow 2)$. $\x\in P$ means that $A\x\leq\b$, and $A\r\leq\0$ means that $A(\x+\alpha\r) \leq A\x \leq \b$.\\
-	$(\neg 1 \Rightarrow \neg 2)$.  Suppose $\ip{A_i}{\r} > 0$, then let $\alpha > (b_i - \ip{A_i}{\x})/\ip{A_i}{\r}$.  We have:
-	\[ \ip{A_i}{\x + \alpha\r} > \ip{A_i}{\x} +
-		\frac{b_i\ip{A_i}{\r} - \ip{A_i}{\x}\ip{A_i}{\r}}{\ip{A_i}{\r}} = b_i \]
-	$(3 \Rightarrow 2)$.  This is essentially the definition of $\VP{U}{V}$.\\
-	$(2 \Rightarrow 3)$.  Now for the real work.  Suppose that (2) holds, but $\r\not\in\cone(U)$.  Then by the Farkas Lemma, we have a $\y$ that satisfies $(\forall \r\in U)\,\ip{\r}{\y}\leq 0,\; \ip{\y}{\r} > 0$.  From (2) we construct a sequence: $(\x_n) = \v+n\cdot\r$.  Then it is clear that the sequence $\ip{\y}{\x_n} \to \infty$.  It is also clear that $(\forall n)\,\x_n \in P$.  We now need the following:
-	\begin{itemize}
-		\item A linear, real-valued function on the set $\conv(V)$ achieves its maximal value at some $\bar\v \in V$.
-	\end{itemize}
-	To see this is true, suppose that the linear function is given by $\ip{\y}{\cdot}$, and that $\bar\v$ is an element of $V$ such that $(\forall \v \in V)\,\ip{\y}{\bar\v} \geq \ip{\y}{\v}$.  Then, for any $\r \in \conv(V)$, $\r = \sum_{\v\in V} \lambda_v\v$ where $\sum \lambda_v = 1 \Rightarrow \lambda_v \leq 1$, and it follows
-	\[\ip{\y}{\r} = \ip{\y}{\sum_{\v\in V}\lambda_v v} = \sum_{v\in V} \lambda_v\ip{\y}{\v}
-		\leq \sum_{v\in V}\lambda_v\ip{\y}{\bar\v} = \ip{\y}{\bar\v} \]
-	Now consider the maximum value of the function $\ip{\y}{\cdot}$ on $P$.  Since any element of $P$ can be written $\r + \v \st \r\in\cone(U),\,\v\in\conv(V)$, and $(\forall\r\in U) \ip{\y}{\r} \leq 0$, we can find the maximum value on $\conv(V)$.  However, $\ip{\y}{\cdot}$ achievs its maximal value on $\conv(V)$ at some $\bar\v\in V$, which is a contradiction with the fact that $\ip{\y}{\x_n} \to \infty$, so we conclude that $\r\in\cone(U)$.
-\end{proof}
-
-\begin{Remark}[Characteristic Cone]\label{characteristic_cone}  Note that $(2)$ in the proof above is independent of $A$ and $U$.  This means that the cone of a polyhedron is independent of its representation, i.e. if $\VP{U}{V} = \VP{U'}{V'}$, then $\cone(U) = \cone(U')$, while it is not necessarily true that $\conv(V) = \conv(V')$.  Similarly, if $\HP{A}{\b} = \HP{A'}{\b'}$, the it holds that $\HC{A} = \HC{A'}$.
-\end{Remark}
-
-\begin{Prop}\label{conv_conv}
-	A convex combination of convex combinations is another convex combination
-\end{Prop}
-\begin{proof}
-	Let $\Lambda$ represent a collection of convex combinations, that is, $\vec{1}^T\Lambda = \vec{1}^T$, and let $\blambda\geq\0,\,\1^T\blambda = 1$ be a convex combinator.  Then $\Lambda\blambda = \blambda'$ where $\blambda'\geq\0,\,\1^T\blambda'=1$.  That $\blambda'\geq\0$ is clear, then just note that $\1^T\blambda' = \1^T\Lambda\blambda = \1^T\blambda = 1$.
-\end{proof}
-
 \begin{Prop}[Minkowski Sums]\label{minkowski_formula}
 	The following two statements hold
 	\begin{enumerate}
