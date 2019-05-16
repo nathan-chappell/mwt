@@ -569,7 +569,9 @@ Is the converse true?  Does it hold that given a $(A,\b)$ which is minimal, the 
 	\[y_i A_i + \sum_{j\neq i}y_j A_j = \0,\quad y_i b_i + \sum_{j\neq i} y_j a_j = 0 \]
 	So, there are non-negative $\t_1,\t_2$ such that
 	\[\t_1^T A = -\t_2^T A,\quad \t_1^T\b = -\t_2^T\b\]
-	But then for any $\x\in P$ it must hold that $\t_1^T A \x = \t_1^T \b$.  Since $P$ is full dimensional, it must be that $\t_1 = \0$, then $\y = \0$.
+	It follows that, for any $\x$ satisfying $A\x\leq\b$:
+  \[ \t_1^T A\x \leq \t_1^T \b,\quad -\t_2^T A\x \geq -\t_2^T \b \]
+  But then for any $\x\in P$ it must hold that $\t_1^T A \x = \t_1^T \b$.  Since $P$ is full dimensional, it must be that $\t_1 = \0$, then $\y = \0$.
 \end{proof}
 
 \begin{Prop}\label{ab_is_minimal}
@@ -613,15 +615,21 @@ Now, combining the results of \Nameref{characteristic_cone} and \cref{homogeniza
 %\begin{proof} This immediately follows from propositions \ref{homogenization_cone} and \ref{dual cone}.  \end{proof}
 
 \begin{Prop}\label{dual_cone_min}
-	If $\HP{A}{\b}$ is minimal and full-dimensional, then $\cone \pmb -\b^T & -1 \\ A^T & \0 \pme$ is minimal and pointed.
+	If $\HP{A}{\b}$ is minimal and full-dimensional, then either 
+  \begin{enumerate}
+    \item $\cone \pmb -\b^T & -1 \\ A^T & \0 \pme$ is minimal and pointed, or
+    \item $\cone \pmb -\b^T \\ A^T \pme$ is minimal and pointed, and $\cone\pmb -\b^T \\ A^T \pme = \cone \pmb -\b^T & -1 \\ A^T & \0 \pme$
+  \end{enumerate}
 \end{Prop}
 
 \begin{proof}
-	To see that it is pointed, let
+	To see that they are pointed, let
 	\[\cone \pmb -\b^T & -1 \\ A^T & \0 \pme (\t,t_0) = \0\]
-	If $(\t,t_0)$ is non-zero, then $\t^T A = \0$, which by \Cref{ab_full_dim} means that $-\t^T \b < 0$.  This means that $-\t^T\b -t_0 < 0$.  So $(\t,t_0) = \0$.  To show that it is minimal, by \Nameref{min_vcone_generators}, we only need to show that
+	If $(\t,t_0)$ is non-zero, then $\t^T A = \0$, which by \Cref{ab_full_dim} means that $-\t^T \b < 0$.  This means that $-\t^T\b -t_0 < 0$.  So $(\t,t_0) = \0$.  
+  
+  To show that it they are minimal, by \Nameref{min_vcone_generators}, we only need to show that
 	\[ \t\geq\0,\; [(A_i=\t^T A,\,\t^T \b + t_0 = b_i) \Rightarrow \t=\e_i] \]
-	By \Cref{ab_is_minimal}, if $\t\neq\e_i$, and $\t^T A = A_i$, then $\t^\b > b_i$, so $\t^T\b + t_0 \> b_i$.  So that means that if $\t^T A = A_i$, then $\t$ mush be $\e_i$.
+	By \Cref{ab_is_minimal}, if $\t\neq\e_i$, and $\t^T A = A_i$, then $\t^T \b > b_i$, so $\t^T\b + t_0 > b_i$.  So that means that if $\t^T A = A_i$, $\t^T\b = b_i$, then $\t$ mush be $\e_i$.  If there is a $\t\neq\0$ such that $\t^T A = \0$, then it follows that $-\t^T \b < 0$, and that $\cone\pmb -\b^T \\ A^T \pme = \pmb -\b^T & -1 \\ A^T & \0 \pme$.  Then $\pmb -\b^T \\ A^T \pme$ is minimal.  If there is no such $\t$, that is, if $\t^T A = 0$ then $\t=\0$, then $\pmb -\b^T & -1 \\ A^T & \0 \pme$ is minimal.
 \end{proof}
 
 \begin{Prop}
@@ -629,10 +637,7 @@ Now, combining the results of \Nameref{characteristic_cone} and \cref{homogeniza
 \end{Prop}
 
 \begin{proof}
-	By \Cref{dual_homogenization_cone} and \Cref{dual_cone_min}, we have that
-	\[ \pmb -\b^T & -1 \\ A^T & 0\pme \sqsubseteq \pmb -\b'^T & -1 \\ A'^T & 0\pme \]
-	Because $A$ does not contain any $\0$ rows, it follows that
-	\[ \pmb -\b^T \\ A^T \pme \sqsubseteq \pmb -\b'^T \\ A'^T \pme \]
+  \Cref{dual_homogenization_cone} shows that the equality of the H-Cones is predicated on the equality of the V-Cones $\cone\pmb -\b \\ A \pme$ and $\cone\pmb -\b' \\ A' \pme$.  \Cref{dual_cone_min} shows that we end up with the situation that either $\cone\pmb -\b \\ A \pme = \cone\pmb -\b' \\ A' \pme$ with $\cone\pmb -\b \\ A \pme$ minimal, in which case $\pmb -\b \\ A \pme \sqsubseteq \pmb -\b' \\ A' \pme$, or $\cone\pmb -\b & -1 \\ A & 0\pme$ is minimal.  In this case, since for no $A_i \in A$ is $A_i \simeq \0$, we conclude that $\pmb -\b \\ A \pme \sqsubseteq \pmb -\b' \\ A' \pme$
 \end{proof}
 
 Say we know that $P = \HP{A}{\b} = \VP{U}{V}$, with $(A,\b)$ minimal, and $P$ full-dimensional.  We have another pair $(A',\b')$, and let $P'=\HP{A'}{\b'}$.  We want to test if $P = P'$.  We have the following:
