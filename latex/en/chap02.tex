@@ -1,12 +1,18 @@
 \chapter{Proof of the \MWT}
 
+The proof proceeds by first showing that V-Cones are representable as H-Cones, and H-Cones are representable as V-Cones.  Then it is shown that the case of polyhedra can be reduced to cones.
+
+\begin{Thm}[{\MWT} for Cones] \label{MWTFC}
+		Every V-Cone is an H-Cone, and every H-Cone is a V-Cone.
+\end{Thm}
+
 \section{Every V-Cone is an H-Cone}
+
+To be clear, what we shall now show is that, given a set of the form $\cone(U)$, there is an $A$ such that $\cone(U) = \HC{A}$.  The first step in this construction is to rewrite $\cone(U)$ as $\Pi\left(\HC{A'}\right)$, where $\Pi$ is a coordinate projection.  We then show how to calculate these projections, and that the result is a set of the form $\HC{A}$.
 
 \begin{Def}[Coordinate Projection]
 	Let $I$ be the identity matrix.  Then the matrix $I'$ formed by deleting some rows from $I$ is called a \textbf{coordinate-projection}.
 \end{Def}
-
-The proof rests on the following two lemmas:
 
 \begin{Lemma}[Lifting a V-Cone]\label{vconelift}
 	 Every V-Cone is a coordinate-projection of an H-Cone.
@@ -16,12 +22,14 @@ The proof rests on the following two lemmas:
 	 Every coordinate-projection of an H-Cone is an H-Cone.
 \end{Lemma}
 
-\begin{proof}
-	Given \Cref{vconelift} and \Cref{hconeproject}, the proof follows simply.  Given a V-Cone, we use \nameref{vconelift} to get a description involving coordinate-projection of an H-Cone.  Then we can apply \nameref{hconeproject} in order to get an H-Cone.
+First, we quickly use the two lemmas to conclude \Cref{MWTFC}.  The rest of the section will be the proof of the two lemmas.
+
+\begin{proof}[Proof of \Cref{MWTFC}]
+	Given \Cref{vconelift} and \Cref{hconeproject}, the proof follows simply.  Given a V-Cone, we use \Cref{vconelift} to get a description involving coordinate-projection of an H-Cone.  Then we can apply \Cref{hconeproject} in order to get an H-Cone.
 \end{proof}
 
-\begin{proof}[Proof of \nameref{vconelift}]
-	We prove that every V-Cone is a coordinate-projection of an H-Cone, by giving an explicit formula.  Let ${\mU}$, and observe that
+\begin{proof}[Proof of \Cref{vconelift}]
+	We prove that every V-Cone is a coordinate projection of an H-Cone, by giving an explicit formula.  Let ${\mU}$, and observe that
 	\[ \cone(U) = \set{U\t \st \t \in \R^{\Udim},\, \t \geq \0} =
 		\set{\xv \st (\exists \tv)\,\x = U\t,\, \t \geq \0} \]
 	We will collect $\t$ and $\x$ on the left side of the inequality, treating $\t$ as a variable and expressing its contraints as linear inequalities, then project away the coordinates corresponding to $\t$.  The following expression takes one step:
@@ -37,20 +45,20 @@ The proof rests on the following two lemmas:
   \begin{Transform}[V-Cone Lift]\label{vconelift_transform}
   \[\VLift(U) = \pmb \0 & -I \\ I & -U \\ -I & U \pme \]
   \end{Transform}
-  So we define $A' = \VLift(U)$, then we can rewrite $\cone(U)$:
+  So we can rewrite $\cone(U)$:
 	\begin{equation*}
-		\cone(U) = \set{ \xv \St A'\xt \leq \0}
+		\cone(U) = \set{ \xv \St \VLift(U)\xt \leq \0}
 	\end{equation*}
 	Let $\Pi \in \set{0,1}^{d\times(d+\Udim)}$ be the identity matrix in $\R^{(d+\Udim)\times(d+\Udim)}$, but with the last $\Udim$-rows deleted.  Then $\Pi$ is a coordinate projection, and the above expression can be written:
 	\begin{equation}\label{eq:vconelift}
-		\cone(U) = \Pi\left(\set{ \y \in \R^{d+\Udim} \st A'\y \leq \0}\right)
+		\cone(U) = \Pi\left(\set{ \y \in \R^{d+\Udim} \st \VLift(U)\y \leq \0}\right)
 	\end{equation}
-	This is a coordinate projection of an H-Cone, and \nameref{vconelift} is shown.
+	This is a coordinate projection of an H-Cone, and \Cref{vconelift} is shown.
 \end{proof}
 
-To prove \nameref{hconeproject}, we use two separate propositions.
+To prove \Cref{hconeproject}, we use two separate propositions.
 \begin{Prop}[Projecting Null Columns]\label{proj_0_columns}
-	Let $B\in\R^{m'\times(d+\Udim)}$, $B'$ be $B$ with the last $\Udim$ columns deleted, and $\Pi$ the identity matrix with the last $\Udim$ rows deleted (i.e. $B' = \Pi B$).  Furthermore, suppose that the last $\Udim$ columns of $B$ are $\0$.  Then
+	Let $B\in\R^{m'\times(d+\Udim)}$, with the last $\Udim$ columns all $\0$.  Let $B'$ be $B$ with the last $\Udim$ columns deleted, and $\Pi$ the identity matrix with the last $\Udim$ rows deleted (i.e. $B' = \Pi B$).  Then
 	\[ \Pi\left(\set{\y \in \R^{d+\Udim} \st B\y \leq \0}\right) =
 		\set{\x\in\R^d\st B'\x\leq\0} \]
 \end{Prop}
@@ -63,10 +71,10 @@ To prove \nameref{hconeproject}, we use two separate propositions.
 	Since $B_i$ is an arbitrary row of $B$, the proposition is shown.
 \end{proof}
 
-In order to use the above proposition, we need a matrix with columns which are $\0$.  The next proposition shows us how to obtain such a matrix from another, while maintaining certain properties.
+In order to use the above proposition, we need a matrix with columns which are $\0$.  The next proposition shows us how to obtain such a matrix from another, while maintaining certain useful properties.
 
 \begin{Prop}[Fourier Motzkin Elimination for H-Cones]\label{fm_hcone}
-	Let $\mB$, $1 \leq k \leq (d+p)$, and $\x = \sum_{i\neq k}x_i \e_i$.  Then there exists a matrix $\mC$ with the following properties:
+	Let $\mB$, and $\x = \sum_{i\neq k}x_i \e_i$ for some $1 \leq k \leq (d+p)$.  Then there exists a matrix $\mC$ with the following properties:
 	\begin{enumerate}
 		\item Every row of $B'$ is a postive linear combination of rows of $B$.
 		\item $m_2$ is finite.
@@ -108,18 +116,18 @@ In order to use the above proposition, we need a matrix with columns which are $
 	Note that the third inequality changes directions because $\Bjk < 0$.  Now we choose $t$ to lie in this last interval, and show that we can use it to satisfy all of the constraints given by $ B$.  So, we have a $t$ such that
 	\[ \max_{i\in P} \ip{B_i/\Bik}{\x} \leq t \leq \min_{j\in N} \ip{B_j/\Bjk}{\x} \]
 	In particular,
-  \[(\forall j\in N)\quad \ip{B_j/\Bjk}{\x} \geq t \Rightarrow \ip{B_j}{\x} - \Bjk t \leq 0\]
+  \[(\forall j\in N)\quad t \leq \ip{B_j/\Bjk}{\x} \Rightarrow \ip{B_j}{\x} - \Bjk t \leq 0\]
 	Again, the inequality changes directions because $\Bjk < 0$.  Now consider a row $ B_j$ from $ B$:
 	\[ \ip{B_j}{\x-t\e_k} =  B_j {\x} - \Bjk t \leq 0 \]
 	Similarly,
-  \[(\forall i\in P)\quad t \geq B_i/\Bik {\x} \Rightarrow 0 \geq B_i {\x} - \Bik t\]
+  \[(\forall i\in P)\quad B_i/\Bik {\x} \leq t \Rightarrow B_i {\x} - \Bik t \leq 0 \]
 	Now consider a row $ B_i$ from $ B$:
 	\[ \ip{B_i}{\x-t\e_k} =  B_i {\x} - \Bik t \leq 0 \]
 	So, we've demonstrated that $\x-t\e_k$ satisfies all the constraints from $B$, and the left implication is shown.  So \textit{4} holds.
 \end{proof}
 
 \begin{Remark}[Fourier Motzkin Matrix]\label{fm_matrix}
-	 \nameref{fm_hcone} highlights the properties of the matrix $B'$.  Upon close inspection, we can create a Matrix $Y$ such that $B' = YB$, and every element of $Y$ is non-negative.  Create the following set of row vectors $Y$
+	 \Cref{fm_hcone} highlights the properties of the matrix $B'$.  Upon close inspection, we can create a Matrix $Y$ such that $B' = YB$, and every element of $Y$ is non-negative.  Create the following set of row vectors $Y$
 	\begin{alignat*}{2}
 		 & \e_l                  & \st & l \in Z          \\
 		 & \Bik \e_j - \Bjk \e_i & \st & i\in P,\; j\in N
@@ -128,8 +136,8 @@ In order to use the above proposition, we need a matrix with columns which are $
 	\[ B' = YB \]
 \end{Remark}
 
-\begin{proof}[Proof of \nameref{hconeproject}]
-	Here we prove the case that the coordinate projection is onto the first $d$ of $d+p$ coordinates.  Let $\set{\y\in\R^{d+\Udim}:A'\y \leq \0}$ be the H-Cone we need to project, and $\Pi$ the coordinate-projection we need to apply (the identity matrix with the last p columns deleted).  For each $1 \leq k \leq p$ we can use \nameref{fm_hcone} in an incremental manner, starting with $A'$.
+\begin{proof}[Proof of \Cref{hconeproject}]
+	Here we prove the case that the coordinate projection is onto the first $d$ of $d+p$ coordinates.  Let $\set{\y\in\R^{d+\Udim}:A'\y \leq \0}$ be the H-Cone we need to project, and $\Pi$ the coordinate-projection we need to apply (the identity matrix with the last p rows deleted).  For each $1 \leq k \leq p$ we can use \Cref{fm_hcone} in an incremental manner, starting with $A'$.
 	\begin{align*}
 		 & \text{let } B_0 := A'                                        \\
 		 & \text{for } 1 \leq k \leq p                                  \\
@@ -139,7 +147,7 @@ In order to use the above proposition, we need a matrix with columns which are $
 		 & \text{return } B_p
 	\end{align*}
 
-	Consider the resulting $B$.  Property \textit{2} holds throughout, so $B$ is finite.  After each iteration, property \textit{3} holds for $k$, so the $k$-th column is $\0$.  Since each iteration only results from non-negative combinations of the result of the previous iteration (property \textit{1}), once a column is $\0$ it remains so.  Therefore, at the end of the process, the last $p$ columns of $B$ are all $\0$.  Then, by \nameref{proj_0_columns}, we can apply $\Pi$ to $B$ by simply deleting the last $p$ columns of $B$.  Denote this resulting matrix $A$.  We still need to check that
+	Consider the resulting $B$.  Property \textit{2} holds throughout, so $B$ is finite.  After each iteration, property \textit{3} holds for $d+k$, so the $(d+k)$-th column is $\0$.  Since each iteration only results from non-negative combinations of the result of the previous iteration (property \textit{1}), once a column is $\0$ it remains so.  Therefore, at the end of the process, the last $p$ columns of $B$ are all $\0$.  Then, by \Cref{proj_0_columns}, we can apply $\Pi$ to $B$ by simply deleting the last $p$ columns of $B$.  Denote this resulting matrix $A$.  We still need to check that
 	\begin{equation}\label{eq:V2equal}
 		\Pi\set{\y\in\R^{d+\Udim}\st A'\y\leq\0} = \set{\x\in\R^{d}\st A\x\leq\0}
 	\end{equation}
@@ -148,7 +156,7 @@ In order to use the above proposition, we need a matrix with columns which are $
 		A'\y & \leq \0 \Rightarrow A(\Pi(\y)) \leq \0 \label{V2seteqright}                                                           \\
 		A\x  & \leq \0 \Rightarrow (\exists t_1)\dots(\exists t_p) A'(\x+t_1\e_{d+1}+\cdots+t_p\e_{d+p}) \leq \0 \label{V2seteqleft}
 	\end{align}
-	The key observation of this verification utilizes property \textit{4} of \nameref{fm_hcone}:
+	The key observation of this verification utilizes property \textit{4} of \Cref{fm_hcone}:
 	\[ (\exists t)B(\x + t\e_k) \leq \0 \Leftrightarrow B'\x \leq \0 \]
 	In what follows, let $\x = \sum_{1 \leq j \leq d}x_j\e_j$.  The above property is applied sequentially to the sets $B_k$ as follows:
 	\begin{alignat*}{2}
@@ -161,12 +169,14 @@ In order to use the above proposition, we need a matrix with columns which are $
 		(\exists t_p)                                                   & \quad B_{p-1}(\x + t_p\e_{d+p})  \leq \0 & \Leftrightarrow      \\
 		                                                                & \quad B_{p}\x  \leq \0                   &
 	\end{alignat*}
-	Because $A' = B_0$, and $A$ is $B_p$ with the last $p$ columns deleted, \eqref{V2seteqright} and \eqref{V2seteqleft} hold, therefore \eqref{eq:V2equal} holds, and the proof of \nameref{hconeproject} is complete, and we've shown that a coordinate projection of an H-Cone is again an H-Cone.
+	Because $A' = B_0$, and $A$ is $B_p$ with the last $p$ columns deleted, \eqref{V2seteqright} and \eqref{V2seteqleft} hold, therefore \eqref{eq:V2equal} holds, and the proof of \Cref{hconeproject} is complete, and we've shown that a coordinate projection of an H-Cone is again an H-Cone.
 \end{proof}
 
-With \nameref{vconelift} and \nameref{hconeproject} proven, we are now certain that any V-Cone is also an H-Cone.
+With \Cref{vconelift} and \Cref{hconeproject} proven, we are now certain that every V-Cone is also an H-Cone.
 
 \section{Every H-Cone is a V-Cone}
+
+Now we suppose that we are given a set of the form $\HC{A}$, and we must show that there is some $U$ such that $\HC{A} = \cone(U)$.  In a manner similar to the previous section, we will first write the set $\HC{A}$ as an intersection of a set $\cone(U')$ with a number of hyperplanes, then give a process to get rid of those intersections.
 
 \begin{Def}[Coordinate Hyperplane]
 	A set of the form
@@ -185,7 +195,7 @@ If we suppose that $U' \subset \R^{d+\Adim}$, and $\Pi$ is the identity matrix w
 	\Pi\big(\cone(U') \cap \set{x_{d+1} = 0}
 	\cap \dots \cap \set{x_{d+\Adim} = 0}\big)
 \end{equation}
-The proof rests on the following three propostions:
+The proof that every H-Cone is a V-Cone rests on the following three propostions:
 \begin{Lemma}[Lifting an H-Cone]\label{hconelift}
   Every H-Cone is a coordinate-projection of a V-Cone intersected with some coordinate hyperplanes.
 \end{Lemma}
@@ -196,22 +206,22 @@ The proof rests on the following three propostions:
   Every coordinate-projection of a V-Cone is an V-Cone.
 \end{Lemma}
 
-\begin{proof}
-	Given \cref{hconelift}, \cref{vconeintersect}, and \cref{vconeproject}, the proof follows simply.  Given an H-Cone, we use \nameref{hconelift} to get a description involving the coordinate-projection of a V-Cone intersected with some coordinate-hyperplanes.  We apply \nameref{vconeintersect} as many times as necessary to elimintate the intersections, then we can apply \nameref{vconeproject} in order to get a V-Cone.
+\begin{proof}[Proof that Every H-Cone is a V-Cone]
+	Given \Cref{hconelift}, \Cref{vconeintersect}, and \Cref{vconeproject}, the proof follows simply.  Given an H-Cone, we use \Cref{hconelift} to get a description involving the coordinate-projection of a V-Cone intersected with some coordinate-hyperplanes.  We apply \Cref{vconeintersect} as many times as necessary to elimintate the intersections, then we can apply \Cref{vconeproject} in order to get a V-Cone.
 \end{proof}
 
-\begin{proof}[Proof of \nameref{hconelift}]
+\begin{proof}[Proof of \Cref{hconelift}]
 	Let $\mA$, we now show that the H-Cone
 	\[\set{\xv \st A\x \leq \0}\]
 	can be written as the projection of a V-Cone intersected with some hyperplanes.  We use the following transform.
   \begin{Transform}[H-Cone Lift]\label{hconelift_transform}
   \[\HLift(A) = \pmb \0 & I & -I \\ I & A & -A \pme \]
   \end{Transform}
-  Define 
-  \[U' = \HLift(A) =  \set{\zei, \eAj, \neAj, 1 \leq j \leq d,\, 1 \leq i \leq m}\]
+  In other words,
+  \[\HLift(A) =  \set{\zei, \eAj, \neAj, 1 \leq j \leq d,\, 1 \leq i \leq m}\]
 	We then claim:
 	\begin{equation}\label{eq:hliftform}
-		\set{\xv \st A\x \leq \0} = \set{\xv \St (\exists \t \geq 0) \xz = U'\t}
+		\set{\xv \st A\x \leq \0} = \set{\xv \St (\exists \t \geq 0) \xz = \HLift(A)\t}
 	\end{equation}
 	First, considering \eqref{eq:coneintform1} and \eqref{eq:coneintform2}, observe that this is a coordinate-projection of a V-Cone intersected with some coordinate-hyperplanes.
 	Next, we note that
@@ -227,14 +237,14 @@ The proof rests on the following three propostions:
 	\end{equation}
 	where $\xjp, \xjm \geq 0$.  Also observe that
 	\[ A\x \leq \0 \Leftrightarrow (\exists \w \geq \0) \st A\x + \w = \0 \]
-	This can also be written
+	This can be written
 	\begin{equation} \label{eq:Axz}
-		A\x \leq \0 \Leftrightarrow (\exists \w \geq \0) \st \xAx + \zw = \xz
+		A\x \leq \0 \Leftrightarrow (\exists \w \geq \0) \St \xAx + \zw = \xz
 	\end{equation}
 	\eqref{eq:xAx} and \eqref{eq:Axz} together show
-	\[ A\x \leq \0 \Rightarrow (\exists \t \geq 0) \xz = U'\t \]
+	\[ A\x \leq \0 \Rightarrow (\exists \t \geq 0) \xz = \HLift(A)\t \]
 	Conversely, suppose
-	\[ (\exists \t \geq 0) \xz = U'\t \]
+	\[ (\exists \t \geq 0) \xz = \HLift(A)\t \]
 	We would like to show that $A\x \leq \0$.  Let $\xjp,\xjm,w_i$ take the values of $\t$ that are coefficients of $\eAj$, $\neAj$, and $\zei$ respectively, and denote $x_j = \xjp - \xjm$.  Then we have
 	\begin{align*}
 		\xz & = \jsum \xjp \eAj + \jsum \xjm \neAj + \isum w_i\zei \\
@@ -244,14 +254,14 @@ The proof rests on the following three propostions:
 	where $\w \geq \0$.  By \eqref{eq:Axz} we have $A\x \leq \0$.  So \eqref{eq:hliftform} holds.
 \end{proof}
 
-The proof of \nameref{vconeintersect} relies upon the following proposition.
+The proof of \Cref{vconeintersect} relies upon the following proposition.
 \begin{Prop}[Fourier Motzkin Elimination for V-Cones]\label{fm_vcone}
-	Let $Y \in \R^{(d+m)\times n_1}$, $1 \leq k \leq m$, and $\x$ satisfy $x_k = 0$.  Then there exists a matrix $Y' \in \R^{(d+m)\times n_2}$ with the following properties:
+	Let $Y \in \R^{(d+m)\times n_1}$, $1 \leq k \leq d+m$, and $\x$ satisfy $x_k = 0$.  Then there exists a matrix $Y' \in \R^{(d+m)\times n_2}$ with the following properties:
 	\begin{enumerate}
 		\item Every column of $Y'$ is a postive linear combination of columns of $Y$.
 		\item $n_2$ is finite.
 		\item The $k$-th row of $Y'$ is $\0$.
-		\item \((\exists \t\geq\0)\x = Y\t \Leftrightarrow (\exists \t' \geq \0)\x = Y'\t'\)
+		\item \((\exists \t\geq\0)\;\x = Y\t \Leftrightarrow (\exists \t' \geq \0)\;\x = Y'\t'\)
 	\end{enumerate}
 \end{Prop}
 
@@ -272,9 +282,9 @@ The proof of \nameref{vconeintersect} relies upon the following proposition.
 	\end{align}
 
 	Before moving on to the proof, we first note how we may write our vectors.
-	\[  Y\t = \Zsum t_k  Y^k + \Psum t_i  Y^i + \Nsum t_j  Y^j \]
-	\[  Y'\t = \Zsum t_k  Y^k + \NPsum t_{ij} (\Yi Y^j - \Yj Y^i) \]
-	Then, by \nameref{cone_closure} (cone closure), to show that the proposition is true, we need only show that, given any $t_i, t_j \geq 0$ ($t_{ij} \geq 0)$, there exists $t_{ij} \geq 0$ ($t_i, t_j \geq 0$) such that
+	\[  Y\t = \Zsum t_l  Y^l + \Psum t_i  Y^i + \Nsum t_j  Y^j \]
+	\[  Y'\t = \Zsum t_l  Y^l + \NPsum t_{ij} (\Yi Y^j - \Yj Y^i) \]
+	Then, by \nameref{cone_closure}, to show that the proposition is true, we need only show that, given any $t_i, t_j \geq 0$ ($t_{ij} \geq 0)$, there exists $t_{ij} \geq 0$ ($t_i, t_j \geq 0$) such that
 	\begin{equation} \label{eq:coneEq}
 		\Psum t_i  Y^i + \Nsum t_j  Y^j = \NPsum t_{ij} (\Yi Y^j - \Yj Y^i)
 	\end{equation}
@@ -282,12 +292,8 @@ The proof of \nameref{vconeintersect} relies upon the following proposition.
 	\newcommand{\coneEqSat}{\quad\mathrm{\;such\; that\; \eqref{eq:coneEq}\; holds}}
 	\begin{Prop}[Sum Mixture]\label{sum_mixture}
 		Suppose that
-		\[ \Psum t_i  Y^i_{d+1} + \Nsum t_j  Y^j_{d+1} = 0\quad\quad \Yj < 0 < \Yi \]
-		Then the following holds
-		\begin{alignat*}{2}
-			(t_i, t_j \geq 0) & \Rightarrow (\exists t_{ij} \geq 0)   &  & \coneEqSat \\
-			(t_{ij} \geq 0)   & \Rightarrow (\exists t_i, t_j \geq 0) &  & \coneEqSat
-		\end{alignat*}
+		\[ \Psum t_i  Y^i_{k} + \Nsum t_j  Y^j_{k} = 0\quad\quad \Yj < 0 < \Yi \]
+		Then \eqref{eq:coneEq} holds.
 	\end{Prop}
 
 	\begin{proof}[Proof of \cref{sum_mixture}]
@@ -310,14 +316,14 @@ The proof of \nameref{vconeintersect} relies upon the following proposition.
 		Combining these results, we have
 		\[ \Psum t_i Y^i + \Nsum t_j Y^j = \NPsum \frac{t_i t_j}{\sigma}(\Yi Y^j - \Yj Y^i) \]
 	\end{proof}
-	Finally, we can conclude that, given $\t \geq \0$, if $Y\t$ has a $0$ in the final coordinate, then we can write it as $ Y'\t'$ where $\t' \geq \0$, and any non-negative linear combination of vectors from $Y'$ can be written as a non-negative linear combination of vetors from $Y$, and will necessarily have the $k$-th coordinate be $0$ by property \textit{3}.  So property \textit{4} holds.
+	Finally, we can conclude that, given $\t \geq \0$, if $Y\t$ has a $0$ in the $k$-th coordinate, then we can write it as $ Y'\t'$ where $\t' \geq \0$, and any non-negative linear combination of vectors from $Y'$ can be written as a non-negative linear combination of vetors from $Y$, and will necessarily have the $k$-th coordinate be $0$ by property \textit{3}.  So property \textit{4} holds.
 \end{proof}
 
-\begin{proof}[Proof of \nameref{vconeintersect}]
-	In \nameref{fm_vcone}, the assumption that $x_k = 0$ in property \textit{4} creates the set $\cone(Y) \cap \set{\x \st x_k = 0}$.  This set, by property \textit{4}, is $\cone(Y')$.
+\begin{proof}[Proof of \Cref{vconeintersect}]
+	In \Cref{fm_vcone}, the assumption that $x_k = 0$ in property \textit{4} creates the set $\cone(Y) \cap \set{\x \st x_k = 0}$.  This set, by property \textit{4}, is $\cone(Y')$.
 \end{proof}
 
-\begin{proof}[Proof of \nameref{vconeproject}]
+\begin{proof}[Proof of \Cref{vconeproject}]
 	We shall prove that the coordinate-projection of a V-Cone is again a V-Cone.  Let $\Pi$ be the relevant projection, then we have:
 	\[ \Pi\set{U\t \st \t \geq \0} = \set{\Pi(U\t) \st \t \geq \0} =
 		\set{(\Pi U)\t \st \t \geq \0} \]
@@ -325,7 +331,7 @@ The proof of \nameref{vconeintersect} relies upon the following proposition.
 	\[ \Pi\big(\cone(U)\big) = \cone\big(\Pi U\big) \]
 \end{proof}
 
-Having shown that H-Cones are V-Cones, the proof of the {\MWT} for cones is complete.
+The final step, as in the previous section, is to show that the iterative process of intersecting a V-Cone with coordinate hyperplanes iteratively yields V-Cones.  This is merely applying \Cref{fm_vcone} multiple times, so the details are omitted.  Having shown that H-Cones are V-Cones, the proof of the {\MWT} for cones is complete.
 
 \section{Reducing Polyhedra to Cones}
 
@@ -336,6 +342,8 @@ Having shown that H-Cones are V-Cones, the proof of the {\MWT} for cones is comp
 \end{Def}
 
 \subsection{H-Polyhedra $\leftrightarrow$ H-Cones}
+
+Here we generalize the results from the previous sections.  There is an asymmetry in the reductions, in that the reduction from H-Polyhedra to H-Cones is almost too simple.  On the other hand, the reduction from V-Polyhedra to V-Cones is almost as difficult as proving that projections of V-Cones results in V-Cones.
 
 \newcommand{\hpxz}{\set{\x\st x_0 = 1}}
 \begin{Prop}
@@ -355,7 +363,8 @@ Having shown that H-Cones are V-Cones, the proof of the {\MWT} for cones is comp
 \subsection{V-Polyhedra $\leftrightarrow$ V-Cone}
 
 \begin{Prop}[V-Polyhedron $\to$ V-Cone]
-	\[ \VP{U}{V} = \cone\pmb \0 & \1 \\ U & V \pme \cap \hpxz \]
+  Let $\Pi$ be the identity matrix with the first row deleted.  Then
+	\[ \VP{U}{V} = \Pi\left(\cone\pmb \0 & \1 \\ U & V \pme \cap \hpxz\right) \]
 \end{Prop}
 
 \begin{proof}
@@ -365,8 +374,8 @@ Having shown that H-Cones are V-Cones, the proof of the {\MWT} for cones is comp
 This shows that a V-Polyhedron may be written as an intersection of a V-Cone and the hyperplane $\hpxz$.  It is more difficult to show that, given a V-Cone, that you can intersect it with the hyperplane $\hpxz$ and get a V-Polyhedron out of it.
 
 \begin{Prop}[V-Cone $\to$ V-Polyhedron]\label{vcone_to_vpoly}
-	Let $\Pi$ be the identity matrix with the first row deleted.  Then, for any set $C_U = \cone(U)$ there are sets $W$ and $V$ such that
-	\[ \cone(V) \cap \hpxz = \VP{W}{V} \]
+	Given some finite $U$, there are finite sets $W$ and $V$ such that
+	\[\cone(U) \cap \hpxz = \VP{W}{V} \]
 \end{Prop}
 
 \begin{proof}
@@ -382,22 +391,22 @@ This shows that a V-Polyhedron may be written as an intersection of a V-Cone and
 		V\; & = \set{U^i/\Uiz \st i \in P}
 	\end{align*}
 	Then I claim that
-	\[ C_U = \VP{W}{V} \]
+	\[ \cone(U) \cap \hpxz = \VP{W}{V} \]
 	Say $\x \in\cone(W)$, and $\y\in\conv(V)$.  Then $\x$ can be written
 	\begin{align*}
 		\x & = \sum_{l\in Z}t_l U^l + \NPsum t_{ij}(\Uiz U^j - \Ujz U^i)      \\
 		   & = \sum_{l\in Z}t_l U^l + \Nsum \left(\Psum t_{ij}\Uiz\right) U^j
 		+ \Psum \left(\Nsum -t_{ij}\Ujz\right) U^i
 	\end{align*}
-	So $\x \in C_U$.  Furthermore,
+	So $\x \in \cone(U)$.  Furthermore,
 	\[ \ip{\e_0}{\x} = \sum_{l\in Z}t_l \Ulz + \NPsum t_{ij}(\Uiz \Ujz - \Ujz \Uiz) = 0\]
 	So $x_0 = 0$.  Similarly, $\y$ can be written:
 	\[ \y = \Psum \lambda_i U^i/\Uiz,\quad\Psum\lambda_i = 1 \]
-	So $\y \in C_U$.  Furthermore,
+	So $\y \in \cone(U)$.  Furthermore,
 	\[ \ip{\e_0}{\y} = \Psum \lambda_i \Uiz/\Uiz = \Psum \lambda_i  = 1\]
-	So $y_0 = 1$ and $x_0 + y_0 = 1$.  It follows that $\x + \y \in C_U$.
+	So $y_0 = 1$ and $x_0 + y_0 = 1$.  It follows that $\x + \y \in \cone(U) \cap \hpxz$.
 
-	Next, suppose that $\z \in C_U$, then $\z$ can be written
+	Next, suppose that $\z \in \cone(U) \cap \hpxz$, then $\z$ can be written
 	\[ \z = \Zsum t_l U^l + \Psum t_i U^i + \Nsum t_j U^j \]
 	It will be convenient to use shorter notation for these sums.  Define the following:
 	\begin{alignat*}{3}
@@ -425,7 +434,7 @@ This shows that a V-Polyhedron may be written as an intersection of a V-Cone and
 	\end{enumerate}
 	Since each $U^l : l \in Z$ is in $C_V$, (1) holds.  We also have:
 	\[ \sigma_i\bsigma_N - \sigma_j\bsigma_P =
-		\Psum t_i \Nsum t_j \Uiz U^j - \Nsum t_j \Psum t_i \Ujz U^i =
+		\Psum t_i\Uiz \Nsum t_j U^j - \Nsum t_j\Ujz \Psum t_i U^i =
 		\NPsum t_i t_j(\Uiz U^j - \Ujz U^i) \]
 	So (2) holds.  Finally,
 	\[ \bsigma_P/\sigma_i = \Psum t_i U^i / \sigma_i = \Psum (t_i \Uiz/\sigma_i)(U^i/\Uiz) \]

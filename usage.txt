@@ -4,10 +4,11 @@ The input object is read on stdin, and the result of the
 transform to sent to stdout.  input_type determines the type
 of input and output:
 
-    -vc  # transforms a vcone into an hcone
-    -vp  # transforms a vpolyhedron into an hpolyhedron
-    -hc  # transforms an hcone into a vcone
-    -hp  # transforms an hpolyhedron into a vpolyhedron
+  arg:   input:         output:
+  -vc    V-Cone         H-Cone
+  -vp    V-Polyhedra    H-Polyhedra
+  -hc    V-Cone         H-Cone
+  -hp    V-Polyhedra    H-Polyhedra
 
 input format is as follows:
   hcone := dimension   ws (vector ws)*  

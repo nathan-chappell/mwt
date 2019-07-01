@@ -1,7 +1,7 @@
 \chapter{C++ Implementation}
 %TODO update the content below, migrate commentary, input usage file...
 
-The above transformations have been implemented in C++.  Program \lsti{main.cpp} takes one argument specifying the type of input object.  It reads the description of the object from standard input, and writes the result of the implied transformation to standard output.  If no arguments are supplied, then a \lsti{usage} message is given.  The \lsti{usage} message, which also contains the input format for the objects, is:
+The above transformations have been implemented in C++.  Program \lsti{main} takes one argument specifying the type of input object (V-Cone, V-Polyhedra, H-Cone, or H-Polyhedra).  It reads the description of the object from standard input, and writes the result of the implied transformation to standard output (details below).  If no arguments are supplied, then a \lsti{usage} message is given.  The \lsti{usage} message, which also contains the input format for the objects, is:
 
 \VerbatimInput{../../usage.txt}
 
@@ -15,6 +15,7 @@ The files pertaining to the implementation will be discussed in the following se
 	\filename{fourier\_motzkin.h} & \filename{linear\_algebra.h}                         \\
 	\filename{polyhedra.h}        & \filename{fourier\_motzkin.h}                        \\
 	\filename{main.cpp}           & \filename{polyhedra.h}                               \\
+  \hline
 	\filename{test\_functions.h}  & \filename{linear\_alebra.h}                          \\
 	\filename{test.cpp}           & \filename{test\_functions.h}, \filename{polyhedra.h} \\
 	\hline
@@ -22,7 +23,7 @@ The files pertaining to the implementation will be discussed in the following se
 
 \vspace{1em}
 
-Here is a very brief summary of the files mentioned in the above table, more details are given in sequent sections.
+Here is a very brief summary of the files mentioned in the above table, more details are given in subsequent sections.
 
 \begin{itemize}
 	\item \texttt{linear\_algebra.h} \\
@@ -42,10 +43,10 @@ Here is a very brief summary of the files mentioned in the above table, more det
 The relevant code will be displayed with commentary below.  Some of the code relating to C{++} specific technicalities and I/O is ommitted.
 
 \section{\filename{linear\_algebra.h}}
-The types \lsti{Vector} and \lsti{Vectors} are used in the representation of polyhedra.  The \lsti{std::valarray} template is used because it has built-in vector-space operations (sum and scaling).  \lsti{std::vector}, is used as a container of \lsti{Vector}s, however other containers could be used.
+The types \lsti{Vector} and \lsti{Vectors} are used in the representation of polyhedra.  The \lsti{std::valarray} template is used because it has built-in vector-space operations (sum and scaling).  \lsti{std::vector} is used as a container of \lsti{Vector}s, however other containers could be used.
 \lsttdVecs
 
-The \lsti{class Matrix} implements a subset of what a \textit{C++ Container} should.  It is the primary type for representing polyhedra, and directly represents Cones, as well as H-Polyhedra.  The interface is designed to enforce the following invariant:
+The \lsti{class Matrix} implements a subset of what a \textit{C++ Container} should.  It is the primary type for representing polyhedra, and directly represents Cones, as well as H-Polyhedra.  The class is designed to enforce the following invariant:
 \[ (\forall \mli{v} \in \mli{vectors})\, \mli{v.size() == d} \]
 The factory function \lsti{read_Matrix} is provided to read a \lsti{Matrix} from an \lsti{istream}.  It is necessary because the value of \lsti{d} can't be known before reading some of the stream.
 \lstMatrix
@@ -87,11 +88,14 @@ A \lsti{slice} object can be used to conveniently obtain a subset of a \lsti{val
 A \lsti{slice} object is determined by three fields: \lsti{start}, \lsti{size}, and \lsti{stride}, and implicitly represents all indices of the form:
 \[ \sum_{0 \leq k < \mli{size}} \mli{start} + k\cdot\mli{stride} \]
 Therefore:
-\[ i \in \mli{slice} \Leftrightarrow i - \mli{start} \equiv 0 \mod(\mli{stride}),
-	\quad \mli{start} \leq i \leq \mli{start} + {\mli{stride}}\cdot\mli{size} \]
+\[i \in \mli{slice} \Leftrightarrow 
+  \begin{cases} 
+       i - \mli{start} \equiv 0 \mod(\mli{stride}) \\
+	     \mli{start} \leq i \leq \mli{start} + {\mli{stride}}\cdot\mli{size}
+  \end{cases}\]
 \lstindexinslice
 
-\lsti{fourier_motzkin} takes a \lsti{Matrix M} and a coordinate \lsti{k} and creates the set which either corresponds to a projection of an H-Cone (without actually doing the projection), or the intersection of a V-Cone with a coordinate-hyperplane.
+\lsti{fourier_motzkin} takes a \lsti{Matrix M} and a coordinate \lsti{k} and creates the set which either corresponds to a projection of an H-Cone (without reducing the dimensionality), or the intersection of a V-Cone with a coordinate-hyperplane.
 \lstfouriermotzkin
 
 The lines:
@@ -120,16 +124,17 @@ Moves $Z$ into the result.  The lines:
 convolute the vectors in the way described in \Nameref{fm_hcone} and \Nameref{fm_vcone} (concerning projecting an H-Cone and intersecting a V-Cone with a coordinate-hyperplane), and push them into the result \lsti{Matrix}.  In particular, it creates the sets which correspond to
 \[ \set{\Bik B_j - \Bjk B_i \st i \in P,\, j \in N}, \quad
 	\set{\Yi Y^j - \Yj Y^i \st i \in P,\, j\in N} \]
-\lsti{sliced_fourier_motzkin} applies \lsti{fourier_motzkin} to \lsti{Matrix M} for each ${k \not\in \mli{s}}$, then slices the resulting \lsti{Matrix} using \lsti{slice_matrix} and \lsti{s}.  This is the realization of the algorithms indicated by the proofs of either direction of the {\MWT} for cones.
+
+\lsti{sliced_fourier_motzkin} applies \lsti{fourier_motzkin} to \lsti{Matrix M} for each ${k \not\in \mli{s}}$, then slices the resulting \lsti{Matrix} using \lsti{slice_matrix} and \lsti{s}.  This is the realization of the algorithms indicated by the proofs of either direction of the {\MWT} for cones.  (Here, the slice operation is used to reduce the dimensionality as appropriate).
 \lstslicedfouriermotzkin
 
 When transforming an H-Cone to a V-Cone, it first must be written as a V-Cone of a new matrix, then it is intersected with coordinate-hyperplanes and projected.  Similarly, when a V-Cone is transformed into an H-Cone, it must be written as and H-Cone of a new matrix then projected with coordinate-projections.  The transformations are described in \nameref{vconelift_transform} and \nameref{hconelift_transform}, and summarized here:
   \[\HLift(A) = \pmb \0 & I & -I \\ I & A & -A \pme \quad 
     \VLift(U) = \pmb \0 & -I \\ I & -U \\ -I & U \pme \]
 Note that the tranformation of $U$ can be written:
-  \[\HLift(A) = \pmb \0 & I & -I \\ -I & -U & U \pme^T \]
+  \[\VLift(U) = \pmb \0 & I & -I \\ -I & -U & U \pme^T \]
 
-Remembering that a \lsti{Matrix} is either a collection of row \textit{or} column \lsti{Vector}s, it is not surprising that these two transformations can be written as one function of a \lsti{Matrix} and some coefficients.  In \lsti{generalized_lift}, the coefficients are given as an \lsti{array<double, 5> C}, so the overall transformation can be illustrated as:
+Remembering that a \lsti{Matrix} is either a collection of row \textit{or} column \lsti{Vector}s, it is not surprising that these two transformations can be written as one function whose parameters are a \lsti{Matrix} and some coefficients.  In \lsti{generalized_lift}, the coefficients are given as an \lsti{array<double, 5> C}, so the overall transformation can be illustrated as:
 \newcommand{\CA}[1]{\mli{C[#1]}}
 \[ \mli{Matrix M} \to
 	\begin{pmatrix*}[r]
@@ -151,7 +156,7 @@ where \lsti{Matrix M} is a collection of column \lsti{Vector}s.
 \lstliftvcone
 \lstlifthcone
 
-\lsti{cone_transform} consolidates the logic of the V-Cone $\to$ H-Cone and H-Cone $\to$ V-Cone transformations by accepting a \lsti{Matrix cone} and a \lsti{Lift}.
+\lsti{cone_transform} consolidates the logic of the V-Cone $\to$ H-Cone and H-Cone $\to$ V-Cone transformations by accepting a \lsti{Matrix cone} and a \lsti{LiftSelector}.  The LiftSelector type is an enumerable class, used to avoid the need for function pointers.
 \lstconetransform
 
 \lsti{vcone_to_hcone} and \lsti{hcone_to_vcone} specialize \lsti{cone_transform} by providing the appropriate \lsti{Lift}.
@@ -185,6 +190,9 @@ These very simple transforms are done with the \lsti{cshift} function, which ``c
 \lstvpolytohpoly
 
 \section{Picture of the Program}
-In the following diagram, the nodes represent functions, and the edges can be read as ``calls.''  Such a diagram is known as a ``callgraph,'' and is only intended to give an overview of the program.\\
+In the following diagram, the nodes represent functions, and the edges can be read as ``calls.''  Such a diagram is known as a ``callgraph,'' and is only intended to give an overview of the program.
+
+For such a small callgraph, observation is enough to get some insight into the program.  In particular, the nodes with the highest degrees (5) are: \\
+\texttt{fourier\_motzkin}, \texttt{cone\_transform}, and \texttt{generalized\_lift}.  Each have two incoming edges, reflecting the ``H'' vs ``V'' aspects of the program.  It makes sense that these would be the functions getting higher degree in the program, as these are (roughly speaking) the most important parts of the proof of the theorem.
 \includegraphics[keepaspectratio,width=\textwidth,height=\textheight]{../img/callgraph.pdf}
 

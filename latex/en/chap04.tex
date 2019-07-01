@@ -15,7 +15,9 @@ It's not clear what to do to check if $C_A\subseteq C_{V'}$.  Suppose we had a s
 	 & C_{V'} = C_A \;   & \Rightarrow & \; AV'\leq\0
 \end{alignat*}
 
-The problem is now to come up with such a set $V$, and to determine when such a set may or may not exist for a given cone.  We will need to relax the requirements on $V$ a little bit, but not in a way that reduces its utility.  First, we consider a \textit{minimal} set generating a cone.
+That is, we'd have necessary and sufficient conditions to test cone-equality (not to mention an obvious way to implement tests for these conditions).  However, as of right now, this test is just wishful thinking.
+
+The problem is to come up with such a set $V$, and to determine when such a set may or may not exist for a given cone.  We will need to relax the requirements on $V$ a little bit, but not in a way that reduces its utility.  First, we consider a \textit{minimal} set generating a cone.
 
 \begin{Def}[Minimal Set]
 	A set $V$ is called \textit{minimal} for $\cone(V)$ if
@@ -62,7 +64,9 @@ then \eqref{vmin_implies} fails.  So, for what cones does \eqref{not_pointed} fa
 \end{Prop}
 
 \begin{proof}
-	First, observe that, due to \nameref{cone_closure}, if a cone has a vertex, then it is the origin.  Suppose that the origin is a vertex, but that (2) fails.  Since $\0\not\in V$, $\t$ has at least two non-zero elements, let one be $t_i$.  Then $\0 = V(t_i\e_i) + V(\t-t_i\e_i)$.  Let $\u=V(t_i\e_i$.  Clearly $\u\neq\0$, and also $\u,-\u\in C$.  Then the origin is not a vertex, a contradiction.
+	First, observe that, due to \nameref{cone_closure}, if a cone has a vertex, then it is the origin.  To see this, take any other point in the cone, and scale it by $1 \pm \epsilon$ for some appropriately small value $\epsilon$.
+  
+  Suppose that the origin is a vertex, but that (2) fails.  Since $\0\not\in V$, $\t$ has at least two non-zero elements, let one be $t_i$.  Then $\0 = V(t_i\e_i) + V(\t-t_i\e_i)$.  Let $\u=V t_i\e_i$.  Clearly $\u\neq\0$, but also $-\u = V(\t-t_i\e_i) \in C$, so that $\u,-\u\in C$.  Then the origin is not a vertex, a contradiction.
 
 	Next, suppose that $\0$ is not a vertex, then $\exists\t_1,\t_2\geq\0$, $\t_{1,2}\neq\0$, $\u=V\t_1$, $-\u=V\t_2$.  Then $\t_1+\t_2\geq\0$, $\t_1+\t_2\neq\0$, and $V(\t_1+\t_2)=\0$.
 \end{proof}
@@ -78,10 +82,10 @@ Now we can consider the converse of \Cref{v_not_minimal}.
 \end{Prop}
 
 \begin{proof}
-	$(\neg 1 \Rightarrow \neg 2)$ is \Cref{v_not_minimal}.  So suppose that $\t\geq\0,\,\v=V\e_i$, and $\v=V\t$.  If $0\leq t_i < 1$, then $\v = V(\t-t_i\e_i)/(1-t_i)$, and $\v\in \cone(V\setminus\{\v\} $, which would mean that $V$ is not minimal.  Suppose that $t_i\geq 1$.  Then $\t-\e_i\geq\0$, and $\0=V(\t-\e_i)$.  Because $V$ is pointed, by \Cref{v_is_pointed} $\0=\t-\e_i$, so $\t=\e_i$.
+	$(\neg 1 \Rightarrow \neg 2)$ is \Cref{v_not_minimal}.  So suppose that $\t\geq\0,\,\v=V\e_i$, and $\v=V\t$.  If $0\leq t_i < 1$, then $\v = V(\t-t_i\e_i)/(1-t_i)$, and $\v\in \cone(V\setminus\{\v\})$, which would mean that $V$ is not minimal.  Suppose that $t_i\geq 1$.  Then $\t-\e_i\geq\0$, and $\0=V(\t-\e_i)$.  Because $V$ is pointed, by \Cref{v_is_pointed} $\0=\t-\e_i$, so $\t=\e_i$.
 \end{proof}
 
-\Cref{min_vcone_generators} gives us a way to characterize the minimal sets generating V-Cones.  Clearly, there is not a unique minimal set generating any V-Cone.  However, we can relax the requirement of unicity to equivalence, in the following way.
+\Cref{min_vcone_generators} gives us a way to characterize the minimal sets generating V-Cones.  Clearly, there is not a unique minimal set generating any V-Cone, since any positive scaling of any of the vectors generating the cone results in the same cone.  However, as one is wont to do upon encountering such trifles, we can relax the requirement of unicity to equivalence, in the following way.
 
 \begin{Def}[vector equivalence]
 	Let $\u,\v \in \R^d$, non-zero, and suppose that $\u/\norm{\u} = \v/\norm{\v}$.  Then say that $\u,\v$ are \textit{equivalent}, and write $\u \simeq \v$.  If for every $\u\in U$ there is a $\v\in V$ such that $\u\simeq\v$, write $ U \sqsubseteq V$.  Write $U \simeq V$ if $U \sqsubseteq V$ and $V \sqsubseteq U$.
@@ -125,7 +129,7 @@ We'll use this short lemma in the proof of the above proposition.
 	Let $\v\in V$, $\v=V\e_i$.  If we can show that there is some $\v'\in V'$ such that $\v\simeq\v'$, then we're done.  Since $\cone(V)=\cone(V')$, there is a non-negative matrix $A$ such that $V'=VA$.  Furthermore, there is a non-negative vector $\b$ such that $\v=V'\b$.  Then $\v=V'\b=(VA)\b=V(A\b)$.  By \Cref{min_vcone_generators}, $A\b=\e_i$.  By \Cref{non_negative_sums_to_e}, there is a $t>0,l$ such that $A\b=A(t\e_l)$.  Then $\v=VA(t\e_l)=tV'\e_l=t\v'$ where $\v'\in V'$.  By \Cref{vector_equivalence}, $\v\simeq\v'$.
 \end{proof}
 
-So now we know that pointed cones have essentially unique generating sets.  We now turn to the question of using this knowledge to create a test for the program.  We suppose that we have a minimal generating set $V$ for some pointed V-Cone $C$, and have created a matrix $A$ so that $C = \HC{A} = \cone(V)$.  We run the program and get a set $V'$, and let $C'=\cone(V')$.  We must check that $C' = C$.
+So now we know that pointed cones have essentially unique generating sets.  We now turn to the question of using this knowledge to create a test for the program.  We suppose that we have a minimal generating set $V$ for some pointed V-Cone $C$, and have created a matrix $A$ so that $C = \HC{A} = \cone(V)$.  We run the program and get a set $V'$, and let $C'=\cone(V')$.  We must check that $C' = C$.  The situation is summarized here below, and formalized in the following Equivalence Criteria.
 \begin{alignat*}{2}
 	 & AV'\leq\0 \;        & \Rightarrow & \; C' \subseteq C   \\
 	 & V \sqsubseteq V' \; & \Rightarrow & \; C \subseteq C'   \\
@@ -154,7 +158,7 @@ So now we know that pointed cones have essentially unique generating sets.  We n
 
 \section{Testing V-Cone $\to$ H-Cone}
 
-In this section we create a method in the vein of \nameref{test_hc_to_vc}, but for testing the program transforming V-Cones to H-Cones.  This section is almost identical to the previous, with the exception of requiring the Farkas Lemma.
+In this section we create a method in the vein of \Cref{test_hc_to_vc}, but for testing the program transforming V-Cones to H-Cones.  This section is almost identical to the previous, with the exception of requiring the Farkas Lemma.
 
 \begin{Def}[Minimal Set of Constraints]
 	A set $A$ is called \textit{minimal} for $\HC{A}$ if
@@ -169,7 +173,7 @@ In this section we create a method in the vein of \nameref{test_hc_to_vc}, but f
 
 In order to prove \Cref{a_not_minimal}, we require the Farkas Lemma.
 
-\subsection{Farkas Lemma}
+\subsection{The Farkas Lemma}
 
 \begin{Prop}[The Farkas Lemma]\label{farkas_lemma}
 	Let $U \in \R^{d\times n}$.  Precisely one of the following is true:
@@ -179,8 +183,8 @@ In order to prove \Cref{a_not_minimal}, we require the Farkas Lemma.
 	\end{align*}
 \end{Prop}
 
-\begin{proof}  That both can't be true can be seen by:
-	\[ \x = U\t \quad\Rightarrow\quad \y^T\x = \y^T U\t \quad\Rightarrow\quad 0 \neq 0 \]
+\begin{proof}  That both can't be true is simple.  Suppose they both were, then:
+	\[ \x = U\t \quad\Rightarrow\quad \y^T\x = \y^T U\t \quad\Rightarrow\quad 0 > 0 \]
 	To see that at least one is true we must reconsider the process of converting a V-Cone to an H-Cone.  First, from $\cone(U)$ we create the following matrix:
 	\[ A = \begin{pmatrix*}[r] \0 & -I \\ I & -U \\ -I & U \end{pmatrix*}  \]
 	By the way $A$ is constructed,
@@ -197,7 +201,7 @@ In order to prove \Cref{a_not_minimal}, we require the Farkas Lemma.
 	\end{enumerate}
 	Note that here $\x \in \R^{d+n}$.  $A$ has three blocks of rows, which can be labeled with $Z,P,N$ in a fairly obvious way.  Then, $Y$ can be broken up into three blocks of columns, so that
 	\[ Y = (Y_Z \; Y_P \; Y_N) \]
-	Where each of $Y_Z,Y_P,Y_N \geq \0$.  Consolidating what is known about $A$ and $Y$,
+	Where each of $Y_Z,Y_P,Y_N \geq \0$.  Consolidating what is known about $A$ and $Y$, in particular that the last columns are $\0$,
 	\[ YA = (Y_Z \; Y_P \; Y_N) \begin{pmatrix*}[r] \0 & -I \\ I & -U \\ -I & U \end{pmatrix*}
 		= (Y' \; \0) \]
 	Here, we have let $Y' = Y_P - Y_N$.  Then it follows that
@@ -223,8 +227,8 @@ In order to prove \Cref{a_not_minimal}, we require the Farkas Lemma.
 \begin{Remark}\label{valid_cone_ineq}
 	\nameref{farkas_lemma} above can be equivalently stated:
 	\[ (\exists \t \geq \0) : \t^T A = \y \quad\Leftrightarrow\quad
-		\neg(\exists \x) : A\x \leq 0,\; \ip{\y}{\x} > 0 \]
-	This way of writing it makes it clear that, if $\y^T\x\leq 0$ holds for some H-Cone $\HC{A}$, then $\y$ is a non-negative linear combination of the rows of $A$.
+		(\forall \x) : A\x \leq 0 \Rightarrow \ip{\y}{\x} \leq 0 \]
+	This way of writing it makes it clear that, if $\y^T\x\leq 0$ holds for every $\x$ in some H-Cone $\HC{A}$, then $\y$ is a non-negative linear combination of the rows of $A$.
 \end{Remark}
 
 \hrule
@@ -233,15 +237,15 @@ In order to prove \Cref{a_not_minimal}, we require the Farkas Lemma.
 	Say $\HC{(A\setminus\{A_i\})} = \HC{A}$.  Then, by \Cref{valid_cone_ineq}, $A_i^T\x\leq 0$ holds for $\HC{(A\setminus\{A_i\})} = \HC{A}$, so $A_i$ is a non-negative linear combination of some rows of $A\setminus\{A_i\}$.
 \end{proof}
 
-As before, the converse will fail if we can combine rows of $A$ in a non-trivial way to get $\0$.  For what cones does this occur?  Well, it would be necessary that the following holds for some $\y$:
+As before, the converse will fail if we can combine rows of $A$ in a non-trivial way to get $\0$.  For which cones does this occur?  Well, it would be necessary that the following holds for some $\y$:
 \[ \y^T\x \leq 0,\quad -\y^T\x\leq 0 \]
 But this means that $\y^T\x = 0$ holds for every member of the cone.  We can prevent this from occuring by forcing the cone to contain a basis.
 
 \begin{Def}[Full-Dimensional Cones]
-	A cone is called \textit{full-dimensional} if it contains a basis (i.e. $d$ linearly-independent vectors).
+	A cone is called \textit{full-dimensional} if it contains a basis of its ambient space.
 \end{Def}
 
-The most important property of a basis $B$ that we shall use is:
+The most important property (well known from linear algebra) of a basis $B$ that we shall use is:
 \begin{equation}
 	\y^T B = \0 \Rightarrow \y = \0 \label{basis_li}
 \end{equation}
@@ -321,7 +325,8 @@ Say we know that $C = \HC{A} = \cone(V)$ is full-dimensional, with $A$ minimal. 
 \end{Test}
 
 \begin{Remark}
-	Can we test the program for non-full-dimensional cones?  (TODO finish this remark).
+	Can we test the program for non-full-dimensional cones?  Once again, this is more complicated and requires a technique to remove the ``degeneracy,'' and once again test for equivalence otherwise.
+  %(TODO finish this remark).
 	%Yes, but again, it is slightly more complicated.  Instead of prior knowledge of a minimal generating of constraints set for the cone, we also need to know what the largest set of independent constraints $B$ such that $B\x=\0$ is valid for the cone.  If we project away constraints from $A$ not orthogonal to all members of $B$, then we will have a pointed cone.  This can be done with a modified fourier-motzkin elimination.  Given another set $A'$, we may project away this subspace from $V'$ using a projection matrix, and use \Cref{test_hc_to_vc}.  Then we need to see if $\cone(V')$ spans $L$.  This can be done with a modified fourier-motzkin elimination, but unfortunately we are trying to test the implementation of fourier-motzkin elimination.
 
 	As of now this is left as a possible future extension of the program.
@@ -331,7 +336,9 @@ Say we know that $C = \HC{A} = \cone(V)$ is full-dimensional, with $A$ minimal. 
 	While not important for testing the program, one may ask if full-dimensional H-Cones are the only cones with essentially unique generating setsof constraints .  The answer is no, for any set of the form $\y^T \x = c$ has an essentially unique generating of constraints.  However, this is the only exception.  It isn't hard to see that, given indpendent constraints of the form $A\x=\0$, if $A$ has more than two rows, then, for any non-singular $B$, $BA\x=\0$ is an equivalent constraint.  So, technically, the \Cref{test_hc_to_vc} would work for hyperplanes.
 \end{Remark}
 
-\paragraph{Generalizing to Polyhedra}  In the following sections we generalize \Cref{test_hc_to_vc} and \Cref{test_vc_to_hc} to polyhedra.
+\paragraph{\Large{Generalizing to Polyhedra}}
+
+In the following sections we generalize \Cref{test_hc_to_vc} and \Cref{test_vc_to_hc} to polyhedra.
 
 \section{Testing H-Polyhedron $\to$ V-Polyhedron}
 
@@ -339,7 +346,7 @@ Say we have an H-Polyhedron $P_{A,\b} = \HP{A}{\b}$, and wish to check that our 
 
 \subsection{Polytopes}
 
-First we consider the special case of a V-Polyhedron given by $P = \conv(V)$.
+First we consider the special case of a V-Polyhedron given by $P = \conv(V)$.  Such a set is known as a \textit{polytope}.
 
 \begin{Def}[Minimal Set for Polytopes]
 	A set $V$ is called \textit{minimal} for the polytope $\conv(V)$ if:
@@ -362,10 +369,11 @@ We will need:
 
 \begin{proof}[Proof of \Cref{min_conv}]
 	First, suppose that $V$ is not minimal.  Then there is a $v\in V$ that satisfies $\conv(V\setminus\set{\v}) = \conv(V)$.  Denote $V'=V\setminus\set{\v}$.  Then $\v=V'\blambda'$, where there is some $\lambda_i$ with $0 < \lambda_i < 1$.  Let $\u = V'(\e_i-\blambda')$.  Then
-	\[ \v-\lambda_i\u = V'\blambda' - \lambda_iV'(\e_i-\blambda')
+	\[ \v+\lambda_i\u = V'\blambda' + \lambda_iV'(\e_i-\blambda')
 		= (1-\lambda_i)V'\blambda' + \lambda_iV'\e_i\]
 	By \Cref{conv_conv}, the right hand side of this equation is a convex combination of members of $V'$, so $\v-\lambda_i\u \in \conv(V')$.   Similarly,
-	\[ \v+\lambda_i\u = V'\blambda' - \lambda_iV'(\e_i-\blambda') = V'(\blambda'-\lambda_i\e_i) + V'(\lambda_i\blambda') \]
+	\[ \v-\lambda_i\u = V'\blambda' - \lambda_iV'(\e_i-\blambda') = 
+      V'(\blambda'-\lambda_i\e_i) + V'(\lambda_i\blambda') \]
 	Consider $(\blambda'-\lambda_i\e_i)$.  Note that this expression is non-negative, and sums to $1-\lambda_i$.  Next note that $\lambda_i\blambda'$ is non-negative, and sums to $\lambda_i$.  This means that the right hand side of the equation is a convex combination of $V'$, so $\v+\lambda_i\u\in\conv(V')$, and $\v$ is not a vertex.\\
 	Next, suppose that $\v\in V$ is not a vertex, and let $V'=V\setminus\set{\v}$.  Then there is some non-zero $\u$ such that $\v+\u\in\conv(V)$, $\v-\u\in\conv(V)$.  First, let $\alpha,\beta > 0$, and consider $\v+\alpha\u$ and $\v-\beta\u$.  Observe that
 	\[ \frac{\beta(\v+\alpha\u)}{\alpha+\beta} + \frac{\alpha(\v-\beta\u)}{\alpha+\beta} =
@@ -379,7 +387,7 @@ We will need:
 
 \subsection{Characterstic Cone}
 
-Now we consider the set $\cone(U)$ in $\cone(U) + \conv(V)$.  The next proposition shows that it is essntially unique for any given Polyhedron.
+Now we consider the set $\cone(U)$ in $\cone(U) + \conv(V)$.  The next proposition shows that it is essentially unique for any given Polyhedron.
 
 \begin{Prop}[Characterstic Cone]\label{characteristic_cone}
 	Suppose that $P = \HP{A}{b} = \VP{U}{V}$.  Then the following three statements are equivalent:
@@ -396,7 +404,7 @@ Now we consider the set $\cone(U)$ in $\cone(U) + \conv(V)$.  The next propositi
 	\[ \ip{A_i}{\x + \alpha\r} > \ip{A_i}{\x} +
 		\frac{b_i\ip{A_i}{\r} - \ip{A_i}{\x}\ip{A_i}{\r}}{\ip{A_i}{\r}} = b_i \]
 	$(3 \Rightarrow 2)$.  This is essentially the definition of $\VP{U}{V}$.\\
-	$(2 \Rightarrow 3)$.  Now for the real work.  Suppose that (2) holds, but $\r\not\in\cone(U)$.  Then by the Farkas Lemma, we have a $\y$ that satisfies $(\forall \r\in U)\,\ip{\r}{\y}\leq 0,\; \ip{\y}{\r} > 0$.  From (2) we construct a sequence: $(\x_n) = \v+n\cdot\r$.  Then it is clear that the sequence $\ip{\y}{\x_n} \to \infty$.  It is also clear that $(\forall n)\,\x_n \in P$.  We now need the following:
+	$(2 \Rightarrow 3)$.  Now for the real work.  Suppose that (2) holds, but $\r\not\in\cone(U)$.  Then by the Farkas Lemma, we have a $\y$ that satisfies $(\forall \r'\in U)\,\ip{\r'}{\y}\leq 0,\; \ip{\y}{\r} > 0$.  From (2) we construct a sequence: $(\x_n) = \v+n\cdot\r$.  Then it is clear that the sequence $\ip{\y}{\x_n} \to \infty$.  It is also clear that $(\forall n)\,\x_n \in P$.  We now need the following:
 	\begin{Prop}\label{max_linear_func}
 		A linear, real-valued function on the set $\conv(V)$ achieves its maximal value at some $\bar\v \in V$.
 	\end{Prop}
@@ -405,7 +413,7 @@ Now we consider the set $\cone(U)$ in $\cone(U) + \conv(V)$.  The next propositi
 		\[\ip{\y}{\r} = \ip{\y}{\sum_{\v\in V}\lambda_v v} = \sum_{v\in V} \lambda_v\ip{\y}{\v}
 			\leq \sum_{v\in V}\lambda_v\ip{\y}{\bar\v} = \ip{\y}{\bar\v} \]
 	\end{proof}
-	Now consider the maximum value of the function $\ip{\y}{\cdot}$ on $P$.  Since any element of $P$ can be written $\r + \v \st \r\in\cone(U),\,\v\in\conv(V)$, and $(\forall\r\in U) \ip{\y}{\r} \leq 0$, we can find the maximum value on $\conv(V)$.  However, $\ip{\y}{\cdot}$ achievs its maximal value on $\conv(V)$ at some $\bar\v\in V$, which is a contradiction with the fact that $\ip{\y}{\x_n} \to \infty$, so we conclude that $\r\in\cone(U)$.
+	Now consider the maximum value of the function $\ip{\y}{\cdot}$ on $P$.  Since any element of $P$ can be written $\r' + \v \st \r'\in\cone(U),\,\v\in\conv(V)$, and $(\forall\r'\in U) \ip{\y}{\r'} \leq 0$, we can find the maximum value on $\conv(V)$.  However, $\ip{\y}{\cdot}$ achievs its maximal value on $\conv(V)$ at some $\bar\v\in V$, which is a contradiction with the fact that $\ip{\y}{\x_n} \to \infty$, so we conclude that $\r\in\cone(U)$.
 \end{proof}
 
 \begin{Remark}[Characteristic Cone]\label{re_characteristic_cone}  Note that $(2)$ in the proof above is independent of $A$ and $U$.  This means that the cone of a polyhedron is independent of its representation, i.e. if $\VP{U}{V} = \VP{U'}{V'}$, then $\cone(U) = \cone(U')$, while it is not necessarily true that $\conv(V) = \conv(V')$.  Similarly, if $\HP{A}{\b} = \HP{A'}{\b'}$, the it holds that $\HC{A} = \HC{A'}$.
@@ -416,8 +424,8 @@ Now we consider the set $\cone(U)$ in $\cone(U) + \conv(V)$.  The next propositi
 \begin{Def}
 	A pair $(U,V)$ is said to be \textit{minimal} for $\cone(U) + \conv(V)$ if
 	\begin{align}
-		 & (\forall \u\in U)\;\cone(U\setminus\set{\u}) \subset \cone(U) + \conv(V) \\
-		 & (\forall \v\in V)\;\cone(V\setminus\set{\v}) \subset \cone(U) + \conv(V)
+		 & (\forall \u\in U)\;\cone(U\setminus\set{\u}) + \conv(V) \subset \cone(U) + \conv(V) \\
+		 & (\forall \v\in V)\;\cone(U) + \conv(V\setminus\set{\v}) \subset \cone(U) + \conv(V)
 	\end{align}
 \end{Def}
 
@@ -441,7 +449,7 @@ Now we consider the vertices of $\cone(U) + \conv(V)$.
 	If $\v$ can be written with some non-zero contribution from $\cone(U)$, then you may decrease this contribution by some amount while staying in $\cone(U) + \conv(V)$, and you may increase the contribution by the same amount, so $\v$ is not a vertex.
 \end{proof}
 
-It will be useful to refer to the property of a set $V$ such that no member of $V$ may be written with a non-zero contribution from $\cone(U)$.  We will call it $U$-free.
+It will be useful to refer to the property of a set $V$ such that no member of $V$ may be written with a non-zero contribution from $\cone(U)$ (this is the property described by \Cref{v_t_must_be_z}).  We will call it $U$-free.
 
 \begin{Prop}\label{v_is_vert}
 	If $\v$ is a vertex of $\VP{U}{V}$, then $\v$ is a vertex of $\conv(V)$.
@@ -472,7 +480,7 @@ Now we can show the following.
 \begin{proof}
 	$(1 \Rightarrow 2)$.  This combines the results of \Cref{u_min} and \Cref{v_min}\\
 	$(2 \Rightarrow 3)$.  That $V$ is $U$-free follows from \Cref{v_t_must_be_z}.  By \Cref{v_is_vert}, the vertex set of $P$ is a subset of the vertices of $\conv(V)$.  Let $\v$ be a vertex of $\conv(V)$, we must show that it is a vertex of $P$.  Because it is a vertex of $\conv(V)$, if $\v+\u\in\conv(V)$ then $\v-\u\not\in\conv(V)$.  Say $\v+\u\in\conv(V)+\cone(U)$.  Then $\u$ must have some non-zero contribution of $\cone(U)$.  If $\v-\u\in P$, then $\v$ could be written as $(\v+\u)/2 + (\v-\u)/2$, which has an overall positive contribution from $\cone(U)$, meaning that $V$ is not $U$-free.\\
-	$(3 \Rightarrow 1)$.  Since $V$ is the vertex set of $\conv(V)$, if $\v\in V$ is also in $\VP{U}{V\setminus\set{\v}}$, then $\v$ can be written with a non-negative contribution from $\cone(U)$, so $V$ is not $U$-free.  Next let $\u\in U$, and $U'=U\setminus\set{\u}$.  We must find a point in $\VP{U}{V}$ that is not in $\VP{U'}{V}$.  Because $\u \not\in\cone(U')$, there is an $\x$ that satisfies: $\x^T U' \leq \0$, and $\x^T \u > 0$.  By \Cref{max_linear_func}, there is some maximum value $c$ such that $(\forall \x\in\conv(V)) \x^T \u <= c$.  This means that $\set{\x^T \y : \y \in \VP{U'}{V}}$ is upper-bounded by $c$.  But the set $\set{\x^T \y : \y \in \VP{U}{V}}$ is unbounded, since $\x^T \u > 0$.  So we can conlude that $\VP{U'}{V} \subset \VP{U}{V}$.  We conclude that $(U,V)$ are minimal.
+	$(3 \Rightarrow 1)$.  Since $V$ is the vertex set of $\conv(V)$, if $\v\in V$ is also in $\VP{U}{V\setminus\set{\v}}$, then $\v$ can be written with a non-negative contribution from $\cone(U)$, so $V$ is not $U$-free.  Next let $\u\in U$, and $U'=U\setminus\set{\u}$.  We must find a point in $\VP{U}{V}$ that is not in $\VP{U'}{V}$.  Because $\u \not\in\cone(U')$, there is an $\x$ that satisfies: $\x^T U' \leq \0$, and $\x^T \u > 0$.  By \Cref{max_linear_func}, there is some maximum value $c$ such that $(\forall \x\in\conv(V)) \x^T \u \leq c$.  This means that $\set{\x^T \y : \y \in \VP{U'}{V}}$ is upper-bounded by $c$.  But the set $\set{\x^T \y : \y \in \VP{U}{V}}$ is unbounded, since $\x^T \u > 0$.  So we can conlude that $\VP{U'}{V} \subset \VP{U}{V}$.  We conclude that $(U,V)$ are minimal.
 \end{proof}
 
 Now we see that the minimal pairs for V-Polyhedra are essentially unique.
@@ -677,19 +685,19 @@ The dot-product and norm (in terms of dot product).
 
 \lsti{approximately_zero} is used during tests to avoid issues involving floating point rounding errors.  For example, \lsti{1/6.0 * 2.5 - 5/12.0 == 0} will give \lsti{false}, while \lsti{approximately_zero(1/6.0 * 2.5 - 5/12.0)} will return \lsti{true}.  Test cases are used where intermediate calculations don't depend on such high accuracy, and these discrepencies can be ignored.
 
-\lsti{approximately_zero(c) == true} is be denoted $\mli{c} \approx 0$.
+\lsti{approximately_zero(c) == true} is to be denoted $\mli{c} \approx 0$.
 \lstapproximatelyzeroa
 
 Tests $c < 0 \lor c \approx 0$.
 \lstapproximatelyltzero
 
-Tests $\norm{\v} \approx 0$.  This is be denoted $\v \approx \0$.
+Tests $\norm{\v} \approx 0$.  This is to be denoted $\v \approx \0$.
 \lstapproximatelyzerob
 
-Tests $\u/\norm{\u} - \v/\norm{\v} \approx \0 $.  This is be denoted $\u \simeq \v$.
+Tests $\u/\norm{\u} - \v/\norm{\v} \approx \0 $.  This is to be denoted $\u \simeq \v$.
 \lstisequivalent
 
-Tests $\u - \v \approx \0$.  This is be denoted $\u \approx \v$.
+Tests $\u - \v \approx \0$.  This is to be denoted $\u \approx \v$.
 \lstisequal
 
 Tests $(\exists \u \in U) \st \v \simeq \u$.
@@ -698,10 +706,10 @@ Tests $(\exists \u \in U) \st \v \simeq \u$.
 Tests $(\exists \u \in U) \st \v \approx \u$.
 \lsthasequalmember
 
-Tests $(\forall v \in V)(\exists \u \in U) \st \v \simeq \u$.  This is be denoted $V \sqsubseteq U$.
+Tests $(\forall v \in V)(\exists \u \in U) \st \v \simeq \u$.  This is to be denoted $V \sqsubseteq U$.
 \lstsubsetmodeq
 
-Tests $(\forall v \in V)(\exists \u \in U) \st \v \approx \u$.  This is be denoted $V \subseteq U$.
+Tests $(\forall v \in V)(\exists \u \in U) \st \v \approx \u$.  This is to be denoted $V \subseteq U$.
 \lstsubset
 
 Given a \mli{Vector constraint} and \mli{Vector ray}, tests if \\

@@ -3,7 +3,7 @@
 \section{Polyhedra}
 
 \begin{Def}[Non-negative Linear Combination]{
-		Let $\mU$, $\tv, \t \geq \0$, then \( \tusum = U\t\) is called a \em{non-negative linear combination} of $U$.
+		Let $\mU$, $\tv$, ${\t \geq \0}$, then \( \tusum = U\t\) is called a \em{non-negative linear combination} of $U$.
 	}\end{Def}
 
 \begin{Def}[V-Cone]{
@@ -11,7 +11,7 @@
 	}\end{Def}
 
 \begin{Def}[Convex Combination]{
-		Let $\mV$, $\lv, \l \geq\0, \lsum = 1$, then \( \lvsum \) is called a \textit{convex combination} of V.  The set of all convex combinations of $V$ is denoted $\conv(V)$.
+		Let $\mV$, and let $\lv$ satisfy $\lsum = 1$, $\l \geq\0$, then \( \lvsum \) is called a \textit{convex combination} of V.  The set of all convex combinations of $V$ is denoted $\conv(V)$.
 	}\end{Def}
 
 \begin{Def}[V-Polyhedron]{
@@ -44,7 +44,7 @@ A simple but useful property of cones is that they are closed under addition and
 
 \begin{proof}
 	First we prove Proposition \ref{cone_closure} for H-Cones, then for V-Cones.
-	If, for each $i$, $A\x^i \leq \0$, then $A(c_i\x^i) = t_iA\x^i \leq \0$, and
+	If, for each $i$, $A\x^i \leq \0$, then $A(c_i\x^i) = c_iA\x^i \leq \0$, and
 	\[ A\left(\sumi c_i\x^i\right) = \sumi A (c_i\x^i) =
 		\sumi c_i A\x^i \leq \sumi \0 \leq \0 \]
 	So, $\sumi c_i\x^i \in C$ when $C$ is an H-Cone.  Next, suppose that $C = \cone(U)$, and for each $i$, $\exists \t_i \geq \0: \x^i = U\t_i$.  Then $c_i\t_i \geq \0$, and $\sumi c_i\t_i \geq \0$.  Therefore
@@ -63,10 +63,3 @@ The following theorem is the basic result to be proved in this thesis, which sta
 \begin{Thm}[{\MWT}]
 		Every V-Polyhedron is an H-Poly-hedron, and every H-Polyhedron is a V-Polyhedron.
 \end{Thm}
-
-The proof proceeds by first showing that V-Cones are representable as H-Cones, and H-Cones are representable as V-Cones.  Then it is shown that the case of polyhedra can be reduced to cones.
-
-\begin{Thm}[{\MWT} for Cones]
-		Every V-Cone is an H-Cone, and every H-Cone is a V-Cone.
-\end{Thm}
-
