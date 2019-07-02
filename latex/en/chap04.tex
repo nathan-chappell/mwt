@@ -1,4 +1,4 @@
-\chapter{Testing}
+\chapter{Testing} \label{chap_testing}
 
 In the next sections, the methods used for testing the program described above will be discussed.  It will be convenient to assume that sets representing row vectors and cone-generators do not contain $\0$.  This results in no loss of generality, only the annoyance of constantly assuming some triviality does not occur.
 
@@ -153,7 +153,7 @@ So now we know that pointed cones have essentially unique generating sets.  We n
 \end{Remark}
 
 \begin{Remark}
-	While not important for testing the program, one may ask if pointed V-Cones are the only cones with essentially unique generating sets.  The answer is no, for any line has an essentially unique generating set, but is not pointed.  However, this is the only exception.  It isn't hard to see that, given a non-pointed cone, if it occupies more than one-dimension, then it must at least occupy a half-plane, and a halfplane has uncountably many non-equivalent generators.  So, technically, the \Cref{test_hc_to_vc} would work for one-dimensional non-pointed cones (lines).
+	While not important for testing the program, one may ask if pointed V-Cones are the only cones with essentially unique generating sets.  The answer is no, for any line has an essentially unique generating set, but is not pointed.  However, this is the only exception.  It isn't hard to see that, given a non-pointed cone, if it occupies more than one-dimension, then it must at least occupy a half-plane, and a half-plane has uncountably many non-equivalent generators.  So, technically, the \Cref{test_hc_to_vc} would work for one-dimensional non-pointed cones (lines).
 \end{Remark}
 
 \section{Testing V-Cone $\to$ H-Cone}
@@ -239,7 +239,7 @@ In order to prove \Cref{a_not_minimal}, we require the Farkas Lemma.
 
 As before, the converse will fail if we can combine rows of $A$ in a non-trivial way to get $\0$.  For which cones does this occur?  Well, it would be necessary that the following holds for some $\y$:
 \[ \y^T\x \leq 0,\quad -\y^T\x\leq 0 \]
-But this means that $\y^T\x = 0$ holds for every member of the cone.  We can prevent this from occuring by forcing the cone to contain a basis.
+But this means that $\y^T\x = 0$ holds for every member of the cone.  We can prevent this from occurring by forcing the cone to contain a basis.
 
 \begin{Def}[Full-Dimensional Cones]
 	A cone is called \textit{full-dimensional} if it contains a basis of its ambient space.
@@ -333,7 +333,7 @@ Say we know that $C = \HC{A} = \cone(V)$ is full-dimensional, with $A$ minimal. 
 \end{Remark}
 
 \begin{Remark}
-	While not important for testing the program, one may ask if full-dimensional H-Cones are the only cones with essentially unique generating setsof constraints .  The answer is no, for any set of the form $\y^T \x = c$ has an essentially unique generating of constraints.  However, this is the only exception.  It isn't hard to see that, given indpendent constraints of the form $A\x=\0$, if $A$ has more than two rows, then, for any non-singular $B$, $BA\x=\0$ is an equivalent constraint.  So, technically, the \Cref{test_hc_to_vc} would work for hyperplanes.
+	While not important for testing the program, one may ask if full-dimensional H-Cones are the only cones with essentially unique generating sets of constraints .  The answer is no, for any set of the form $\y^T \x = c$ has an essentially unique generating of constraints.  However, this is the only exception.  It isn't hard to see that, given independent constraints of the form $A\x=\0$, if $A$ has more than two rows, then, for any non-singular $B$, $BA\x=\0$ is an equivalent constraint.  So, technically, the \Cref{test_hc_to_vc} would work for hyperplanes.
 \end{Remark}
 
 \paragraph{\Large{Generalizing to Polyhedra}}
@@ -413,7 +413,7 @@ Now we consider the set $\cone(U)$ in $\cone(U) + \conv(V)$.  The next propositi
 		\[\ip{\y}{\r} = \ip{\y}{\sum_{\v\in V}\lambda_v v} = \sum_{v\in V} \lambda_v\ip{\y}{\v}
 			\leq \sum_{v\in V}\lambda_v\ip{\y}{\bar\v} = \ip{\y}{\bar\v} \]
 	\end{proof}
-	Now consider the maximum value of the function $\ip{\y}{\cdot}$ on $P$.  Since any element of $P$ can be written $\r' + \v \st \r'\in\cone(U),\,\v\in\conv(V)$, and $(\forall\r'\in U) \ip{\y}{\r'} \leq 0$, we can find the maximum value on $\conv(V)$.  However, $\ip{\y}{\cdot}$ achievs its maximal value on $\conv(V)$ at some $\bar\v\in V$, which is a contradiction with the fact that $\ip{\y}{\x_n} \to \infty$, so we conclude that $\r\in\cone(U)$.
+	Now consider the maximum value of the function $\ip{\y}{\cdot}$ on $P$.  Since any element of $P$ can be written $\r' + \v \st \r'\in\cone(U),\,\v\in\conv(V)$, and $(\forall\r'\in U) \ip{\y}{\r'} \leq 0$, we can find the maximum value on $\conv(V)$.  However, $\ip{\y}{\cdot}$ achieves its maximal value on $\conv(V)$ at some $\bar\v\in V$, which is a contradiction with the fact that $\ip{\y}{\x_n} \to \infty$, so we conclude that $\r\in\cone(U)$.
 \end{proof}
 
 \begin{Remark}[Characteristic Cone]\label{re_characteristic_cone}  Note that $(2)$ in the proof above is independent of $A$ and $U$.  This means that the cone of a polyhedron is independent of its representation, i.e. if $\VP{U}{V} = \VP{U'}{V'}$, then $\cone(U) = \cone(U')$, while it is not necessarily true that $\conv(V) = \conv(V')$.  Similarly, if $\HP{A}{\b} = \HP{A'}{\b'}$, the it holds that $\HC{A} = \HC{A'}$.
@@ -480,7 +480,7 @@ Now we can show the following.
 \begin{proof}
 	$(1 \Rightarrow 2)$.  This combines the results of \Cref{u_min} and \Cref{v_min}\\
 	$(2 \Rightarrow 3)$.  That $V$ is $U$-free follows from \Cref{v_t_must_be_z}.  By \Cref{v_is_vert}, the vertex set of $P$ is a subset of the vertices of $\conv(V)$.  Let $\v$ be a vertex of $\conv(V)$, we must show that it is a vertex of $P$.  Because it is a vertex of $\conv(V)$, if $\v+\u\in\conv(V)$ then $\v-\u\not\in\conv(V)$.  Say $\v+\u\in\conv(V)+\cone(U)$.  Then $\u$ must have some non-zero contribution of $\cone(U)$.  If $\v-\u\in P$, then $\v$ could be written as $(\v+\u)/2 + (\v-\u)/2$, which has an overall positive contribution from $\cone(U)$, meaning that $V$ is not $U$-free.\\
-	$(3 \Rightarrow 1)$.  Since $V$ is the vertex set of $\conv(V)$, if $\v\in V$ is also in $\VP{U}{V\setminus\set{\v}}$, then $\v$ can be written with a non-negative contribution from $\cone(U)$, so $V$ is not $U$-free.  Next let $\u\in U$, and $U'=U\setminus\set{\u}$.  We must find a point in $\VP{U}{V}$ that is not in $\VP{U'}{V}$.  Because $\u \not\in\cone(U')$, there is an $\x$ that satisfies: $\x^T U' \leq \0$, and $\x^T \u > 0$.  By \Cref{max_linear_func}, there is some maximum value $c$ such that $(\forall \x\in\conv(V)) \x^T \u \leq c$.  This means that $\set{\x^T \y : \y \in \VP{U'}{V}}$ is upper-bounded by $c$.  But the set $\set{\x^T \y : \y \in \VP{U}{V}}$ is unbounded, since $\x^T \u > 0$.  So we can conlude that $\VP{U'}{V} \subset \VP{U}{V}$.  We conclude that $(U,V)$ are minimal.
+	$(3 \Rightarrow 1)$.  Since $V$ is the vertex set of $\conv(V)$, if $\v\in V$ is also in $\VP{U}{V\setminus\set{\v}}$, then $\v$ can be written with a non-negative contribution from $\cone(U)$, so $V$ is not $U$-free.  Next let $\u\in U$, and $U'=U\setminus\set{\u}$.  We must find a point in $\VP{U}{V}$ that is not in $\VP{U'}{V}$.  Because $\u \not\in\cone(U')$, there is an $\x$ that satisfies: $\x^T U' \leq \0$, and $\x^T \u > 0$.  By \Cref{max_linear_func}, there is some maximum value $c$ such that $(\forall \x\in\conv(V)) \x^T \u \leq c$.  This means that $\set{\x^T \y : \y \in \VP{U'}{V}}$ is upper-bounded by $c$.  But the set $\set{\x^T \y : \y \in \VP{U}{V}}$ is unbounded, since $\x^T \u > 0$.  So we can conclude that $\VP{U'}{V} \subset \VP{U}{V}$.  We conclude that $(U,V)$ are minimal.
 \end{proof}
 
 Now we see that the minimal pairs for V-Polyhedra are essentially unique.
@@ -558,7 +558,7 @@ To characterize Minimal H-Pairs, we will need a new form of the Farkas Lemma.
 	Since $(A,\b)$ is not minimal, there is such an $(A_i,b_i)$ and $(A',\b')$ such that $\HP{A}{\b} = \HP{A'}{\b'}$.  In the right hand side of \nameref{farkas_lemma2}, the conditions are satisfied with $A := A'$, $\b := \b'$, $\y := A_i$, $c := b_i$.
 \end{proof}
 
-Is the converse true?  Does it hold that given a $(A,\b)$ which is minimal, the implication of \Cref{ab_not_minimal} fails?  In general, no.  For example, the hyperplane $\ip{\y}{\x} = c$ has a minimal representation $\set{\ip{\y}{\x}\leq c,\,\ip{-\y}{\x}\leq -c}$, but the sum of the rows is $0$, and so $\t':= (2,1)$ satsifes the claim.  In general, we need all $d+1$ rows to be \textit{affinely independent}.
+Is the converse true?  Does it hold that given a $(A,\b)$ which is minimal, the implication of \Cref{ab_not_minimal} fails?  In general, no.  For example, the hyperplane $\ip{\y}{\x} = c$ has a minimal representation $\set{\ip{\y}{\x}\leq c,\,\ip{-\y}{\x}\leq -c}$, but the sum of the rows is $0$, and so $\t':= (2,1)$ satisfies the claim.  In general, we need all $d+1$ rows to be \textit{affinely independent}.
 
 \begin{Def}[Affine Dependence]
 	A set $V$ of vectors is called \textit{affinely independent} if, given any $\y\neq\0$, $c\in\R$, there is some $\v\in V$ such that $\y^T\v \neq c$.
@@ -606,7 +606,7 @@ Now we intend to use these properties of full-dimensionality and minimality to l
 	$(\neg 2 \Rightarrow \neg 1)$.  Suppose that:
 	\[ \pmb -1 & \0 \\ -\b & A \pme \xx \leq \0,\quad
 		\pmb -1 & \0 \\ -\b' & A' \pme \xx \not\leq \0 \]
-	Observe that, by the way these sets are constructed, $x_0 \geq 0$.  If $x_0 = 0$, then we have $\HC{A} \neq \HC{A'}$, which, by \Cref{characteristic_cone} means that that $A$ and $A'$ don't create the same characterstic cone, so $\HP{A}{\b} \neq \HP{A'}{\b'}$.  If $x_0 > 0$, then we have:
+	Observe that, by the way these sets are constructed, $x_0 \geq 0$.  If $x_0 = 0$, then we have $\HC{A} \neq \HC{A'}$, which, by \Cref{characteristic_cone} means that that $A$ and $A'$ don't create the same characteristic cone, so $\HP{A}{\b} \neq \HP{A'}{\b'}$.  If $x_0 > 0$, then we have:
 	\[ A\x \leq x_0\b,\;A'\x\not\leq x_0\b' \Rightarrow A(\x/x_0)\leq\b,\;A'(\x/x_0)\not\leq\b' \]
 	So $\HP{A}{\b} \neq \HP{A'}{\b'}$.
 \end{proof}
@@ -683,7 +683,7 @@ The dot-product and norm (in terms of dot product).
 \lstoperator
 \lstnorm
 
-\lsti{approximately_zero} is used during tests to avoid issues involving floating point rounding errors.  For example, \lsti{1/6.0 * 2.5 - 5/12.0 == 0} will give \lsti{false}, while \lsti{approximately_zero(1/6.0 * 2.5 - 5/12.0)} will return \lsti{true}.  Test cases are used where intermediate calculations don't depend on such high accuracy, and these discrepencies can be ignored.
+\lsti{approximately_zero} is used during tests to avoid issues involving floating point rounding errors.  For example, \lsti{1/6.0 * 2.5 - 5/12.0 == 0} will give \lsti{false}, while \lsti{approximately_zero(1/6.0 * 2.5 - 5/12.0)} will return \lsti{true}.  Test cases are used where intermediate calculations don't depend on such high accuracy, and these discrepancies can be ignored.
 
 \lsti{approximately_zero(c) == true} is to be denoted $\mli{c} \approx 0$.
 \lstapproximatelyzeroa

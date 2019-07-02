@@ -32,7 +32,7 @@ First, we quickly use the two lemmas to conclude \Cref{MWTFC}.  The rest of the 
 	We prove that every V-Cone is a coordinate projection of an H-Cone, by giving an explicit formula.  Let ${\mU}$, and observe that
 	\[ \cone(U) = \set{U\t \st \t \in \R^{\Udim},\, \t \geq \0} =
 		\set{\xv \st (\exists \tv)\,\x = U\t,\, \t \geq \0} \]
-	We will collect $\t$ and $\x$ on the left side of the inequality, treating $\t$ as a variable and expressing its contraints as linear inequalities, then project away the coordinates corresponding to $\t$.  The following expression takes one step:
+	We will collect $\t$ and $\x$ on the left side of the inequality, treating $\t$ as a variable and expressing its constraints as linear inequalities, then project away the coordinates corresponding to $\t$.  The following expression takes one step:
 	\begin{equation}\label{eq:tleqz}
 		\t \geq \0 \Leftrightarrow -I\t \leq \0
 	\end{equation}
@@ -41,7 +41,7 @@ First, we quickly use the two lemmas to conclude \Cref{MWTFC}.  The rest of the 
 		\x = U\t \Leftrightarrow \x - U\t = \0 \Leftrightarrow
 		\begin{pmatrix*}[r] I & -U \\ -I & U \end{pmatrix*} \xt \leq \0
 	\end{equation}
-	Comparing \eqref{eq:tleqz} and \eqref{eq:xeqt}, we define a matrix tranform:
+	Comparing \eqref{eq:tleqz} and \eqref{eq:xeqt}, we define a matrix transform:
   \begin{Transform}[V-Cone Lift]\label{vconelift_transform}
   \[\VLift(U) = \pmb \0 & -I \\ I & -U \\ -I & U \pme \]
   \end{Transform}
@@ -76,7 +76,7 @@ In order to use the above proposition, we need a matrix with columns which are $
 \begin{Prop}[Fourier Motzkin Elimination for H-Cones]\label{fm_hcone}
 	Let $\mB$, and $\x = \sum_{i\neq k}x_i \e_i$ for some $1 \leq k \leq (d+p)$.  Then there exists a matrix $\mC$ with the following properties:
 	\begin{enumerate}
-		\item Every row of $B'$ is a postive linear combination of rows of $B$.
+		\item Every row of $B'$ is a positive linear combination of rows of $B$.
 		\item $m_2$ is finite.
 		\item The $k$-th column of $B'$ is $\0$.
 		\item \((\exists t)B(\x + t\e_k) \leq \0 \Leftrightarrow B'\x \leq \0\)
@@ -207,7 +207,7 @@ The proof that every H-Cone is a V-Cone rests on the following three propostions
 \end{Lemma}
 
 \begin{proof}[Proof that Every H-Cone is a V-Cone]
-	Given \Cref{hconelift}, \Cref{vconeintersect}, and \Cref{vconeproject}, the proof follows simply.  Given an H-Cone, we use \Cref{hconelift} to get a description involving the coordinate-projection of a V-Cone intersected with some coordinate-hyperplanes.  We apply \Cref{vconeintersect} as many times as necessary to elimintate the intersections, then we can apply \Cref{vconeproject} in order to get a V-Cone.
+	Given \Cref{hconelift}, \Cref{vconeintersect}, and \Cref{vconeproject}, the proof follows simply.  Given an H-Cone, we use \Cref{hconelift} to get a description involving the coordinate-projection of a V-Cone intersected with some coordinate-hyperplanes.  We apply \Cref{vconeintersect} as many times as necessary to eliminate the intersections, then we can apply \Cref{vconeproject} in order to get a V-Cone.
 \end{proof}
 
 \begin{proof}[Proof of \Cref{hconelift}]
@@ -258,7 +258,7 @@ The proof of \Cref{vconeintersect} relies upon the following proposition.
 \begin{Prop}[Fourier Motzkin Elimination for V-Cones]\label{fm_vcone}
 	Let $Y \in \R^{(d+m)\times n_1}$, $1 \leq k \leq d+m$, and $\x$ satisfy $x_k = 0$.  Then there exists a matrix $Y' \in \R^{(d+m)\times n_2}$ with the following properties:
 	\begin{enumerate}
-		\item Every column of $Y'$ is a postive linear combination of columns of $Y$.
+		\item Every column of $Y'$ is a positive linear combination of columns of $Y$.
 		\item $n_2$ is finite.
 		\item The $k$-th row of $Y'$ is $\0$.
 		\item \((\exists \t\geq\0)\;\x = Y\t \Leftrightarrow (\exists \t' \geq \0)\;\x = Y'\t'\)
@@ -316,7 +316,7 @@ The proof of \Cref{vconeintersect} relies upon the following proposition.
 		Combining these results, we have
 		\[ \Psum t_i Y^i + \Nsum t_j Y^j = \NPsum \frac{t_i t_j}{\sigma}(\Yi Y^j - \Yj Y^i) \]
 	\end{proof}
-	Finally, we can conclude that, given $\t \geq \0$, if $Y\t$ has a $0$ in the $k$-th coordinate, then we can write it as $ Y'\t'$ where $\t' \geq \0$, and any non-negative linear combination of vectors from $Y'$ can be written as a non-negative linear combination of vetors from $Y$, and will necessarily have the $k$-th coordinate be $0$ by property \textit{3}.  So property \textit{4} holds.
+	Finally, we can conclude that, given $\t \geq \0$, if $Y\t$ has a $0$ in the $k$-th coordinate, then we can write it as $ Y'\t'$ where $\t' \geq \0$, and any non-negative linear combination of vectors from $Y'$ can be written as a non-negative linear combination of vectors from $Y$, and will necessarily have the $k$-th coordinate be $0$ by property \textit{3}.  So property \textit{4} holds.
 \end{proof}
 
 \begin{proof}[Proof of \Cref{vconeintersect}]
@@ -442,7 +442,7 @@ This shows that a V-Polyhedron may be written as an intersection of a V-Cone and
 \end{proof}
 
 \section{Picture of the Proof}
-Here we show a diagram that represent the proof of the {\MWT}.
+Here we show a diagram that represents the proof of the {\MWT}.
 \definecolor{mygrey}{rgb}{.1,.1,.1}
 \newcommand{\FIGstep}{2}
 \newcommand{\FIGge}{8}
@@ -506,4 +506,4 @@ Here we show a diagram that represent the proof of the {\MWT}.
 	\end{centering}
 \end{figure}
 
-Figure \ref{fig:h_to_v} shows the flow from an H-Polyhedron to a V-Polyhedron and back.  There are \textcolor{\ptovcolor}{arrows} for transformations back and forth from polyhedra to cones, \textcolor{\liftcolor}{arrows} to show the transformation between cones and intermediate representation, and \textcolor{\dropcolor}{arrows} to show where Fourier Motzkin elimination is applied to reduce these intermediate represenations to standard cones.  V-Cones are \textcolor{\liftcolor}{lifted} to H-Cones which need to be \textcolor{\dropcolor}{projected (\HDropdesc)}, and H-Cones are \textcolor{\liftcolor}{lifted} to V-Cones which need to be \textcolor{\dropcolor}{intersected and projected (\VDropdesc)}.
+Figure \ref{fig:h_to_v} shows the flow from an H-Polyhedron to a V-Polyhedron and back.  There are \textcolor{\ptovcolor}{{\ptovcolor} arrows} for transformations back and forth from polyhedra to cones, \textcolor{\liftcolor}{{\liftcolor} arrows} to show the transformation between cones and intermediate representations, and \textcolor{\dropcolor}{{\dropcolor} arrows} to show where Fourier Motzkin elimination is applied to reduce these intermediate representations to standard cones.  V-Cones are \textcolor{\liftcolor}{lifted} to H-Cones which need to be \textcolor{\dropcolor}{projected (\HDropdesc)}, and H-Cones are \textcolor{\liftcolor}{lifted} to V-Cones which need to be \textcolor{\dropcolor}{intersected and projected (\VDropdesc)}.

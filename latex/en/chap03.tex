@@ -2,8 +2,10 @@
 %TODO update the content below, migrate commentary, input usage file...
 
 The above transformations have been implemented in C++.  Program \lsti{main} takes one argument specifying the type of input object (V-Cone, V-Polyhedra, H-Cone, or H-Polyhedra).  It reads the description of the object from standard input, and writes the result of the implied transformation to standard output (details below).  If no arguments are supplied, then a \lsti{usage} message is given.  The \lsti{usage} message, which also contains the input format for the objects, is:
-
+\bigskip
+\hrule
 \VerbatimInput{../../usage.txt}
+\hrule
 
 The files pertaining to the implementation will be discussed in the following sections, but here is a table showing the include dependencies followed by a short summary of the files. \\
 
@@ -11,11 +13,11 @@ The files pertaining to the implementation will be discussed in the following se
 	\hline
 	file                          & includes                                             \\
 	\hline
-	\filename{linear\_algebra.h}  &                                                      \\
+	\filename{linear\_algebra.h}  & \filename{<C++ standard library>}                    \\
 	\filename{fourier\_motzkin.h} & \filename{linear\_algebra.h}                         \\
 	\filename{polyhedra.h}        & \filename{fourier\_motzkin.h}                        \\
 	\filename{main.cpp}           & \filename{polyhedra.h}                               \\
-  \hline
+	\hline
 	\filename{test\_functions.h}  & \filename{linear\_alebra.h}                          \\
 	\filename{test.cpp}           & \filename{test\_functions.h}, \filename{polyhedra.h} \\
 	\hline
@@ -27,20 +29,20 @@ Here is a very brief summary of the files mentioned in the above table, more det
 
 \begin{itemize}
 	\item \texttt{linear\_algebra.h} \\
-	      Types \lsti{Vector} and \lsti{Matrix}, and some basic functionality for them
+	      Defines the types \lsti{Vector} and \lsti{Matrix}, which are the primary means of representing polyhedra, and some basic functionality for them
 	\item \texttt{fourier\_motzkin.h} \\
-	      Fourier Motzkin elimination, {\MWT} for cones
+	      Implementation of Fourier Motzkin elimination, and the {\MWT} for cones
 	\item \texttt{polyhedra.\{cpp,h\} } \\
-	      Transforms between polytopes and polyhedra, {\MWT}
+	      Transforms between polytopes and polyhedra, completing the {\MWT}
 	\item \texttt{test\_functions.h} \\
-	      Types and functions for testing the algorithms
+	      Types and functions for testing the algorithms (see \Cref{chap_testing}).
 	\item \texttt{test.cpp} \\
-	      Test cases for the algorithms and the functions from \filename{test\_functions.h}
+	      Test cases for the algorithms and functions from \filename{test\_functions.h}
 \end{itemize}
 
 \section{Code}
 
-The relevant code will be displayed with commentary below.  Some of the code relating to C{++} specific technicalities and I/O is ommitted.
+The relevant code will be displayed with commentary below.  Some of the code relating to C{++} specific technicalities and I/O is omitted.
 
 \section{\filename{linear\_algebra.h}}
 The types \lsti{Vector} and \lsti{Vectors} are used in the representation of polyhedra.  The \lsti{std::valarray} template is used because it has built-in vector-space operations (sum and scaling).  \lsti{std::vector} is used as a container of \lsti{Vector}s, however other containers could be used.
@@ -88,11 +90,11 @@ A \lsti{slice} object can be used to conveniently obtain a subset of a \lsti{val
 A \lsti{slice} object is determined by three fields: \lsti{start}, \lsti{size}, and \lsti{stride}, and implicitly represents all indices of the form:
 \[ \sum_{0 \leq k < \mli{size}} \mli{start} + k\cdot\mli{stride} \]
 Therefore:
-\[i \in \mli{slice} \Leftrightarrow 
-  \begin{cases} 
-       i - \mli{start} \equiv 0 \mod(\mli{stride}) \\
-	     \mli{start} \leq i \leq \mli{start} + {\mli{stride}}\cdot\mli{size}
-  \end{cases}\]
+\[i \in \mli{slice} \Leftrightarrow
+	\begin{cases}
+		i - \mli{start} \equiv 0 \mod(\mli{stride}) \\
+		\mli{start} \leq i \leq \mli{start} + {\mli{stride}}\cdot\mli{size}
+	\end{cases}\]
 \lstindexinslice
 
 \lsti{fourier_motzkin} takes a \lsti{Matrix M} and a coordinate \lsti{k} and creates the set which either corresponds to a projection of an H-Cone (without reducing the dimensionality), or the intersection of a V-Cone with a coordinate-hyperplane.
@@ -129,10 +131,10 @@ convolute the vectors in the way described in \Nameref{fm_hcone} and \Nameref{fm
 \lstslicedfouriermotzkin
 
 When transforming an H-Cone to a V-Cone, it first must be written as a V-Cone of a new matrix, then it is intersected with coordinate-hyperplanes and projected.  Similarly, when a V-Cone is transformed into an H-Cone, it must be written as and H-Cone of a new matrix then projected with coordinate-projections.  The transformations are described in \nameref{vconelift_transform} and \nameref{hconelift_transform}, and summarized here:
-  \[\HLift(A) = \pmb \0 & I & -I \\ I & A & -A \pme \quad 
-    \VLift(U) = \pmb \0 & -I \\ I & -U \\ -I & U \pme \]
+\[\HLift(A) = \pmb \0 & I & -I \\ I & A & -A \pme \quad
+	\VLift(U) = \pmb \0 & -I \\ I & -U \\ -I & U \pme \]
 Note that the tranformation of $U$ can be written:
-  \[\VLift(U) = \pmb \0 & I & -I \\ -I & -U & U \pme^T \]
+\[\VLift(U) = \pmb \0 & I & -I \\ -I & -U & U \pme^T \]
 
 Remembering that a \lsti{Matrix} is either a collection of row \textit{or} column \lsti{Vector}s, it is not surprising that these two transformations can be written as one function whose parameters are a \lsti{Matrix} and some coefficients.  In \lsti{generalized_lift}, the coefficients are given as an \lsti{array<double, 5> C}, so the overall transformation can be illustrated as:
 \newcommand{\CA}[1]{\mli{C[#1]}}
