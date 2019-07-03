@@ -1,0 +1,243 @@
+%max bound
+\newcommand{\MX}{10}
+%draw the grid 
+\newcommand{\drawGrid}{
+	\clip (-1,-1) rectangle (4,4);
+	\draw[style=help lines] (-\MX,-\MX) grid (\MX,\MX);
+	\draw[style=very thick] (0,\MX) -- (0,-\MX);
+	\draw[style=very thick] (\MX,0) -- (-\MX,0);
+}
+%various constants
+\newcommand{\lowSlopeX}{2}
+\newcommand{\lowSlopeY}{1}
+\pgfmathsetmacro{\lowSlope}{\lowSlopeY / \lowSlopeX}
+\newcommand{\highSlopeX}{1}
+\newcommand{\highSlopeY}{2}
+\pgfmathsetmacro{\highSlope}{\highSlopeY / \highSlopeX}
+\newcommand{\myslope}{0}
+\newcommand{\genLen}{2}
+\newcommand{\lowVertX}{2}
+\newcommand{\highVertX}{1.5}
+\newcommand{\vertexRadius}{.08}
+\newcommand{\origin}{(0,0)}
+%
+\tikzstyle ConeStyle=[fill, color=gray, style=semitransparent]
+\tikzstyle GeneratorInd=[style=dotted, thick, color=blue]
+\tikzstyle GeneratorSty=[->, style=thick, color=blue]
+%
+%draw the constraints: #1 - slope, #2 lt or rt
+\newcommand{\getHatchLine}[3]{
+	\renewcommand{\myslope}{#1}
+	\pgfmathsetmacro{\myAngle}{atan{\myslope}}
+	\draw[style=thick, color=blue] #3 -- +(\myAngle:-\MX);
+	\draw[style=thick, color=blue] #3 -- +(\myAngle:\MX);
+	\pgfmathsetmacro{\myHatchAngle}{\myAngle + #2*90}
+	\foreach \x in {-\MX, -9.5, ..., \MX} {
+			\draw[style=thick, color=blue] #3 ++(\myAngle:\x) -- +(\myHatchAngle:.15);
+		}
+}
+\newcommand{\drawGenerator}[1]{
+	\draw[style=GeneratorSty] \origin -- (#1:\genLen);
+}
+\newcommand{\drawSegment}[2]{
+	\draw[fill, color=blue] #1 circle (\vertexRadius);
+	\draw[fill, color=blue] #2 circle (\vertexRadius);
+	\draw[style=thick, color=blue] #1 -- #2;
+}
+%draws the cone: #1 - low slope, #2 - high slope
+\newcommand{\coneConstraints}[2]{
+	\getHatchLine{#1}{1}{\origin};
+	\getHatchLine{#2}{-1}{\origin};
+}
+%draws the cone: #1 - low slope, #2 - high slope, #3 vertex
+\newcommand{\polyConstraints}[5]{
+	\getHatchLine{#1}{1}{\origin};
+	\getHatchLine{#2}{-1}{\origin};
+	\getHatchLine{#4}{#5}{#3};
+}
+%draws the generators
+\newcommand{\coneGenerators}[2]{
+	\drawGenerator{\lowDir};
+	\drawGenerator{\highDir};
+	\draw[style=GeneratorInd] (\lowDir:\genLen) arc (\lowDir:\highDir:\genLen);
+}
+%V-Polyhedra: low, high, vert
+\newcommand{\polyGenerators}[3]{
+	\drawGenerator{\highDir};
+	\draw[style=GeneratorInd] (\highDir:\genLen) -- ++ #3;
+	\drawSegment{\origin}{\lowVert};
+}
+%V-Polytope
+\newcommand{\vPolytope}{
+	\drawSegment{\origin}{\lowVert}
+	\drawSegment{\origin}{\highVert}
+	\drawSegment{\lowVert}{\highVert}
+}
+%H-Polytope
+\newcommand{\hPolytope}{
+	\polyConstraints{\lowSlope}{\highSlope}{\lowVert}{-4.0}{-1}
+}
+%draws the h-constraints
+\newcommand{\drawCone}{
+	\draw[style=ConeStyle] \origin -- (\MX,\lowY) -- (\MX,\highY);
+}
+%draws the polyhedra
+\newcommand{\drawPolyhedra}{
+	\draw[style=ConeStyle] \origin -- \lowVert -- ++(\MX,\highY) -- (\MX,\highY);
+}
+%draws the polytope
+\newcommand{\drawPolytope}{
+	\draw[style=ConeStyle] \origin -- \lowVert -- \highVert;
+}
+
+%
+\pgfmathsetmacro{\lowY}{\MX * \lowSlope}
+\pgfmathsetmacro{\highY}{\MX * \highSlope}
+\pgfmathsetmacro{\lowVertY}{\lowVertX * \lowSlope}
+\pgfmathsetmacro{\highVertY}{\highVertX * \highSlope}
+\pgfmathsetmacro{\lowDir}{atan{\lowSlope}}
+\pgfmathsetmacro{\highDir}{atan{\highSlope}}
+
+\newcommand{\lowVert}{(\lowVertX,\lowVertY)}
+\newcommand{\highVert}{(\highVertX,\highVertY)}
+
+\newcommand{\svec}[2]{\begin{bmatrix*}[r] #1 \\ #2 \end{bmatrix*}}
+
+%H-Cone
+\newcommand{\drawHCone}{
+	\begin{figure}[h]
+		\centering
+		\begin{tikzpicture}
+			\drawGrid
+			\drawCone
+			\coneConstraints{\lowSlope}{\highSlope}
+		\end{tikzpicture}
+		\caption[]{H-Cone: $\pmb
+				-\highSlopeY & \highSlopeX \\
+				\lowSlopeY & -\lowSlopeX
+				\pme \pmb x \\ y \pme \leq \pmb 0 \\ 0 \pme$}
+	\end{figure}
+}
+
+%V-Cone
+\newcommand{\drawVCone}{
+	\begin{figure}[h]
+		\centering
+		\begin{tikzpicture}
+			\drawGrid
+			\drawCone
+			\coneGenerators{\lowSlope}{\highSlope}
+		\end{tikzpicture}
+		\caption[]{V-Cone: $\cone\left(
+				\svec{\highSlopeX}{\highSlopeY},
+				\svec{\lowSlopeX}{\lowSlopeY}\right)$}
+	\end{figure}
+}
+
+%H-Polyhedra
+\newcommand{\drawHPoly}{
+	\begin{figure}[h]
+		\centering
+		\begin{tikzpicture}
+			\drawGrid
+			\drawPolyhedra
+			\polyConstraints{\lowSlope}{\highSlope}{\lowVert}{\highSlope}{1}
+		\end{tikzpicture}
+		\caption[]{H-Polyhedra: $\pmb
+				-\highSlopeY & \highSlopeX \\
+				\lowSlopeY & -\lowSlopeX \\
+				\highSlopeY & -\highSlopeX
+				\pme \pmb x \\ y \pme \leq \pmb 0 \\ 0 \\ 3 \pme$}
+	\end{figure}
+}
+
+%V-Polyhedra
+\newcommand{\drawVPoly}{
+	\begin{figure}[h]
+		\centering
+		\begin{tikzpicture}
+			\drawGrid
+			\drawPolyhedra
+			\polyGenerators{\lowSlope}{\highSlope}{\lowVert}
+		\end{tikzpicture}
+		\caption[]{V-Polyhedra: $\cone\left(
+				\svec{\highSlopeX}{\highSlopeY}\right) +
+				\conv\left(\svec{0}{0}, \svec{\lowVertX}{1}\right)$}
+	\end{figure}
+}
+
+%H-Polytope
+\newcommand{\drawHPolytope}{
+	\begin{figure}[h]
+		\centering
+		\begin{tikzpicture}
+			\drawGrid
+			\drawPolytope
+			\hPolytope
+		\end{tikzpicture}
+		\caption[]{H-Polytope: $\pmb
+				-\highSlopeY & \highSlopeX \\
+				\lowSlopeY & -\lowSlopeX \\
+				4 & 1
+				\pme \pmb x \\ y \pme \leq \pmb 0 \\ 0 \\ 9 \pme$}
+	\end{figure}
+}
+
+%V-Polytope
+\newcommand{\drawVPolytope}{
+	\begin{figure}[h]
+		\centering
+		\begin{tikzpicture}
+			\drawGrid
+			\drawPolytope
+			\vPolytope
+		\end{tikzpicture}
+		\caption[]{V-Polytope: $\conv\left(
+				\svec{0}{0},
+				\svec{\lowVertX}{1},
+				\svec{1.5}{3}
+				\right)$}
+	\end{figure}
+}
+
+%Not Full Dim
+\newcommand{\drawNotFullDim}{
+	\begin{figure}[h]
+		\centering
+		\begin{tikzpicture}
+			\drawGrid
+			\getHatchLine{\highSlope}{1}{\origin};
+			\getHatchLine{\highSlope}{-1}{\origin};
+			\getHatchLine{-1}{1}{\origin};
+			\getHatchLine{0.}{1}{\origin};
+		\end{tikzpicture}
+		\caption[]{H-Cone, not full-dimensional: \\
+			$\pmb -2 & 1 \\ 2 & -1 \\ -1 & -1 \\ 0 & -1 \pme \pmb x \\ y \pme
+				\leq \pmb 0 \\ 0 \\ 0 \\ 0 \pme$ }
+	\end{figure}
+}
+
+%Not Pointed
+\newcommand{\drawNotPointed}{
+	\begin{figure}[h]
+		\centering
+		\begin{tikzpicture}
+			\clip (-3,-3) rectangle (3,3);
+			\draw[style=help lines] (-\MX,-\MX) grid (\MX,\MX);
+			\draw[style=very thick] (0,\MX) -- (0,-\MX);
+			\draw[style=very thick] (\MX,0) -- (-\MX,0);
+			\draw[style=GeneratorSty] \origin -- (135:2.);
+			\draw[style=GeneratorSty] \origin -- (-45:2.);
+			\draw[style=GeneratorSty] \origin -- (0,2);
+			\draw[style=GeneratorSty] \origin -- (2,0);
+			\draw[style=ConeStyle] \origin -- (-\MX,\MX) -- (\MX,\MX) -- (\MX,-\MX);
+		\end{tikzpicture}
+		\caption[]{V-Cone, not pointed: $\cone\left(
+				\svec{\highSlopeX}{\highSlopeY},
+				\svec{\lowSlopeX}{\lowSlopeY},
+				\svec{0}{2},
+				\svec{2}{0}
+				\right)$}
+	\end{figure}
+}
+

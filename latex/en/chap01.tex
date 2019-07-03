@@ -12,6 +12,8 @@ We begin somewhat tersely, stating some basic definitions in order to state the 
 		Let $\mU$.  The set of all non-negative linear combinations of $U$ is denoted $\cone(U)$.  Such a set is called a \em{V-Cone}.
 	}\end{Def}
 
+\drawVCone
+
 \begin{Def}[Convex Combination]{
 		Let $\mV$, and let $\lv$ satisfy $\lsum = 1$, $\l \geq\0$, then \( \lvsum \) is called a \textit{convex combination} of V.  The set of all convex combinations of $V$ is denoted $\conv(V)$.
 	}\end{Def}
@@ -23,6 +25,8 @@ We begin somewhat tersely, stating some basic definitions in order to state the 
 		is called a \em{V-Polyhedron}.
 	}\end{Def}
 
+\drawVPoly
+
 \paragraph{Note:} Given two sets $P$ and $Q$, the set $P+Q = \set{p+q\st p\in p,\,q\in Q}$ is called the \textit{Minkowski Sum} of $P$ and $Q$.  Therefore, we will write a V-Polyhedron as $\cone(U) + \conv(V)$ for some $U$ and $V$.\\
 
 \begin{Def}[H-Polyhedron]{
@@ -31,11 +35,15 @@ We begin somewhat tersely, stating some basic definitions in order to state the 
 		is called an \em{H-Polyhedron}.
 	}\end{Def}
 
+\drawHPoly
+
 \begin{Def}[H-Cone]{
 		Let $\mA$. Then the set
 		\[ \set{\xv \St A\x \leq \0} \]
 		is called an \em{H-Cone}.
 	}\end{Def}
+
+\drawHCone
 
 A simple but useful property of cones is that they are closed under addition and positive scaling.
 

@@ -56,6 +56,8 @@ then \eqref{vmin_implies} fails.  So, for what cones does \eqref{not_pointed} fa
 	A cone is called \textit{pointed} if it has a vertex.
 \end{Def}
 
+\drawNotPointed
+
 \begin{Prop} \label{v_is_pointed} The following statements are equivalent.
 	\begin{enumerate}
 		\item $\cone(V)$ is pointed.
@@ -348,6 +350,9 @@ Say we have an H-Polyhedron $P_{A,\b} = \HP{A}{\b}$, and wish to check that our 
 
 First we consider the special case of a V-Polyhedron given by $P = \conv(V)$.  Such a set is known as a \textit{polytope}.
 
+\drawVPolytope
+\drawHPolytope
+
 \begin{Def}[Minimal Set for Polytopes]
 	A set $V$ is called \textit{minimal} for the polytope $\conv(V)$ if:
 	\[(\forall \v\in V)\; \conv(V\setminus\set{\v}) \subset \conv(V)\]
@@ -567,6 +572,8 @@ Is the converse true?  Does it hold that given a $(A,\b)$ which is minimal, the 
 \begin{Def}[Full-Dimensional]
 	A polyhedron is called \textit{full-dimensional} if it contains an affinely independent set of vectors.
 \end{Def}
+
+\drawNotFullDim
 
 \begin{Prop}\label{ab_full_dim}
 	If $P = \HP{A}{\b}$ is full dimensional, and $\y^T A = \0$ with $\y\geq\0$, then either $\y = \0$ or $\y^T \b > \0$.
