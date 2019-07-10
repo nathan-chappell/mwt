@@ -6,9 +6,9 @@ of input and output:
 
   arg:   input:         output:
   -vc    V-Cone         H-Cone
-  -vp    V-Polyhedra    H-Polyhedra
+  -vp    V-Polyhedron   H-Polyhedron
   -hc    V-Cone         H-Cone
-  -hp    V-Polyhedra    H-Polyhedra
+  -hp    V-Polyhedron   H-Polyhedron
 
 input format is as follows:
   hcone := dimension   ws (vector ws)*  

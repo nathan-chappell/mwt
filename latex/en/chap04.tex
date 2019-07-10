@@ -87,14 +87,14 @@ Now we can consider the converse of \Cref{v_not_minimal}.
 	$(\neg 1 \Rightarrow \neg 2)$ is \Cref{v_not_minimal}.  So suppose that $\t\geq\0,\,\v=V\e_i$, and $\v=V\t$.  If $0\leq t_i < 1$, then $\v = V(\t-t_i\e_i)/(1-t_i)$, and $\v\in \cone(V\setminus\{\v\})$, which would mean that $V$ is not minimal.  Suppose that $t_i\geq 1$.  Then $\t-\e_i\geq\0$, and $\0=V(\t-\e_i)$.  Because $V$ is pointed, by \Cref{v_is_pointed} $\0=\t-\e_i$, so $\t=\e_i$.
 \end{proof}
 
-\Cref{min_vcone_generators} gives us a way to characterize the minimal sets generating V-Cones.  Clearly, there is not a unique minimal set generating any V-Cone, since any positive scaling of any of the vectors generating the cone results in the same cone.  However, as one is wont to do upon encountering such trifles, we can relax the requirement of unicity to equivalence, in the following way.
+\Cref{min_vcone_generators} gives us a way to characterize the minimal sets generating pointed V-Cones.  Clearly, there is not a unique minimal set generating any V-Cone, since any positive scaling of any of the vectors generating the cone results in the same cone.  However, as one is wont to do upon encountering such trifles, we can relax the requirement of unicity to equivalence, in the following way.
 
 \begin{Def}[vector equivalence]
 	Let $\u,\v \in \R^d$, non-zero, and suppose that $\u/\norm{\u} = \v/\norm{\v}$.  Then say that $\u,\v$ are \textit{equivalent}, and write $\u \simeq \v$.  If for every $\u\in U$ there is a $\v\in V$ such that $\u\simeq\v$, write $ U \sqsubseteq V$.  Write $U \simeq V$ if $U \sqsubseteq V$ and $V \sqsubseteq U$.
 \end{Def}
 
 \begin{Prop}\label{vector_equivalence}
-	Then the following two statements are equivalent:
+	The following two statements are equivalent:
 	\begin{enumerate}
 		\item $\v\simeq\u$
 		\item $(\exists t>0)\;\v=t\u$
@@ -335,7 +335,7 @@ Say we know that $C = \HC{A} = \cone(V)$ is full-dimensional, with $A$ minimal. 
 \end{Remark}
 
 \begin{Remark}
-	While not important for testing the program, one may ask if full-dimensional H-Cones are the only cones with essentially unique generating sets of constraints .  The answer is no, for any set of the form $\y^T \x = c$ has an essentially unique generating of constraints.  However, this is the only exception.  It isn't hard to see that, given independent constraints of the form $A\x=\0$, if $A$ has more than two rows, then, for any non-singular $B$, $BA\x=\0$ is an equivalent constraint.  So, technically, the \Cref{test_hc_to_vc} would work for hyperplanes.
+	While not important for testing the program, one may ask if full-dimensional H-Cones are the only cones with essentially unique generating sets of constraints .  The answer is no, for any set of the form $\y^T \x = c$ has an essentially unique generating set of constraints.  However, this is the only exception.  It isn't hard to see that, given independent constraints of the form $A\x=\0$, if $A$ has more than two rows, then, for any non-singular $B$, $BA\x=\0$ is an equivalent constraint.  So, technically, the \Cref{test_hc_to_vc} would work for hyperplanes.
 \end{Remark}
 
 \paragraph{\Large{Generalizing to Polyhedra}}
@@ -425,6 +425,8 @@ Now we consider the set $\cone(U)$ in $\cone(U) + \conv(V)$.  The next propositi
 \end{Remark}
 
 \subsection{Minimal V-Polyhedra Pairs}
+
+In this section, when we write $\cone(U) + \conv(V)$, we assume that $V$ is non-empty.
 
 \begin{Def}
 	A pair $(U,V)$ is said to be \textit{minimal} for $\cone(U) + \conv(V)$ if
@@ -563,14 +565,14 @@ To characterize Minimal H-Pairs, we will need a new form of the Farkas Lemma.
 	Since $(A,\b)$ is not minimal, there is such an $(A_i,b_i)$ and $(A',\b')$ such that $\HP{A}{\b} = \HP{A'}{\b'}$.  In the right hand side of \nameref{farkas_lemma2}, the conditions are satisfied with $A := A'$, $\b := \b'$, $\y := A_i$, $c := b_i$.
 \end{proof}
 
-Is the converse true?  Does it hold that given a $(A,\b)$ which is minimal, the implication of \Cref{ab_not_minimal} fails?  In general, no.  For example, the hyperplane $\ip{\y}{\x} = c$ has a minimal representation $\set{\ip{\y}{\x}\leq c,\,\ip{-\y}{\x}\leq -c}$, but the sum of the rows is $0$, and so $\t':= (2,1)$ satisfies the claim.  In general, we need all $d+1$ rows to be \textit{affinely independent}.
+Is the converse true?  Does it hold that given a $(A,\b)$ which is minimal, the implication of \Cref{ab_not_minimal} fails?  In general, no.  For example, the hyperplane $\ip{\y}{\x} = c$ has a minimal representation $\set{\ip{\y}{\x}\leq c,\,\ip{-\y}{\x}\leq -c}$, but the sum of the rows is $0$, and so $\t':= (2,1)$ satisfies the claim.  In general, we need the polyhedron to be \textit{full-dimensional}.
 
 \begin{Def}[Affine Dependence]
-	A set $V$ of vectors is called \textit{affinely independent} if, given any $\y\neq\0$, $c\in\R$, there is some $\v\in V$ such that $\y^T\v \neq c$.
+	A set $V$ of vectors is called \textit{full-dimensional} if, given any $\y\neq\0$, $c\in\R$, there is some $\v\in V$ such that $\y^T\v \neq c$.
 \end{Def}
 
 \begin{Def}[Full-Dimensional]
-	A polyhedron is called \textit{full-dimensional} if it contains an affinely independent set of vectors.
+	A polyhedron is called \textit{full-dimensional} if it contains a full-dimensional set of vectors.
 \end{Def}
 
 \drawNotFullDim
@@ -590,7 +592,7 @@ Is the converse true?  Does it hold that given a $(A,\b)$ which is minimal, the 
 \end{proof}
 
 \begin{Prop}\label{ab_is_minimal}
-	Suppose that $(A,\b)$ is minimal for some full-dimensional $\HP{A}{\b}$.  Then let $(A_i,b_i)$ be any row.  If, for some $\t\geq\0$ $\t^TA = A_i$, then either $\t=\e_i$ or $\t^T\b > b_i$.
+	Suppose that $(A,\b)$ is minimal for some full-dimensional $\HP{A}{\b}$.  Then let $(A_i,b_i)$ be any row.  If, for some $\t\geq\0$, $\t^TA = A_i$, then either $\t=\e_i$ or $\t^T\b > b_i$.
 \end{Prop}
 
 \begin{proof}
@@ -639,12 +641,12 @@ Now, combining the results of \Nameref{characteristic_cone} and \cref{homogeniza
 
 \begin{proof}
 	To see that they are pointed, let
-	\[\cone \pmb -\b^T & -1 \\ A^T & \0 \pme (\t,t_0) = \0\]
+	\[\pmb -\b^T & -1 \\ A^T & \0 \pme (\t,t_0) = \0\]
 	If $(\t,t_0)$ is non-zero, then $\t^T A = \0$, which by \Cref{ab_full_dim} means that $-\t^T \b < 0$.  This means that $-\t^T\b -t_0 < 0$.  So $(\t,t_0) = \0$.  
   
   To show that it they are minimal, by \Nameref{min_vcone_generators}, we only need to show that
 	\[ \t\geq\0,\; [(A_i=\t^T A,\,\t^T \b + t_0 = b_i) \Rightarrow \t=\e_i] \]
-	By \Cref{ab_is_minimal}, if $\t\neq\e_i$, and $\t^T A = A_i$, then $\t^T \b > b_i$, so $\t^T\b + t_0 > b_i$.  So that means that if $\t^T A = A_i$, $\t^T\b = b_i$, then $\t$ mush be $\e_i$.  If there is a $\t\neq\0$ such that $\t^T A = \0$, then it follows that $-\t^T \b < 0$, and that $\cone\pmb -\b^T \\ A^T \pme = \pmb -\b^T & -1 \\ A^T & \0 \pme$.  Then $\pmb -\b^T \\ A^T \pme$ is minimal.  If there is no such $\t$, that is, if $\t^T A = 0$ then $\t=\0$, then $\pmb -\b^T & -1 \\ A^T & \0 \pme$ is minimal.
+	By \Cref{ab_is_minimal}, if $\t\neq\e_i$, and $\t^T A = A_i$, then $\t^T \b > b_i$, so $\t^T\b + t_0 > b_i$.  So that means that if $\t^T A = A_i$, $\t^T\b = b_i$, then $\t$ must be $\e_i$.  If there is a $\t\neq\0$ such that $\t^T A = \0$, then it follows that $-\t^T \b < 0$, and that $\cone\pmb -\b^T \\ A^T \pme = \pmb -\b^T & -1 \\ A^T & \0 \pme$.  Then $\pmb -\b^T \\ A^T \pme$ is minimal.  If there is no such $\t$, that is, if $\t^T A = 0$ then $\t=\0$, then $\pmb -\b^T & -1 \\ A^T & \0 \pme$ is minimal.
 \end{proof}
 
 \begin{Prop}
@@ -652,7 +654,7 @@ Now, combining the results of \Nameref{characteristic_cone} and \cref{homogeniza
 \end{Prop}
 
 \begin{proof}
-  \Cref{dual_homogenization_cone} shows that the equality of the H-Cones is predicated on the equality of the V-Cones $\cone\pmb -\b \\ A \pme$ and $\cone\pmb -\b' \\ A' \pme$.  \Cref{dual_cone_min} shows that we end up with the situation that either $\cone\pmb -\b \\ A \pme = \cone\pmb -\b' \\ A' \pme$ with $\cone\pmb -\b \\ A \pme$ minimal, in which case $\pmb -\b \\ A \pme \sqsubseteq \pmb -\b' \\ A' \pme$, or $\cone\pmb -\b & -1 \\ A & 0\pme$ is minimal.  In this case, since for no $A_i \in A$ is $A_i \simeq \0$, we conclude that $\pmb -\b \\ A \pme \sqsubseteq \pmb -\b' \\ A' \pme$
+  \Cref{dual_homogenization_cone} shows that the equality of the H-Cones is predicated on the equality of the V-Cones $\cone\psmb -\b \\ A \psme$ and $\cone\psmb -\b' \\ A' \psme$.  \Cref{dual_cone_min} shows that we end up with the situation that either $\cone\psmb -\b \\ A \psme = \cone\psmb -\b' \\ A' \psme$ with $\cone\psmb -\b \\ A \psme$ minimal, in which case $\psmb -\b \\ A \psme \sqsubseteq \psmb -\b' \\ A' \psme$, or $\cone\psmb -\b & -1 \\ A & 0\psme$ is minimal.  In this case, since for no $A_i \in A$ is $A_i \simeq \0$, we conclude that $\psmb -\b \\ A \psme \sqsubseteq \psmb -\b' \\ A' \psme$
 \end{proof}
 
 Say we know that $P = \HP{A}{\b} = \VP{U}{V}$, with $(A,\b)$ minimal, and $P$ full-dimensional.  We have another pair $(A',\b')$, and let $P'=\HP{A'}{\b'}$.  We want to test if $P = P'$.  We have the following:

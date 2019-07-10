@@ -20,6 +20,8 @@
 \newcommand{\highVertX}{1.5}
 \newcommand{\vertexRadius}{.08}
 \newcommand{\origin}{(0,0)}
+\newcommand{\spmb}{\begin{psmallmatrix*}[r]}
+		\newcommand{\spme}{\end{psmallmatrix*}}
 %
 \tikzstyle ConeStyle=[fill, color=gray, style=semitransparent]
 \tikzstyle GeneratorInd=[style=dotted, thick, color=blue]
@@ -101,7 +103,7 @@
 \newcommand{\lowVert}{(\lowVertX,\lowVertY)}
 \newcommand{\highVert}{(\highVertX,\highVertY)}
 
-\newcommand{\svec}[2]{\begin{bmatrix*}[r] #1 \\ #2 \end{bmatrix*}}
+\newcommand{\svec}[2]{\begin{bsmallmatrix*}[r] #1 \\ #2 \end{bsmallmatrix*}}
 
 %H-Cone
 \newcommand{\drawHCone}{
@@ -112,10 +114,10 @@
 			\drawCone
 			\coneConstraints{\lowSlope}{\highSlope}
 		\end{tikzpicture}
-		\caption[]{H-Cone: $\pmb
+		\caption[]{H-Cone: $\spmb
 				-\highSlopeY & \highSlopeX \\
 				\lowSlopeY & -\lowSlopeX
-				\pme \pmb x \\ y \pme \leq \pmb 0 \\ 0 \pme$}
+				\spme \spmb x \\ y \spme \leq \spmb 0 \\ 0 \spme$}
 	\end{figure}
 }
 
@@ -143,11 +145,11 @@
 			\drawPolyhedra
 			\polyConstraints{\lowSlope}{\highSlope}{\lowVert}{\highSlope}{1}
 		\end{tikzpicture}
-		\caption[]{H-Polyhedra: $\pmb
+		\caption[]{H-Polyhedron: $\spmb
 				-\highSlopeY & \highSlopeX \\
 				\lowSlopeY & -\lowSlopeX \\
 				\highSlopeY & -\highSlopeX
-				\pme \pmb x \\ y \pme \leq \pmb 0 \\ 0 \\ 3 \pme$}
+				\spme \spmb x \\ y \spme \leq \spmb 0 \\ 0 \\ 3 \spme$}
 	\end{figure}
 }
 
@@ -160,7 +162,7 @@
 			\drawPolyhedra
 			\polyGenerators{\lowSlope}{\highSlope}{\lowVert}
 		\end{tikzpicture}
-		\caption[]{V-Polyhedra: $\cone\left(
+		\caption[]{V-Polyhedron: $\cone\left(
 				\svec{\highSlopeX}{\highSlopeY}\right) +
 				\conv\left(\svec{0}{0}, \svec{\lowVertX}{1}\right)$}
 	\end{figure}
@@ -175,11 +177,11 @@
 			\drawPolytope
 			\hPolytope
 		\end{tikzpicture}
-		\caption[]{H-Polytope: $\pmb
+		\caption[]{H-Polytope: $\spmb
 				-\highSlopeY & \highSlopeX \\
 				\lowSlopeY & -\lowSlopeX \\
 				4 & 1
-				\pme \pmb x \\ y \pme \leq \pmb 0 \\ 0 \\ 9 \pme$}
+				\spme \spmb x \\ y \spme \leq \spmb 0 \\ 0 \\ 9 \spme$}
 	\end{figure}
 }
 
@@ -212,8 +214,8 @@
 			\getHatchLine{0.}{1}{\origin};
 		\end{tikzpicture}
 		\caption[]{H-Cone, not full-dimensional: \\
-			$\pmb -2 & 1 \\ 2 & -1 \\ -1 & -1 \\ 0 & -1 \pme \pmb x \\ y \pme
-				\leq \pmb 0 \\ 0 \\ 0 \\ 0 \pme$ }
+			$\spmb -2 & 1 \\ 2 & -1 \\ -1 & -1 \\ 0 & -1 \spme \spmb x \\ y \spme
+				\leq \spmb 0 \\ 0 \\ 0 \\ 0 \spme$ }
 	\end{figure}
 }
 

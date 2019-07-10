@@ -1,11 +1,11 @@
 \chapter*{Introduction}
 \addcontentsline{toc}{chapter}{Introduction}
 
-Polyhedra are important mathematical objects.  Two ways of describing polyhedra are:
+Known since antiquity, polyhedra are primordial mathematical objects.  Two ways of describing polyhedra are:
 \begin{enumerate}
   \item A finite intersection of half-spaces
   \item The \textit{Minkowski-Sum} of the \textit{convex-hull} of a finite set of rays and a finite set of points
 \end{enumerate}
-The {\MWT} is a fundamental result in the theory of polyhedra.  It states that both means of representation are equivalent.  The proof given here is algorithmic in nature, using a technique known as \textit{Fourier-Motzkin elimination}.  The correctness of the algorithm also proves a result known as \nameref{farkas_lemma}.
+The {\MWT} is a fundamental result in the theory of polyhedra; it states that both means of representation are equivalent.  The proof given here is algorithmic in nature, using a technique known as \textit{Fourier-Motzkin elimination}.  The correctness of the algorithm also proves a result known as \nameref{farkas_lemma}.
 
-This thesis is broken up into four chapters.  Chapter 1 states the definitions necessary for {\MWT}, and states the theorem.  Chapter 2 proves the theorem, by first considering the case that the polyhedron is a cone, then shows how to reduce the case of general polyhedra to that of cones.  Chapter 3 shows a C$++$ implementation of the transformations described in Chapter 2.  Chapter 4 presents a method of testing the program for special cases of polyhedra, known as either pointed or full-dimensional polyhedra.  \nameref{farkas_lemma} is proven and extensively used to show the validity of the testing methods.
+This thesis is broken up into four chapters.  Chapter 1 states the definitions necessary for {\MWT}, and states the theorem.  Chapter~2 proves the theorem, by first considering the case that the polyhedron is a cone, then shows how to reduce the case of general polyhedra to that of cones.  Chapter~3 shows a C$++$ implementation of the transformations described in Chapter~2.  Chapter 4 presents a method of testing the program for special cases of polyhedra, known as either pointed or full-dimensional polyhedra.  \nameref{farkas_lemma} is proven and extensively used to show the validity of the testing methods.

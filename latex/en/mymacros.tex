@@ -1,0 +1,142 @@
+% common for paper and presentation
+
+%%-- My stuff
+
+\usepackage{amsmath,amsfonts,amsthm}
+\usepackage{mathtools,bm}
+\usepackage{listings,color}
+\usepackage{tikz,float}
+\usepackage[font=small]{caption}
+\usepackage{pdfpages}
+\usetikzlibrary{arrows,snakes,backgrounds}
+
+\input{listingcommands.tex}
+
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand{\set}[1]{\left\{#1\right\}}
+\DeclareMathOperator{\cone}{cone}
+\DeclareMathOperator{\conv}{conv}
+\DeclareMathOperator{\VLift}{T_V}
+\DeclareMathOperator{\HLift}{T_H}
+\newcommand{\ip}[2]{\left\langle #1, #2 \right\rangle}
+
+%special letters
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\0}{\vec{0}}
+\newcommand{\1}{\vec{1}}
+\renewcommand{\r}{\vec{r}}
+\renewcommand{\u}{\vec{u}}
+\newcommand{\x}{\vec{x}}
+\newcommand{\y}{\vec{y}}
+\newcommand{\z}{\vec{z}}
+\newcommand{\e}{\vec{e}}
+\newcommand{\w}{\vec{w}}
+\renewcommand{\t}{\vec{t}}
+\renewcommand{\v}{\vec{v}}
+\renewcommand{\b}{\vec{b}}
+\newcommand{\faij}{\forall i\in P,\forall j \in N}
+\newcommand{\blambda}{\bm{\lambda}}
+\newcommand{\bsigma}{\bm{\sigma}}
+\newcommand{\bmu}{\bm{\mu}}
+
+%symbols
+\newcommand{\st}{\;|\;}
+\newcommand{\St}{\;\Big|\;}
+
+%constants
+\newcommand{\Udim}{p}
+\newcommand{\Vdim}{n}
+\newcommand{\Adim}{m}
+\newcommand{\mspaceA}{\R^{{\Adim}\times d}}
+\newcommand{\mspaceB}{\R^{m_1\times (d+\Udim)}}
+\newcommand{\mspaceC}{\R^{m_2\times (d+\Udim)}}
+
+%matrices and vectors with domain
+\newcommand{\bv}{\b \in \R^{\Adim}}
+\newcommand{\tv}{\t \in \R^{\Udim}}
+\renewcommand{\l}{\bm{\lambda}}
+\newcommand{\lv}{\l \in \R^{\Vdim}}
+\newcommand{\yv}{\y \in \R^{d+1}}
+\newcommand{\xv}{\x \in \R^d}
+\newcommand{\mV}{V \in \R^{d\times \Vdim}}
+\newcommand{\mU}{U \in \R^{d\times \Udim}}
+\newcommand{\mA}{A \in \mspaceA}
+\newcommand{\mB}{B \in \mspaceB}
+\newcommand{\mC}{B' \in \mspaceC}
+\newcommand{\xt}{\pmb  \x\\ \t\pme }
+\newcommand{\xw}{\pmb  \x\\ \w\pme }
+\newcommand{\xAx}{\pmb \x\\ A\x\pme }
+\newcommand{\xz}{\pmb  \x\\ \0\pme }
+\newcommand{\xx}{\pmb  x_0\\ \x\pme }
+\newcommand{\sxx}{\psmb  x_0\\ \x\psme }
+\newcommand{\onex}{\pmb 1\\ \x\pme }
+\newcommand{\zw}{\pmb  \0\\ \w\pme }
+\newcommand{\eAj}{\pmb \e_j\\ A^j\pme }
+\newcommand{\neAj}{\pmb -\e_j\\ -A^j\pme }
+\newcommand{\ee}{\pmb  \0 \\ 1 \pme }
+\newcommand{\zei}{\pmb \0 \\ \e_i \pme }
+\newcommand{\lcone}{\pmb  \0 & \vec{1} \\ U & V \pme }
+\newcommand{\xjp}{x_j^+}
+\newcommand{\xjm}{x_j^-}
+\newcommand{\Yi}{Y^i_{k}}
+\newcommand{\Yj}{Y^j_{k}}
+\newcommand{\Yl}{Y^l_{k}}
+\newcommand{\Uiz}{U^i_{0}}
+\newcommand{\Ujz}{U^j_{0}}
+\newcommand{\Ulz}{U^l_{0}}
+\newcommand{\Bik}{B^k_i}
+\newcommand{\Bjk}{B^k_j}
+\newcommand{\Blk}{B^k_l}
+
+%sums
+\newcommand{\tusum}{\sum_{1\leq j \leq \Udim}t_j U^j}
+\newcommand{\lvsum}{\sum_{1\leq j \leq \Vdim}\lambda_j V^j}
+\newcommand{\lsum}{\sum_{1\leq j \leq \Vdim}\lambda_j}
+\newcommand{\jsum}{\sum_{1\leq j \leq d}}
+\newcommand{\isum}{\sum_{1\leq i \leq n}}
+\newcommand{\Psum}{\sum_{i\in P}}
+\newcommand{\Nsum}{\sum_{j\in N}}
+\newcommand{\Zsum}{\sum_{l\in Z}}
+\newcommand{\NPsum}{\sum_{\substack{i\in P \\ j\in N}}}
+\newcommand{\isconv}{\lambda_j \geq 0 \lsum = 1}
+\newcommand{\sumi}{\sum\nolimits_i}
+
+% Polyhedra
+\newcommand{\HC}[1]{\set{\x\st #1\x\leq\0}}
+\newcommand{\HP}[2]{\set{\x\st #1\x\leq #2}}
+\newcommand{\VP}[2]{\cone(#1) + \conv(#2)}
+\newcommand{\LHC}{\set{\xx\St\big[-\vec{b}|A\big]\xx\leq\0}}
+\newcommand{\hpxz}{\set{\xx\St x_0 = 1}}
+\newcommand{\shpxz}{\set{\sxx\st x_0 = 1}}
+
+\usepackage{thmtools,cleveref}
+
+%text macros
+\newcommand{\MWT}{Minkowski-Weyl Theorem}
+\newcommand{\texteq}[2]{\begin{equation}\text{#1}\label{#2}\end{equation}}
+
+%code stuff
+\newcommand{\cppSourceDir}{../../cpp}
+%%
+\newcommand{\smallstack}[2]{\left(\begin{smallmatrix}#1 \\ #2\end{smallmatrix}\right)}
+
+\newcommand{\lsti}[1]{\lstinline!#1!}
+\newcommand{\filename}[1]{\texttt{#1}}
+\newcommand{\mli}[1]{\text{\lsti{#1}}}
+\newcommand{\norm}[1]{\left|\left|#1\right|\right|}
+\renewcommand{\pmb}{\begin{pmatrix*}[r]}
+\newcommand{\pme}{\end{pmatrix*}}
+\newcommand{\psmb}{\begin{psmallmatrix*}[r]}
+\newcommand{\psme}{\end{psmallmatrix*}}
+
+\lstset{
+	language=C++,
+	backgroundcolor=\color[rgb]{.9,.9,.9},
+	basicstyle=\small\tt,
+	keywordstyle=\color[rgb]{0,.2,1},
+	commentstyle=\color[rgb]{0,.6,.2},
+	numbers=left,
+	showstringspaces=false
+}
+
+\input{pictures}

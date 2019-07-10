@@ -1,6 +1,6 @@
 \chapter{\MWT}
 
-We begin somewhat tersely, stating some basic definitions in order to state the theorem.  The only noteworthy part of this section is \Cref{cone_closure}, which will be used a number of times throughout the paper.
+We begin somewhat tersely, stating some basic definitions in order to state the theorem.  The only noteworthy part of this section is \Cref{cone_closure}, which will be used a number of times throughout the thesis.
 
 \section{Polyhedra}
 
@@ -27,7 +27,7 @@ We begin somewhat tersely, stating some basic definitions in order to state the 
 
 \drawVPoly
 
-\paragraph{Note:} Given two sets $P$ and $Q$, the set $P+Q = \set{p+q\st p\in p,\,q\in Q}$ is called the \textit{Minkowski Sum} of $P$ and $Q$.  Therefore, we will write a V-Polyhedron as $\cone(U) + \conv(V)$ for some $U$ and $V$.\\
+\paragraph{Note:} Given two sets $P$ and $Q$, the set $P+Q = \set{p+q\st p\in P,\,q\in Q}$ is called the \textit{Minkowski Sum} of $P$ and $Q$.  Therefore, we will write a V-Polyhedron as $\cone(U) + \conv(V)$ for some $U$ and $V$.\\
 
 \begin{Def}[H-Polyhedron]{
 		Let $\mA$, $\bv$.  Then the set
@@ -63,10 +63,10 @@ A simple but useful property of cones is that they are closed under addition and
 	So, $\sumi c_i\x^i \in C$ when $C$ is a V-Cone.
 \end{proof}
 
-This proposition will be used in the following way: if we wish to show that $\sumi c_i\x^i$ in a member of some cone $C$, it suffices to show that, for each $i$, $c_i \geq 0$ and $\x^i \in C$.
+This proposition will be used in the following way: if we wish to show that $\sumi c_i\x^i$ is a member of some cone $C$, it suffices to show that, for each $i$, $c_i \geq 0$ and $\x^i \in C$.
 
 \begin{Remark}
-\Cref{cone_closure} is a fundamental property of cones.  In fact, it could be used as an abstract definition of a cone, removed from geometric interpretation, then cones in euclidean space could be examined as important special classes.
+\Cref{cone_closure} is a characteristic property of cones.  In fact, it could be used as an abstract definition of a cone, removed from geometric interpretation, then cones in euclidean space could be examined as important special classes.
 \end{Remark}
 
 
@@ -75,5 +75,13 @@ This proposition will be used in the following way: if we wish to show that $\su
 The following theorem is the basic result to be proved in this thesis, which states that V-Polyhedra and H-Polyhedra are two different representations of the same objects.
 
 \begin{Thm}[{\MWT}]
-		Every V-Polyhedron is an H-Poly-hedron, and every H-Polyhedron is a V-Polyhedron.
+		Every V-Polyhedron is an H-Poly\-hedron, and every H-Polyhedron is a V-Polyhedron.
 \end{Thm}
+
+\section{Notational Abuses}
+
+Throughout the paper, capital letters will be used to denote matrices.  In some cases, the dimensions of the matrix will not be specified: it is assumed that they have dimensions necessary for the expressions in which they appear to make sense (typically for block-matrix notation or matrix-multiplication).  Rows will be indicated by subscript (e.g. $B_k$ is the $k$-th row of $B$), and columns by superscript ($Y^j$ is the $j$-th column of $Y$).  Then, $A_k^j$ is the element of $A$ in the $k$-th row and $j$-th column.
+
+A special case of dimensional abuse will take place with vectors being row or column vectors.  For example, the expression $\y\in\R^{d+p}, \x\in\R^d, \w\in\R^p$, $\y = (\x,\w)$ is technically not correct without indicating various transpositions.  However, it seems clear what is meant is that $\y^T = (\x^T,\w^T)$.
+
+A very special matrix, the identity matrix, will be referred to as $I$, regardless of dimension.  This enhances clarity, although at times may not be perfectly formal.

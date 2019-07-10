@@ -33,7 +33,7 @@ Here is a very brief summary of the files mentioned in the above table, more det
 	\item \texttt{fourier\_motzkin.h} \\
 	      Implementation of Fourier Motzkin elimination, and the {\MWT} for cones
 	\item \texttt{polyhedra.\{cpp,h\} } \\
-	      Transforms between polytopes and polyhedra, completing the {\MWT}
+	      Transforms between cones and polyhedra, completing the {\MWT}
 	\item \texttt{test\_functions.h} \\
 	      Types and functions for testing the algorithms (see \Cref{chap_testing}).
 	\item \texttt{test.cpp} \\
@@ -53,7 +53,7 @@ The \lsti{class Matrix} implements a subset of what a \textit{C++ Container} sho
 The factory function \lsti{read_Matrix} is provided to read a \lsti{Matrix} from an \lsti{istream}.  It is necessary because the value of \lsti{d} can't be known before reading some of the stream.
 \lstMatrix
 
-The \lsti{struct VPoly} gather two \lsti{Matrix}s needed to represent a V-Polyhedron.  The \lsti{Matrix U} corresponds to the rays that generate the cone, and the \lsti{Matrix V} corresponds to the points, i.e.
+The \lsti{struct VPoly} gather two \lsti{Matrices} needed to represent a V-Polyhedron.  The \lsti{Matrix U} corresponds to the rays that generate the cone, and the \lsti{Matrix V} corresponds to the points, i.e.
 \[ \mli{vpoly} = \cone(\mli{vpoly.U}) + \conv(\mli{vpoly.V}) \]
 \lstVPoly
 

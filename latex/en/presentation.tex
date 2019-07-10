@@ -1,0 +1,543 @@
+% $Header$
+
+\documentclass{beamer}
+\input{mymacros.tex}
+% This file is a solution template for:
+
+% - Talk at a conference/colloquium.
+% - Talk length is about 20min.
+% - Style is ornate.
+
+
+
+% Copyright 2004 by Till Tantau <tantau@users.sourceforge.net>.
+%
+% In principle, this file can be redistributed and/or modified under
+% the terms of the GNU Public License, version 2.
+%
+% However, this file is supposed to be a template to be modified
+% for your own needs. For this reason, if you use this file as a
+% template and not specifically distribute it as part of a another
+% package/program, I grant the extra permission to freely copy and
+% modify this file as you see fit and even to delete this copyright
+% notice. 
+
+
+\mode<presentation>
+{
+	\usetheme{Warsaw}
+	% or ...
+
+	\setbeamercovered{transparent}
+	% or whatever (possibly just delete it)
+}
+
+
+\usepackage[english]{babel}
+% or whatever
+
+\usepackage[latin1]{inputenc}
+% or whatever
+
+\usepackage{times}
+\usepackage[T1]{fontenc}
+% Or whatever. Note that the encoding and the font should match. If T1
+% does not look nice, try deleting the line with the fontenc.
+
+
+\title % (optional, use only with long paper titles)
+{The \MWT}
+
+%\subtitle
+%{Include Only If Paper Has a Subtitle}
+
+\author % (optional, use only with lots of authors)
+{Nathan Chappell\inst{1}}
+% - Give the names in the same order as the appear in the paper.
+% - Use the \inst{?} command only if the authors have different
+%   affiliation.
+
+\institute % (optional, but mostly needed)
+{
+	\inst{1}%
+	Charles University\\
+	Faculty of Mathematics and Physics
+}
+% - Use the \inst command only if there are several affiliations.
+% - Keep it simple, no one is interested in your street address.
+
+\date % (optional, should be abbreviation of conference name)
+{Defense of Bachelor's Thesis, 2019}
+% - Either use conference name or its abbreviation.
+% - Not really informative to the audience, more for people (including
+%   yourself) who are reading the slides online
+
+%\subject{Theoretical Computer Science}
+% This is only inserted into the PDF information catalog. Can be left
+% out. 
+
+
+
+% If you have a file called "university-logo-filename.xxx", where xxx
+% is a graphic format that can be processed by latex or pdflatex,
+% resp., then you can add a logo as follows:
+
+% \pgfdeclareimage[height=0.5cm]{university-logo}{university-logo-filename}
+% \logo{\pgfuseimage{university-logo}}
+
+
+
+% Delete this, if you do not want the table of contents to pop up at
+% the beginning of each subsection:
+\AtBeginSubsection[]
+{
+	\begin{frame}<beamer>{Outline}
+		\tableofcontents[currentsection,currentsubsection]
+	\end{frame}
+}
+
+
+% If you wish to uncover everything in a step-wise fashion, uncomment
+% the following command: 
+
+%\beamerdefaultoverlayspecification{<+->}
+
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+	\tableofcontents
+	% You might wish to add the option [pausesections]
+\end{frame}
+
+
+% Structuring a talk is a difficult task and the following structure
+% may not be suitable. Here are some rules that apply for this
+% solution: 
+
+% - Exactly two or three sections (other than the summary).
+% - At *most* three subsections per section.
+% - Talk about 30s to 2min per frame. So there should be between about
+%   15 and 30 frames, all told.
+
+% - A conference audience is likely to know very little of what you
+%   are going to talk about. So *simplify*!
+% - In a 20min talk, getting the main ideas across is hard
+%   enough. Leave out details, even if it means being less precise than
+%   you think necessary.
+% - If you omit details that are vital to the proof/implementation,
+%   just say so once. Everybody will be happy with that.
+
+\section{Theorem}
+
+\subsection{Definitions and Statement}
+%
+%\begin{frame}{V/H Polyhedra/Cones}
+%  % - A title should summarize the slide in an understandable fashion
+%  %   for anyone how does not follow everything on the slide itself.
+%
+%  \begin{itemize}
+%  \item V-Cone: non-negative linear combinations of some set \\
+%          $\{U\t : \t \geq \0\}$
+%  \item V-Polytope: convex combinations of some set \\
+%          $\{V\blambda : \blambda \geq \0, \1^T\blambda = 1\}$
+%  \item V-Polyhedron: Minkowski Sum of V-Cone and V-Polytope \\
+%          $\{U\t + V\blambda : \t,\blambda \geq \0, \1^T\blambda = 1\}$
+%  \item H-Cone: solutions to system of linear inequalities \\
+%          $\{\x : A\x \leq \0 \}$
+%  \item H-Polyhedra: solutions to system of linear inequalities \\
+%          $\{\x : A\x \leq \vec{b} \}$
+%  \end{itemize}
+%\end{frame}
+
+%my macros
+\newcommand{\UCone}{\{U\t \st \t \geq \0\}}
+\newcommand{\TUCone}{\pmb \0 & -I \\ I & -U \\ -I & U \pme}
+
+\begin{frame}{V/H Polyhedra/Cones}
+	% - A title should summarize the slide in an understandable fashion
+	%   for anyone how does not follow everything on the slide itself.
+
+	Let $U \in \R^{d\times l},\, V \in \R^{d\times m},\, A \in \R^{m\times d}$
+	\begin{itemize}
+		\item V-Cone:\\ $\UCone \;\equiv\; \cone(U)$
+		\item V-Polytope:\\ $\{V\blambda \st \blambda \geq \0, \1^T\blambda = 1\} \;\equiv\; \conv(V)$
+		\item V-Polyhedron:\\ $\{U\t + V\blambda \st \t,\blambda \geq \0, \1^T\blambda = 1\} \;\equiv\; \cone(U) + \conv(V)$
+		\item H-Cone:\\ $\{\x \st A\x \leq \0 \}$
+		\item H-Polyhedron:\\ $\{\x \st A\x \leq \vec{b} \}$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{\MWT}
+	\begin{itemize}
+		\item General Statement: \\
+		      V-Polyhedra and H-Polyhedra are the same things
+		      \pause
+		\item For Cones: \\
+		      V-Cones and H-Cones are the same things
+		      \pause
+	\end{itemize}
+	First, the proof is done for cones, then polyhedra are reduced to cones.
+\end{frame}
+
+
+\subsection{Proof of the theorem}
+
+\begin{frame}{V-Cones are H-Cones}
+	Basic idea:
+	\begin{itemize}
+		\item rewrite V-Cone as a projection of an H-Cone
+		\item show that a projection of an H-Cone is an H-Cone
+	\end{itemize}
+\end{frame}
+
+\newcommand{\myalignw}{2.2cm}
+\def\myialign[#1]#2{\makebox[\myalignw][l]{#1} \;#2\;}
+
+\begin{frame}[t]{V-Cones are H-Cones}{Lifting the V-Cone}
+	Say we are given $\UCone\ldots$
+	\medskip
+	\begin{itemize}
+		\only<1>{\item First, the non-negativity constraint}
+		      \only<2-7>{\item \myialign[$\t \geq \0$]{$\Leftrightarrow$}
+		      $\pmb \0 & -I\pme \xt \leq \0$}
+		      \only<3>{\item Next, capture the points}
+		      \only<4-7>{\item \myialign[$\x = U\t$]{$\Leftrightarrow$}
+		      $\pmb I & -U \\ -I & U \pme \xt \leq \0$}
+		      \only<5>{\item Finally, project the combined constraints}
+		      \only<6-7>{\item \myialign[$\UCone$]{$=$}
+		      $\left\{\x \St \TUCone \xt \leq \0 \right\}$}
+	\end{itemize}
+	\only<7>{The final expression is a projection of an H-Cone}
+\end{frame}
+
+\begin{frame}{V-Cones are H-Cones}{Projecting an H-Cone}
+	We project an H-Cone one coordinate at a time with
+	\alert{Fourier-Motzkin Elimination}
+	\begin{itemize}
+		\item<2-> Observation:\\[5pt]
+		      $\pmb A & \0 \pme \xt \leq \0 \Leftrightarrow A\x \leq \0$
+		\item<3-> Therefore: \\[5pt]
+		      $\left\{\x \St \pmb A & \0 \pme \xt \leq \0\right\} =
+			      \left\{ \x \st A\x \leq \0 \right\}$
+		\item<4-> So, projecting $\0$ columns is easy.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{V-Cones are H-Cones}{Fourier-Motzkin Elimination}
+	Suppose we are projecting column $k$ from $A\x\leq\0$.
+	\begin{itemize}
+		\item<2-> First, partition the rows as follows:\\
+		      $Z$: rows with $k$-th column is $0$ \\
+		      $P$: rows with $k$-th column is positive\\
+		      $N$: rows with $k$-th column is negative
+		\item<3-> Create a new matrix $A'$ with rows as follows: \\[5pt]
+		      $\begin{cases}
+				      A_z                   & A_z \in Z            \\
+				      A_p^k A_n - A_n^k A_p & A_n \in N, A_p \in P
+			      \end{cases}$
+		\item<4-> You can show:\\
+		      $(\exists t)\,A(\x+t\e_k) \leq \0 \Leftrightarrow A'\x\leq\0$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{H-Cones are V-Cones}
+	Basic idea:
+	\begin{itemize}
+		\item rewrite V-Cone as a projection of intersection of an H-Cone with hyperplanes
+		\item show that a intersection of a V-Cone with a hyperplane is a V-Cone
+		\item projecting V-Cones is easy
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{H-Cones are V-Cones}{Lifting the H-Cone}
+	Say we are given $\HC{A}\ldots$
+	\medskip
+	\begin{itemize}
+		\only<1>{\item First, take up the slack}
+		      \only<2-7>{\item \myialign[$A\x\leq\0$]{$\Leftrightarrow$}
+		      $\exists \w\geq\0 \st A\x + \w = \0$}
+		      \only<3>{\item Next, capture the points}
+		      \only<4-7>{\item
+		      \myialign[$A\x + \w = \0$]{$\Leftrightarrow$}
+		      $\pmb \x \\ A\x \pme + \pmb \0 \\ \w \pme = \pmb \x \\ \0 \pme$}
+		      \only<5>{\item Finally, split the positive/negative contributions:}
+		      \only<6-7>{\item \myialign[$A\x\leq\0$]{$\Leftrightarrow$}
+		      $\xz \in \cone\pmb I & -I & \0 \\ A & -A & I \pme$}
+	\end{itemize}
+	\only<7>{The final expression is a intersection of a V-Cone with some hyperplanes}
+\end{frame}
+
+\begin{frame}[t]{H-Cones are V-Cones}{Intersecting a V-Cone}
+	We intersect a V-Cone one coordinate at a time with
+	\alert{Dual-Fourier-Motzkin Elimination}
+	\begin{itemize}
+		\item<2-> We need to characterize elements of $\cone(U)$ with the $k$-th element $0$.
+		      \only<3>{\item We use the following algebraic trick$\ldots$}
+		      \only<4-6>{
+		\item<4-> Suppose that $\x_i, \x_j \in \cone(U)$, $x_j^k < 0 < x_i^k$, $\sum_i x_i^k + \sum_j x_j^k = 0$, and let $1/\sigma := \sum_i x_i^k = -\sum_j x_j^k$.
+		\item<5-> We can rewrite $\sum_j \x_j + \sum_i \x_i = \sigma \sum_{i,j} x_i^k \x_j - x_j^k \x_i$
+		\item<6-> Note that: $x_i^k\x_j - x_j^k\x_i \in \cone(U) \cap \{\x \st x^k = 0\}$
+		      }
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{H-Cones are V-Cones}{Fourier-Motzkin Elimination}
+	Suppose we are intersecting row $k$ from $\cone(U)$.
+	\begin{itemize}
+		\item<2-> First, partition the columns as follows:\\
+		      $Z$: columns with $k$-th row is $0$ \\
+		      $P$: columns with $k$-th row is positive\\
+		      $N$: columns with $k$-th row is negative
+		\item<3-> Create a new matrix $U'$ with columns as follows: \\[5pt]
+		      $\begin{cases}
+				      \x_z                      & \x_z \in Z             \\
+				      \x_p^k \x_n - \x_n^k \x_p & \x_n \in N, \x_p \in P
+			      \end{cases}$
+		\item<4-> You can show:\\
+		      $\y \in \cone(U), y^k = 0 \Leftrightarrow \y \in \cone(U')$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Reducing Polyhedra to Cones}
+	\begin{itemize}
+		\item For H-Polyhedra, move constraints to column $0$ and set that coordinate to $1$
+		      \pause
+		\item $\HP{A}{\vec{b}} = \LHC \cap \hpxz$
+		      \pause
+		\item For V-Polyhedra, use an intersection to enforce convex combinations
+		      \pause
+		\item $\VP{U}{V} = \Pi\left(\cone\pmb \0 & \1 \\ U & V \pme \cap \hpxz\right)$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Reducing Polyhedra to Cones}
+	$\VP{U}{V} = \Pi\left(\cone\pmb \0 & \1 \\ U & V \pme \cap \hpxz\right)$
+	\hrule
+	\begin{itemize}
+		\item This intersection is a slight complication, but handled in essentially the same way as before.  The basic idea:
+		      \pause
+		\item Denote $\sigma_i = \sum_i x_i^0$, $\sigma_j = \sum_j x_j^0$
+		      \pause
+		\item If $\sigma_i + \sigma_j = 1$, then $-\frac{\sigma_j}{\sigma_i} = 1 - \frac{1}{\sigma_i}$
+		      \pause
+		\item Then $\sum_i \x_i = \frac{\sum_i \x_i}{\sigma_i} + \left(1-\frac{1}{\sigma_i}\right)\sum_i \x_i = \frac{1}{\sigma_i}\sum_i \x_i - \frac{\sigma_j}{\sigma_i}\sum_i \x_i$
+		      \pause
+		\item We can rewrite $\sum_j \x_j + \sum_i \x_i =$ $\frac{1}{\sigma_i}\sum_i \x_i + \frac{1}{\sigma_i}\sum_{i,j} x_i^0\x_j - x_j^0\x_i$
+		      \pause
+		\item The left term is in $\conv\pmb \1\\ V\pme$, while the right term is in the cone but has $0$ in $0$-th coordinate.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+\definecolor{mygrey}{rgb}{.1,.1,.1}
+\newcommand{\FIGstep}{2}
+\newcommand{\FIGge}{8}
+\newcommand{\FIGgd}{\numexpr \FIGge-\FIGstep}
+\newcommand{\FIGgc}{\numexpr \FIGgd-\FIGstep}
+\newcommand{\FIGgb}{\numexpr \FIGgc-\FIGstep}
+\newcommand{\FIGga}{\numexpr \FIGgb-\FIGstep}
+\newcommand{\ptovcolor}{violet}
+\newcommand{\liftcolor}{blue}
+\newcommand{\dropcolor}{red}
+\newcommand{\VDropdesc}{$\Pi\circ\bigcap$}
+\newcommand{\HDropdesc}{$\Pi$}
+\newcommand{\HPdesc}{\HP{A}{\vec{b}}}
+\newcommand{\HPidesc}{\LHC}
+\newcommand{\HCdesc}{\HC{A}}
+\newcommand{\HCpdesc}{\pmb \0 & -I \\ I & -U \\ -I & U \pme \x \leq \0}
+\newcommand{\VPdesc}{\VP{U}{V}}
+%\newcommand{\VPidesc}{\cone\{\smallstack{\vec{0}}{U}\cup\smallstack{\vec{1}}{V}\}}
+\newcommand{\VPidesc}{\cone\pmb\vec{0}&\vec{1}\\{U}&{V}\pme}
+\newcommand{\VCdesc}{\cone(U)}
+\newcommand{\VCpdesc}{\cone \pmb 0 & I & -I\\ I & A & -A\pme}
+\begin{figure}[H]
+	\begin{centering}
+		\begin{tikzpicture}[>=triangle 45, scale=.8]
+			\node (HP)  at (\FIGgd,\FIGge) {\small\framebox{$\HPdesc$}};
+			\node (HPi) at (\FIGga,\FIGge) {\small\framebox{$\HPidesc$}};
+			\node (HC)  at (\FIGga,\FIGgc) {\small\framebox{$\HCdesc$}};
+			\node (HCp) at (\FIGgc,\FIGgb) {\small\framebox{$\HCpdesc$}};
+			%
+			\node (VP)  at (\FIGgb,\FIGga) {\small\framebox{$\VPdesc$}};
+			\node (VPi) at (\FIGge,\FIGga) {\small\framebox{$\VPidesc$}};
+			\node (VC)  at (\FIGge,\FIGgc) {\small\framebox{$\VCdesc$}};
+			\node (VCp) at (\FIGgc,\FIGgd) {\small\framebox{$\VCpdesc$}};
+			\draw[<->,color=\ptovcolor] (HP) to node[below]{} node[above]{} (HPi);
+			\draw[<->,color=\ptovcolor] (VP) to node[above]{} node[below]{} (VPi);
+			\draw[-,dashed,color=mygrey]  (HPi) to node[rotate=90,above]{} (HC);
+			\draw[-,dashed,color=mygrey]  (VPi) to node[rotate=90,below]{} (VC);
+			\draw[->,color=\liftcolor,bend left] (HC)  to node[above left]{} (VCp);
+			\draw[->,color=\dropcolor,bend left] (VCp) to node[above right]{} (VC);
+			\draw[->,color=\liftcolor,bend left] (VC)  to node[below right]{} (HCp);
+			\draw[->,color=\dropcolor,bend left] (HCp) to node[below left]{} (HC);
+			%HP <-> HPi
+			%VP <-> VPi
+			%HPi -  HC
+			%VPi -  VC
+			%HC  -> VCp
+			%VC  -> HCi
+			%VCp -> VC
+			%HCp -> HC
+			%
+			%HPi  <-> HP
+			%|
+			%| ____VCp___
+			%HC_        _VC
+			%   \__HCp_/ |
+			%            |
+			%   VP <->  VPi
+		\end{tikzpicture}
+		\caption{Diagram of the proof $P_H \leftrightarrow P_V$}
+		\label{fig:h_to_v}
+	\end{centering}
+\end{figure}
+
+
+\end{frame}
+
+\subsection{Implementation}
+
+\begin{frame}{Files and Includes}
+	\begin{tabular}{|l|l|}
+		\hline
+		file                          & includes                                             \\
+		\hline
+		\filename{linear\_algebra.h}  & \filename{<C++ standard library>}                    \\
+		\filename{fourier\_motzkin.h} & \filename{linear\_algebra.h}                         \\
+		\filename{polyhedra.h}        & \filename{fourier\_motzkin.h}                        \\
+		\filename{main.cpp}           & \filename{polyhedra.h}                               \\
+		\hline
+		\filename{test\_functions.h}  & \filename{linear\_alebra.h}                          \\
+		\filename{test.cpp}           & \filename{test\_functions.h}, \filename{polyhedra.h} \\
+		\hline
+	\end{tabular}\\
+\end{frame}
+
+\begin{frame}{Callgraph}
+\includegraphics[angle=90, width=\textwidth]{../img/callgraph.pdf}
+\end{frame}
+
+\begin{frame}{{\tt Matrix fourier\_motzkin(Matrix,k)}}
+\lstFMEPart
+Partition \lsti{M} into logical sets $Z,P,N$ that satisfy the following:\\
+
+\begin{tabular}{|l|l|l|}
+	\hline
+	set & range                               & property     \\
+	\hline
+	$Z$ & [\lsti{M.begin()}, \lsti{z_end} $)$ &
+	\lsti{it} $\in Z \Leftrightarrow$ \lsti{(*it)[k]} $ = 0$ \\
+	\hline
+	$P$ & [\lsti{z_end}, \lsti{p_end} )       &
+	\lsti{it} $\in P \Leftrightarrow$ \lsti{(*it)[k]} $ > 0$ \\
+	\hline
+	$N$ & [\lsti{p_end}, \lsti{M.end()})      &
+	\lsti{it} $\in N \Leftrightarrow$ \lsti{(*it)[k]} $ < 0$ \\
+	\hline
+\end{tabular}\\
+\end{frame}
+
+\begin{frame}{{\tt Matrix fourier\_motzkin(Matrix,k)}}
+\lstFMEConvolute
+This function creates the sets which correspond to:
+
+$\set{\Bik B_j - \Bjk B_i \st i \in P,\, j \in N}, \quad
+	\set{\Yi Y^j - \Yj Y^i \st i \in P,\, j\in N} $
+\end{frame}
+
+
+\section{Pointed and Full-Dimensional Polyhedra}
+
+\subsection{Main Results}
+
+\begin{frame}{Make Titles Informative.}
+\end{frame}
+
+\begin{frame}{Make Titles Informative.}
+\end{frame}
+
+\begin{frame}{Make Titles Informative.}
+\end{frame}
+
+
+\subsection{Basic Ideas for Proofs/Implementation}
+
+\begin{frame}{Make Titles Informative.}
+\end{frame}
+
+\begin{frame}{Make Titles Informative.}
+\end{frame}
+
+\begin{frame}{Make Titles Informative.}
+\end{frame}
+
+
+
+\section*{Summary}
+
+\begin{frame}{Summary}
+
+	% Keep the summary *very short*.
+	\begin{itemize}
+		\item
+		      The \alert{first main message} of your talk in one or two lines.
+		\item
+		      The \alert{second main message} of your talk in one or two lines.
+		\item
+		      Perhaps a \alert{third message}, but not more than that.
+	\end{itemize}
+
+	% The following outlook is optional.
+	\vskip0pt plus.5fill
+	\begin{itemize}
+		\item
+		      Outlook
+		      \begin{itemize}
+			      \item
+			            Something you haven't solved.
+			      \item
+			            Something else you haven't solved.
+		      \end{itemize}
+	\end{itemize}
+\end{frame}
+
+
+
+% All of the following is optional and typically not needed. 
+\appendix
+\section<presentation>*{\appendixname}
+\subsection<presentation>*{For Further Reading}
+
+\begin{frame}[allowframebreaks]
+	\frametitle<presentation>{For Further Reading}
+
+	\begin{thebibliography}{10}
+
+		\beamertemplatebookbibitems
+		% Start with overview books.
+
+		\bibitem{Author1990}
+		A.~Author.
+		\newblock {\em Handbook of Everything}.
+		\newblock Some Press, 1990.
+
+
+		\beamertemplatearticlebibitems
+		% Followed by interesting articles. Keep the list short. 
+
+		\bibitem{Someone2000}
+		S.~Someone.
+		\newblock On this and that.
+		\newblock {\em Journal of This and That}, 2(1):50--100,
+		2000.
+	\end{thebibliography}
+\end{frame}
+
+\end{document}
+
+
