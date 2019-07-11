@@ -42,7 +42,7 @@ Not quite.  There is one catch, if there is some
 \begin{equation}
 	\t\geq\0,\,\t\neq\0,\,V\t=\0  \label{not_pointed}
 \end{equation}
-then \eqref{vmin_implies} fails.  So, for what cones does \eqref{not_pointed} fail?  It turns out that there is a useful class of cones called \textit{pointed} having this property.
+then \eqref{vmin_implies} fails.  Are there cones for which \eqref{not_pointed} fails?  It turns out that there is a useful class of cones called \textit{pointed} having this property.
 
 \begin{Def}[Vertex]
 	Let $P$ be a polyhedron.  A point $\v \in P$ is called a \textit{vertex} if, for any $\u \neq \0$, at least one of the following is true:
@@ -61,7 +61,7 @@ then \eqref{vmin_implies} fails.  So, for what cones does \eqref{not_pointed} fa
 \begin{Prop} \label{v_is_pointed} The following statements are equivalent.
 	\begin{enumerate}
 		\item $\cone(V)$ is pointed.
-		\item $\t\geq\0,\,\t\neq\0,\; [V\t=\0 \Rightarrow \t=\0]$
+		\item $\t\geq\0,\; [V\t=\0 \Rightarrow \t=\0]$
 	\end{enumerate}
 \end{Prop}
 
@@ -255,7 +255,7 @@ The most important property (well known from linear algebra) of a basis $B$ that
 \begin{Prop} \label{a_full_d}The following statements are equivalent.
 	\begin{enumerate}
 		\item $\HC{A}$ is full-dimensional.
-		\item $\t\geq\0,\,\t\neq\0,\; [\t^T A=\0 \Rightarrow \t=\0]$
+		\item $\t\geq\0,\; [\t^T A=\0 \Rightarrow \t=\0]$
 	\end{enumerate}
 \end{Prop}
 
@@ -376,7 +376,7 @@ We will need:
 	First, suppose that $V$ is not minimal.  Then there is a $v\in V$ that satisfies $\conv(V\setminus\set{\v}) = \conv(V)$.  Denote $V'=V\setminus\set{\v}$.  Then $\v=V'\blambda'$, where there is some $\lambda_i$ with $0 < \lambda_i < 1$.  Let $\u = V'(\e_i-\blambda')$.  Then
 	\[ \v+\lambda_i\u = V'\blambda' + \lambda_iV'(\e_i-\blambda')
 		= (1-\lambda_i)V'\blambda' + \lambda_iV'\e_i\]
-	By \Cref{conv_conv}, the right hand side of this equation is a convex combination of members of $V'$, so $\v-\lambda_i\u \in \conv(V')$.   Similarly,
+	By \Cref{conv_conv}, the right hand side of this equation is a convex combination of members of $V'$, so $\v+\lambda_i\u \in \conv(V')$.   Similarly,
 	\[ \v-\lambda_i\u = V'\blambda' - \lambda_iV'(\e_i-\blambda') = 
       V'(\blambda'-\lambda_i\e_i) + V'(\lambda_i\blambda') \]
 	Consider $(\blambda'-\lambda_i\e_i)$.  Note that this expression is non-negative, and sums to $1-\lambda_i$.  Next note that $\lambda_i\blambda'$ is non-negative, and sums to $\lambda_i$.  This means that the right hand side of the equation is a convex combination of $V'$, so $\v+\lambda_i\u\in\conv(V')$, and $\v$ is not a vertex.\\
@@ -567,11 +567,11 @@ To characterize Minimal H-Pairs, we will need a new form of the Farkas Lemma.
 
 Is the converse true?  Does it hold that given a $(A,\b)$ which is minimal, the implication of \Cref{ab_not_minimal} fails?  In general, no.  For example, the hyperplane $\ip{\y}{\x} = c$ has a minimal representation $\set{\ip{\y}{\x}\leq c,\,\ip{-\y}{\x}\leq -c}$, but the sum of the rows is $0$, and so $\t':= (2,1)$ satisfies the claim.  In general, we need the polyhedron to be \textit{full-dimensional}.
 
-\begin{Def}[Affine Dependence]
+\begin{Def}[Full-Dimensional]
 	A set $V$ of vectors is called \textit{full-dimensional} if, given any $\y\neq\0$, $c\in\R$, there is some $\v\in V$ such that $\y^T\v \neq c$.
 \end{Def}
 
-\begin{Def}[Full-Dimensional]
+\begin{Def}[Full-Dimensional Polyhedra]
 	A polyhedron is called \textit{full-dimensional} if it contains a full-dimensional set of vectors.
 \end{Def}
 
@@ -678,75 +678,129 @@ The first two lines imply that $P \subseteq P'$, so the first three mean that $P
 	We now have a method for testing the program.  First, we hand-craft a V-Polyhedron $\VP{U}{V}$ based on some minimal pair $(A,\b)$, then run our program to get the pair $(A',\b')$, with the alleged property that $\VP{U}{V} = \HP{A'}{\b'}$.  If we confirm \Cref{eq_vp_hp}, then our program has succeeded.
 \end{Test}
 
+\section{Full-Dimensional and Pointed Polyhedra}
+
+This section will summarize and finalize the discussion of full-dimensional and pointed polyhedra.  It is not directly related to the subject of the thesis or testing of the program, however it addresses two obvious subjects which have been thus far avoided: characterizing V-Cones and V-Polyhedra which are full-dimensional, and characterizing which H-Cones and H-Polyhedra are pointed.  These questions are quite similar to their already addressed counterparts, but worth a short discussion.
+
+\subsection{Full-Dimensional V-Polyhedra}
+
+Which V-Cones are full dimensional?  Well, a V-Cone is full dimensional if there is no non-zero $\y\in\R^d$ and $c\in\R$ such that $\ip{\y}{\x} = c$ for all $\x\in\cone(U)$.  First note that if such a $\y$ and $c$ exist, then $c = 0$.  This is because every hyperplane which may contain $\cone(U)$ must contain the origin.  If $U$ has $d$ {\LI} vectors, then clearly $\cone(U)$ is full-dimensional.  Suppose that $U$ does not have $d$ {\LI} vectors, then there is some vector $\y$ such that $(\forall\v\in U)\,\ip{\y}{\v}=0$.  Then $\y^T U\t=\0^T\t=0$, so $\cone(U)$ is not full-dimensional.  So much for V-Cones.  The situation is similar for V-Polyhedra.  In $\cone(U) + \conv(V)$ there are two sets adding to the dimensionality of the polyhedron, $U$ and $V$.  Let $\bar V= \{\v - \v'\st \v,\v'\in V\}$.  Then we must look for $d$ {\LI} vectors in $U\cup\bar V$.  Basically, the cone adds to the dimensionality in the same way as before, but the vectors from $\conv(V)$ are not simply the points of $V$.  More formally, say that there is some $\y$ such that $\y^T U = \y^T \bar V = 0$.  Let $\v'\in V$, and observe that:
+\[ \y^T\bar V = 0 \Rightarrow 
+      (\forall\v\in V) \ip{\y}{\v-\v'}=0 \Rightarrow 
+      (\forall\v\in V)\ip{\y}{\v} = \ip{\y}{\v'}\]
+Let $c = \ip{\y}{\v'}$.  Then for any member of $\cone(U)+\conv(V)$
+\[\ip{\y}{\sumi t_i\u_i + \sumj\lambda_j\v_j} = 0 + \sumj \lambda_j c = c \]
+
+\subsection{Pointed H-Polyhedra}
+
+Which H-Cones are pointed?  As previously discussed, if a Cone has a vertex, it is the origin.  So, if $\HC{A}$ is pointed, then no $\u\neq\0$ satisfies $A\u=\0$.  Conversely, if $\HC{A}$ is not pointed, then for some $\u\neq\0$ we have $A\u\leq\0$ and $-A\u\leq\0$, so $A\u=\0$.  In either case, we see that the rows of $A$ have a non-trivial orthogonal subspace, so it must be that there are not $d$ {\LI} rows of $A$.  What about for H-Polyhedra?  First, assume that $\HP{A}{\b}$ is non-empty, otherwise there are certainly no vertices.  As before, if there is some $\u\neq\0$ such that $A\u=\0$, then this $\u$ prevents any point from being a vertex.  Now suppose that $\HP{A}{\b}$ has a vertex $\v$.  We claim that there are $d$ {\LI} rows $A_i$ from $A$ such that $\ip{A_i}{\v}=b_i$.  If there were fewer, then we take some $\u$ that is in the orthogonal subspace of the $A_i$ for which $\ip{A_i}{\v}=b_i$, and $A(\v\pm\epsilon\u)\leq\b$ for some small $\epsilon$.  So, a non-empty $\HP{A}{\b}$ has a vertex if and only if $A$ has full row rank.  This result is nice in that it shows the existence of a vertex doesn't depend on $\b$ (for the most part).  If you imagine continuously changing $\b$, you are just ``sliding'' the half-spaces which you are intersecting ``back and forth.''  Vertices may be split or joined, but you cannot completely get rid of all the vertices from the polyhedron (unless you choose a $\b$ which makes the polyhedron empty).  This is an example of an ``intuitive'' result about polyhedra for which the proof is somewhat indirect.
+
+\subsection{Summary}
+
+Here we present a table summarizing the situation for full-dimensionality and pointedness of polyhedra.  $\t$ is a non-negative vector, and abbreviate {\LI} as LI. $\bar V$ denotes $\{\v-\v'\st\v,\v'\in V\}$.\\
+
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|l|l|}\hline
+        & Pointed & Full-Dimensional \\ \hline
+$\cone(U)$ & $U\t=\0 \Rightarrow \t=\0$ & $d$ LI vectors in $U$ \\  \hline
+$\cone(U)+\conv(V)$ & $U\t=\0 \Rightarrow \t=\0$ & $d$ LI vectors in $U\cup \bar V$ \\ \hline
+$\HC{A}$ & $d$ LI row vectors in $A$ & $\t^T A=\0 \Rightarrow \t= \0$ \\ \hline
+$\HP{A}{\b}$ & $d$ LI row vectors in $A$ & $\t^T A=\0 \Rightarrow \t^T\b > 0$ \\ \hline
+\end{tabular}
+
 \section{\filename{test\_functions.h}}
 
 The following types are defined for running tests of the different algorithms.  They are expected to be given a descriptive name, the object on which the test will be run, and a \lsti{key} with which the result of the test will be compared.  The \lsti{key} object is one of the minimal objects described above.
+\subsection{\lsti{struct hcone_test_case}}
 \lsthconetestcasea
+\subsection{\lsti{struct vcone_test_case}}
 \lstvconetestcasea
+\subsection{\lsti{struct hpoly_test_case}}
 \lsthpolytestcaseb
+\subsection{\lsti{struct vpoly_test_case}}
 \lstvpolytestcaseb
 
 \section{\filename{test\_functions.cpp}}
 
+\subsection{\lsti{double operator*(Vector,Vector)}}
 The dot-product and norm (in terms of dot product).
 \lstoperator
+\subsection{\lsti{double norm(Vector)}}
 \lstnorm
 
+\subsection{\lsti{bool approximately_zero(double)}}
 \lsti{approximately_zero} is used during tests to avoid issues involving floating point rounding errors.  For example, \lsti{1/6.0 * 2.5 - 5/12.0 == 0} will give \lsti{false}, while \lsti{approximately_zero(1/6.0 * 2.5 - 5/12.0)} will return \lsti{true}.  Test cases are used where intermediate calculations don't depend on such high accuracy, and these discrepancies can be ignored.
 
 \lsti{approximately_zero(c) == true} is to be denoted $\mli{c} \approx 0$.
 \lstapproximatelyzeroa
 
+\subsection{\lsti{bool approximately_lt_zero(double)}}
 Tests $c < 0 \lor c \approx 0$.
 \lstapproximatelyltzero
 
+\subsection{\lsti{bool approximately_zero(Vector)}}
 Tests $\norm{\v} \approx 0$.  This is to be denoted $\v \approx \0$.
 \lstapproximatelyzerob
 
+\subsection{\lsti{bool is_equivalent(Vector,Vector)}}
 Tests $\u/\norm{\u} - \v/\norm{\v} \approx \0 $.  This is to be denoted $\u \simeq \v$.
 \lstisequivalent
 
+\subsection{\lsti{bool is_equal(Vector,Vector)}}
 Tests $\u - \v \approx \0$.  This is to be denoted $\u \approx \v$.
 \lstisequal
 
+\subsection{\lsti{bool has_equivalent_member(Matrix,Vector)}}
 Tests $(\exists \u \in U) \st \v \simeq \u$.
 \lsthasequivalentmember
 
+\subsection{\lsti{bool has_equal_member(Matrix,Vector)}}
 Tests $(\exists \u \in U) \st \v \approx \u$.
 \lsthasequalmember
 
+\subsection{\lsti{bool subset_mod_eq(Matrix,Matrix)}}
 Tests $(\forall v \in V)(\exists \u \in U) \st \v \simeq \u$.  This is to be denoted $V \sqsubseteq U$.
 \lstsubsetmodeq
 
+\subsection{\lsti{bool subset(Matrix,Matrix)}}
 Tests $(\forall v \in V)(\exists \u \in U) \st \v \approx \u$.  This is to be denoted $V \subseteq U$.
 \lstsubset
 
+\subsection{\lsti{bool ray_satisfied(Vector,Vector)}}
 Given a \mli{Vector constraint} and \mli{Vector ray}, tests if \\
 \lsti{approximately_lt_zero(ray * constraint)}.  Note that if the constraint is of the form $\ip{A_i}{\v} \leq b$ for some value $b$, then this tests $\ip{A_i}{\mli{ray}}\leq\0$.
 \lstraysatisfieda
 
+\subsection{\lsti{bool ray_satisfied(Matrix,Vector)}}
 Test $A\v \leq \0$
 \lstraysatisfiedb
 
+\subsection{\lsti{bool rays_satisfied(Matrix,Matrix)}}
 Test $AV \leq \0$
 \lstrayssatisfied
 
+\subsection{\lsti{bool vec_satisfied(Vector,Vector)}}
 Test $\ip{A_i}{\v} \leq b_i$
 \lstvecsatisfieda
 
+\subsection{\lsti{bool vec_satisfied(Matrix,Vector)}}
 Test $A\v \leq \b$
 \lstvecsatisfiedb
 
+\subsection{\lsti{bool vecs_satisfied(Matrix,Matrix)}}
 Test $AV \leq \b$
 \lstvecssatisfied
 
+\subsection{\lsti{bool equivalent_cone_rep(Matrix,Matrix,Matrix)}}
 Given an H-Cone $C = \HC{A} = \cone(U)$ where $U$ is minimal, and a \lsti{Matrix} $U'$, determines if $C = \cone(U')$.
-Similarly, given a V-Cone $C = \cone(U) = \HC{A}$ where $A$ is minimal, and a \lsti{Matrix} $A'$, determines if $C = \HC{A'}$.
+Similarly, given a V-Cone $C = \cone(U) = \HC{A}$ where $A$ is minimal, and a \lsti{Matrix} $A'$, determines if ${C = \HC{A'}}$.
 \lstequivalentconerep
 
+\subsection{\lsti{bool equivalent_hpoly_rep(Matrix,VPoly,VPoly)}}
 Given an H-Polytope $P = \HP{A}{\b} = \VP{U}{V}$ where $U$ and $V$ are minimal, and a pair $(U',V')$, determines if $P = \VP{U'}{V'}$.
 \lstequivalenthpolyrep
 
+\subsection{\lsti{bool equivalent_vpoly_rep(VPoly,Matrix,Matrix)}}
 Given a V-Polytope $P = \VP{U}{V} = \HP{A}{\b}$ where $A$ is minimal, and a \lsti{Matrix} $(A',\b')$, determines if $P = \HP{A'}{\b'}$.
 \lstequivalentvpolyrep
 

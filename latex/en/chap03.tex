@@ -45,48 +45,61 @@ Here is a very brief summary of the files mentioned in the above table, more det
 The relevant code will be displayed with commentary below.  Some of the code relating to C{++} specific technicalities and I/O is omitted.
 
 \section{\filename{linear\_algebra.h}}
+\subsection{\lsti{typedef Vector}}
 The types \lsti{Vector} and \lsti{Vectors} are used in the representation of polyhedra.  The \lsti{std::valarray} template is used because it has built-in vector-space operations (sum and scaling).  \lsti{std::vector} is used as a container of \lsti{Vector}s, however other containers could be used.
 \lsttdVecs
 
+\subsection{\lsti{class Matrix}}
 The \lsti{class Matrix} implements a subset of what a \textit{C++ Container} should.  It is the primary type for representing polyhedra, and directly represents Cones, as well as H-Polyhedra.  The class is designed to enforce the following invariant:
 \[ (\forall \mli{v} \in \mli{vectors})\, \mli{v.size() == d} \]
 The factory function \lsti{read_Matrix} is provided to read a \lsti{Matrix} from an \lsti{istream}.  It is necessary because the value of \lsti{d} can't be known before reading some of the stream.
 \lstMatrix
 
+\subsection{\lsti{struct VPoly}}
 The \lsti{struct VPoly} gather two \lsti{Matrices} needed to represent a V-Polyhedron.  The \lsti{Matrix U} corresponds to the rays that generate the cone, and the \lsti{Matrix V} corresponds to the points, i.e.
 \[ \mli{vpoly} = \cone(\mli{vpoly.U}) + \conv(\mli{vpoly.V}) \]
 \lstVPoly
 
+\subsection{\lsti{class input_error}}
 The \lsti{class input_error} is thrown to indicate an invalid input to the program, and provide some clue as to why it failed.  Here are two command line examples:
 \VerbatimInput{../../bad_usage.txt}
 
 \lstinputerror
 
+\subsection{\lsti{operator<<, operator>>}}
 \lsti{operator>>} and \lsti{operator<<} implement the input format described in \\\filename{usage.txt}.
 \lstissV
 \lstossV
 
+\subsection{\lsti{usage()}}
 \lsti{usage()} outputs the usage message shown above.
 \lstusage
 
 \section{\filename{linear\_algebra.cpp}}
+
+\subsection{\lsti{Vector e_k(size_t,size_t)}}
 \lsti{e_k} creates the canonical basis \lsti{Vector} $\e_k \in \R^d$.
 \lstek
 
+\subsection{\lsti{Vector concatenate(Vector,Vector)}}
 \lsti{concatentate} takes the \lsti{Vector}s $\mli{l} \in \R^{\mli{l.size()}}$ and $\mli{r} \in \R^{\mli{r.size()}}$ and \lsti{return}s the \lsti{Vector} $(\mli{l,r}) \in \R^{\mli{l.size() + r.size()}}$
 \lstconcatenate
 
+\subsection{\lsti{Vector get_column(Matrix,size_t)}}
 \lsti{get_column} \lsti{return}s the \lsti{k}-th column of the \lsti{Matrix M}.  Note that while a \lsti{Matrix} may logically represent either a collection of row or column \lsti{Vector}s, \lsti{get_column} is only used in the function \lsti{transpose}, where this distinction is unimportant.
 \lstgetcolumn
 
+\subsection{\lsti{Matrix transpose(Matrix)}}
 \lsti{transpose} \lsti{return}s the transpose of \lsti{Matrix M}.
 \lsttranspose
 
+\subsection{\lsti{Matrix slice_matrix(Matrix,slice)}}
 A \lsti{slice} object can be used to conveniently obtain a subset of a \lsti{valarray}.  \lsti{slice_matrix} \lsti{return}s the \lsti{Matrix} obtained by applying the \lsti{slice s} to each \lsti{Vector} of the \lsti{Matrix}.
 \lstslicematrix
 
 \section{\filename{fourier\_motzkin.cpp}}
 
+\subsection{\lsti{bool index_in_slice(size_t,slice)}}
 A \lsti{slice} object is determined by three fields: \lsti{start}, \lsti{size}, and \lsti{stride}, and implicitly represents all indices of the form:
 \[ \sum_{0 \leq k < \mli{size}} \mli{start} + k\cdot\mli{stride} \]
 Therefore:
@@ -97,6 +110,7 @@ Therefore:
 	\end{cases}\]
 \lstindexinslice
 
+\subsection{\lsti{Matrix fourier_motzkin(Matrix,size_t)}}
 \lsti{fourier_motzkin} takes a \lsti{Matrix M} and a coordinate \lsti{k} and creates the set which either corresponds to a projection of an H-Cone (without reducing the dimensionality), or the intersection of a V-Cone with a coordinate-hyperplane.
 \lstfouriermotzkin
 
@@ -127,9 +141,11 @@ convolute the vectors in the way described in \Nameref{fm_hcone} and \Nameref{fm
 \[ \set{\Bik B_j - \Bjk B_i \st i \in P,\, j \in N}, \quad
 	\set{\Yi Y^j - \Yj Y^i \st i \in P,\, j\in N} \]
 
+\subsection{\lsti{Matrix sliced_fourier_motzkin(Matrix,slice)}}
 \lsti{sliced_fourier_motzkin} applies \lsti{fourier_motzkin} to \lsti{Matrix M} for each ${k \not\in \mli{s}}$, then slices the resulting \lsti{Matrix} using \lsti{slice_matrix} and \lsti{s}.  This is the realization of the algorithms indicated by the proofs of either direction of the {\MWT} for cones.  (Here, the slice operation is used to reduce the dimensionality as appropriate).
 \lstslicedfouriermotzkin
 
+\subsection{\lsti{Matrix generalized_lift(Matrix,array<double,5>)}}
 When transforming an H-Cone to a V-Cone, it first must be written as a V-Cone of a new matrix, then it is intersected with coordinate-hyperplanes and projected.  Similarly, when a V-Cone is transformed into an H-Cone, it must be written as and H-Cone of a new matrix then projected with coordinate-projections.  The transformations are described in \nameref{vconelift_transform} and \nameref{hconelift_transform}, and summarized here:
 \[\HLift(A) = \pmb \0 & I & -I \\ I & A & -A \pme \quad
 	\VLift(U) = \pmb \0 & -I \\ I & -U \\ -I & U \pme \]
@@ -153,26 +169,31 @@ where \lsti{Matrix M} is a collection of row \lsti{Vector}s, or
 where \lsti{Matrix M} is a collection of column \lsti{Vector}s.
 \lstgeneralizedlift
 
+\subsection{\lsti{Matrix lift_\{vcone,hcone\}(Matrix)}}
 \lsti{lift_vcone} and \lsti{lift_hcone} implement the appropriate transformation using \lsti{generalized_lift} and providing the appropriate coefficients in \\
 \lsti{array<double, 5> C}.
 \lstliftvcone
 \lstlifthcone
 
+\subsection{\lsti{Matrix cone_transform(Matrix,LiftSelector)}}
 \lsti{cone_transform} consolidates the logic of the V-Cone $\to$ H-Cone and H-Cone $\to$ V-Cone transformations by accepting a \lsti{Matrix cone} and a \lsti{LiftSelector}.  The LiftSelector type is an enumerable class, used to avoid the need for function pointers.
 \lstconetransform
 
+\subsection{\lsti{Matrix \{hcone_to_vcone,vcone_to_hcone\}(Matrix)}}
 \lsti{vcone_to_hcone} and \lsti{hcone_to_vcone} specialize \lsti{cone_transform} by providing the appropriate \lsti{Lift}.
 \lstvconetohcone
 \lsthconetovcone
 
 \section{\filename{polyhedra.cpp}}
 
+\subsection{\lsti{Matrix \{hpoly_to_hcone,hcone_to_hpoly\}(Matrix)}}
 \lsti{hpoly_to_hcone} and \lsti{hcone_to_hpoly} implement the \lsti{Matrix} transforms:
 \[ \mli{hpoly_to_hcone}: (A|b) \to (-b|A),\quad \mli{hcone_to_hpoly} : (-b|A) \to (A|b) \]
 These very simple transforms are done with the \lsti{cshift} function, which ``circularly shifts'' the elements of a \lsti{Vector} (provided as part of the interface to \lsti{valarray}).
 \lsthpolytohcone
 \lsthconetohpoly
 
+\subsection{\lsti{Matrix vpoly_to_vcone(Matrix)}}
 \lsti{vpoly_to_vcone} implements the \lsti{VPoly} transform:
 \[ \mli{vpoly} \to
 	\begin{pmatrix}
@@ -180,13 +201,16 @@ These very simple transforms are done with the \lsti{cshift} function, which ``c
 	\end{pmatrix} \]
 \lstvpolytovcone
 
+\subsection{\lsti{Matrix normalized_P(Matrix)}}
 \lsti{normalized_P} takes the members of \texttt{U} that have $x_0 > 0$, scaled by $1/x_0$.  Let $\Pi$ be the identity matrix with the $0$-th row deleted, and $P = \set{\u \in U : u_0 > 0}$. then this is the result of:
 \[ \Pi\left(\set{\x/x_0 : \x\in P} \cap \set{x_0 = 1}\right) \]
 \lstnormalizedP
 
+\subsection{\lsti{Matrix vcone_to_vpoly(Matrix)}}
 \lsti{vcone_to_vpoly} implements \nameref{vcone_to_vpoly}.
 \lstvconetovpoly
 
+\subsection{\lsti{Matrix \{hpoly_to_vpoly,vpoly_to_hpoly\}(Matrix)}}
 \lsti{hpoly_to_vpoly} and \lsti{vpoly_to_hpoly} implement the complete transformations promised by the file.
 \lsthpolytovpoly
 \lstvpolytohpoly
