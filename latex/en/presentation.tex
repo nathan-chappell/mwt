@@ -232,9 +232,9 @@
 	Suppose we are projecting column $k$ from $A\x\leq\0$.
 	\begin{itemize}
 		\item<2-> First, partition the rows as follows:\\
-		      $Z$: rows with $k$-th column is $0$ \\
-		      $P$: rows with $k$-th column is positive\\
-		      $N$: rows with $k$-th column is negative
+		      $Z$: rows with $k$-th column $0$ \\
+		      $P$: rows with $k$-th column positive\\
+		      $N$: rows with $k$-th column negative
 		\item<3-> Create a new matrix $A'$ with rows as follows: \\[5pt]
 		      $\begin{cases}
 				      A_z                   & A_z \in Z            \\
@@ -287,12 +287,12 @@
 \end{frame}
 
 \begin{frame}{H-Cones are V-Cones}{Fourier-Motzkin Elimination}
-	Suppose we are intersecting row $k$ from $\cone(U)$.
+	Suppose we are intersecting $\set{x_k = 0}$ with $\cone(U)$.
 	\begin{itemize}
 		\item<2-> First, partition the columns as follows:\\
-		      $Z$: columns with $k$-th row is $0$ \\
-		      $P$: columns with $k$-th row is positive\\
-		      $N$: columns with $k$-th row is negative
+		      $Z$: columns with $k$-th row $0$ \\
+		      $P$: columns with $k$-th row positive\\
+		      $N$: columns with $k$-th row negative
 		\item<3-> Create a new matrix $U'$ with columns as follows: \\[5pt]
 		      $\begin{cases}
 				      \x_z                      & \x_z \in Z             \\
@@ -455,15 +455,144 @@ $\set{\Bik B_j - \Bjk B_i \st i \in P,\, j \in N}, \quad
 
 \subsection{Main Results}
 
-\begin{frame}{Make Titles Informative.}
+\begin{frame}{Pointed/ Full-Dimensional Polyhedra}
+\begin{itemize}
+  \item These are essentially non-degeneracy constraints.
+    \begin{itemize}
+      \item Pointed Polyhedra have at least one vertex
+      \item Full dimensional polyhedra contain an affine independent set
+    \end{itemize}
+
+  \item Pointed V-Polyhedra and Full-Dimensional H-Polyhedra have ``essentially unique'' sets of generators
+  \item These ``essentially unique'' sets make it easy to test for equivalence
+  \item The characterizations are similar to ``linear independence''
+\end{itemize}
 \end{frame}
 
-\begin{frame}{Make Titles Informative.}
+\begin{frame}{Testing Methods}
+\begin{itemize}
+  \item The basic scheme of testing is as follows:
+\end{itemize}
 \end{frame}
 
-\begin{frame}{Make Titles Informative.}
+\begin{frame}{Pointed V-Cones}
+\begin{itemize}
+  \item The following statements are equivalent.
+    \begin{enumerate}
+      \item $\cone(V)$ is pointed.
+      \item $\t\geq\0,\; [V\t=\0 \Rightarrow \t=\0]$
+    \end{enumerate}
+
+  \item A set $V$ is called \textit{minimal} for $\cone(V)$ if:\\
+  $(\forall \vec{v} \in V)\; \cone(V\setminus\{\vec{v}\}) \subset \cone(V)$
+
+	\item Suppose that $\cone(V)$ is pointed.  Then the following two statements are equivalent:
+	\begin{enumerate}
+		\item V is minimal
+		\item $\t\geq\0,\,\vec{v}=V\e_i,\; [\vec{v}=V\t \Rightarrow \t=\e_i]$
+	\end{enumerate}
+\end{itemize}
 \end{frame}
 
+\begin{frame}{Full-Dimensional H-Cones}
+\begin{itemize}
+  \item All definitions are nearly identical, but we use the Farkas' lemma to consider the ``dual cone''
+  \item Farkas Lemma:
+    Let $U \in \R^{d\times n}$.  Precisely one of the following is true:
+    \begin{align*}
+       & (\exists \t \geq \0) : \x = U\t                \\
+       & (\exists \y) : U^T\y \leq 0,\; \ip{\x}{\y} > 0
+    \end{align*}
+  \item i.e. a point is contained in a cone or can be separated from it with a hyperplane
+  \item The Farkas Lemma can be used to prove the following: 
+    \[\HC{A} = \HC{A'} \Leftrightarrow \cone(A^T) = \cone(A'^T)\]
+    ($\cone(A^T)$ is what I call the ``dual cone'')
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Cones and Polyhedra}
+\begin{itemize}
+  \item General Polyhedra are decomposed into a ``characteristic-cone'' and polytope
+  \item Suppose that $P = \HP{A}{b} = \VP{U}{V}$.  Then the following three statements are equivalent:
+    \begin{enumerate}
+      \item $A\vec{r}\leq\0$
+      \item $(\forall \vec{x}\in P)(\forall \alpha > 0)\;\vec{x} + \alpha\vec{r} \in P$
+      \item $\vec{r} \in \cone(U)$
+    \end{enumerate}
+  \item Note that $(2)$ in the proof above is independent of $A$ and $U$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Pointed V-Polyhedra}
+\begin{itemize}
+  \item In $P = \cone(U)+\conv(V)$ we need $U$ to be minimal as for V-Cones
+  \item Minimality for the set $\conv(V)$ -- a polytope -- is given by the vertex set
+  \item Complication: a vertex of $\conv(V)$ may not be a vertex of $P$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Pointed V-Polyhedra}
+\begin{itemize}
+	\item If $\vec{v}$ is a vertex of $\VP{U}{V}$, then $[\vec{v} = U\vec{t} + V\blambda] \Rightarrow \vec{t} = \0$  \\
+  (I call $\vec{v}$ here \textit{U-free})
+  \item If $\vec{v}$ is a vertex of $\VP{U}{V}$, then $\vec{v}$ is a vertex of $\conv(V)$
+	\item Let $P = \cone(U)+ \cone(V)$.  Then the following are equivalent
+    \begin{enumerate}
+      \item $(U,V)$ is minimal for $P$
+      \item $U$ is minimal for $\cone(U)$, $V$ is the vertex set of $P$
+      \item $U$ is minimal for $\cone(U)$, $V$ is the vertex set of $\conv(V)$, and $V$ is $U$-free
+    \end{enumerate}
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Full-Dimensional H-Polyhedra}
+\begin{itemize}
+  \item We need another form of the Farkas Lemma:
+      \[ (\exists \vec{t}\geq\0) \vec{t}^T A = \vec{y},\, \vec{t}^T\vec{b} \leq c \Leftrightarrow
+        \begin{cases}
+        (\forall \vec{x}) A\vec{x}\leq \0 \Rightarrow \vec{y}^T\vec{x} \leq 0 \textbf{ and } \\
+        (\forall \vec{x}) A\vec{x}\leq \vec{b} \Rightarrow \vec{y}^T\vec{x} \leq c
+        \end{cases}
+      \]
+  \item Basically, a constraint is valid for a polyhedron if and only if it is a non-negative combination of rows of constraints (plus some change)
+  \item If $P = \HP{A}{\vec{b}}$ is full dimensional, and $\vec{y}^T A = \0$ with $\vec{y}\geq\0$, then either $\vec{y} = \0$ or $\vec{y}^T \vec{b} > \0$.
+  \item $\vec{y}^T A = \0,\;\vec{y}^T \vec{b} > \0$ occurs when two of the bounding hyperplanes are parallel
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Dual Homogenization Cone}
+\begin{itemize}
+  \item To use minimality results, the following are used
+  \item 	The following two statement are equivalent:
+    \begin{enumerate}
+      \item $\HP{A}{\vec{b}} = \HP{A'}{\vec{b}'}$
+      \item $\cone \pmb -\vec{b}^T & -1 \\ A^T & \0 \pme = \cone \pmb -\vec{b}'^T & -1 \\ A'^T & \0 \pme$
+    \end{enumerate}
+  \item If $\HP{A}{\vec{b}}$ is minimal and full-dimensional, then either 
+    \begin{enumerate}
+      \item $\cone \pmb -\vec{b}^T & -1 \\ A^T & \0 \pme$ is minimal and pointed, or
+      \item $\cone \pmb -\vec{b}^T \\ A^T \pme$ is minimal and pointed, and $\cone\pmb -\vec{b}^T \\ A^T \pme = \cone \pmb -\vec{b}^T & -1 \\ A^T & \0 \pme$
+    \end{enumerate}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Pointed H-Polyhedra and Full-Dimensional V-Polyhedra}
+\begin{itemize}
+  \item $\vec{t}$ is a non-negative vector, and abbreviate {\LI} as LI. $\bar V$ denotes $\{\vec{v}-\vec{v}'\st\vec{v},\vec{v}'\in V\}$.\\
+
+  \renewcommand{\arraystretch}{1.3}
+  \resizebox{\columnwidth}{!}{
+  \begin{tabular}{|l|l|l|}\hline
+          & Pointed & Full-Dimensional \\ \hline
+    $\cone(U)$ & $U\vec{t}=\0 \Rightarrow \vec{t}=\0$ & $d$ LI vectors in $U$ \\  \hline
+    $\cone(U)+\conv(V)$ & $U\vec{t}=\0 \Rightarrow \vec{t}=\0$ & $d$ LI vectors in $U\cup \bar V$ \\ \hline
+    $\HC{A}$ & $d$ LI row vectors in $A$ & $\vec{t}^T A=\0 \Rightarrow \vec{t}= \0$ \\ \hline
+    $\HP{A}{\vec{b}}$ & $d$ LI row vectors in $A$ & $\vec{t}^T A=\0 \Rightarrow \vec{t}^T\vec{b} > 0$ \\ \hline
+  \end{tabular}
+  }
+\end{itemize}
+\end{frame}
 
 \subsection{Basic Ideas for Proofs/Implementation}
 
@@ -475,7 +604,6 @@ $\set{\Bik B_j - \Bjk B_i \st i \in P,\, j \in N}, \quad
 
 \begin{frame}{Make Titles Informative.}
 \end{frame}
-
 
 
 \section*{Summary}

@@ -1,12 +1,12 @@
 export TEXINPUTS=../tex//:
 
-cur: thesis.pdf
-
-all: thesis.pdf presentation
-
 presentation: presentation.tex
 	pdflatex presentation.tex
 	pdflatex presentation.tex
+
+cur: thesis.pdf
+
+all: thesis.pdf presentation
 
 # LaTeX must be run multiple times to get references right
 thesis.pdf: thesis.tex $(wildcard *.tex) thesis.xmpdata listings
