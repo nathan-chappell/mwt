@@ -432,6 +432,7 @@ Here we show a diagram that represents the proof of the {\MWT}.
 \newcommand{\VCpdesc}{\cone \pmb 0 & I & -I\\ I & A & -A\pme}
 \begin{figure}[H]
 	\begin{centering}
+  %\leavevmode\beginpgfgraphicnamed{jobProofFlowChart}
 		\begin{tikzpicture}[>=triangle 45]
 			\node (HP)  at (\FIGgd,\FIGge) {\framebox{$\HPdesc$}};
 			\node (HPi) at (\FIGga,\FIGge) {\framebox{$\HPidesc$}};
@@ -467,6 +468,7 @@ Here we show a diagram that represents the proof of the {\MWT}.
 			%            |
 			%   VP <->  VPi
 		\end{tikzpicture}
+    %\endpgfgraphicnamed
 		\caption{Diagram of the proof $P_H \leftrightarrow P_V$}
 		\label{fig:h_to_v}
 	\end{centering}

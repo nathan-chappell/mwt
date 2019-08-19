@@ -109,11 +109,13 @@
 \newcommand{\drawHCone}{
 	\begin{figure}[h]
 		\centering
+    %\leavevmode\beginpgfgraphicnamed{jobHCone}
 		\begin{tikzpicture}
 			\drawGrid
 			\drawCone
 			\coneConstraints{\lowSlope}{\highSlope}
 		\end{tikzpicture}
+    %\endpgfgraphicnamed
 		\caption[]{H-Cone: $\spmb
 				-\highSlopeY & \highSlopeX \\
 				\lowSlopeY & -\lowSlopeX
@@ -125,11 +127,13 @@
 \newcommand{\drawVCone}{
 	\begin{figure}[h]
 		\centering
+    %\leavevmode\beginpgfgraphicnamed{jobVCone}
 		\begin{tikzpicture}
 			\drawGrid
 			\drawCone
 			\coneGenerators{\lowSlope}{\highSlope}
 		\end{tikzpicture}
+    %\endpgfgraphicnamed
 		\caption[]{V-Cone: $\cone\left(
 				\svec{\highSlopeX}{\highSlopeY},
 				\svec{\lowSlopeX}{\lowSlopeY}\right)$}
@@ -140,11 +144,13 @@
 \newcommand{\drawHPoly}{
 	\begin{figure}[h]
 		\centering
+    %\leavevmode\beginpgfgraphicnamed{jobHPoly}
 		\begin{tikzpicture}
 			\drawGrid
 			\drawPolyhedra
 			\polyConstraints{\lowSlope}{\highSlope}{\lowVert}{\highSlope}{1}
 		\end{tikzpicture}
+    %\endpgfgraphicnamed
 		\caption[]{H-Polyhedron: $\spmb
 				-\highSlopeY & \highSlopeX \\
 				\lowSlopeY & -\lowSlopeX \\
@@ -157,11 +163,13 @@
 \newcommand{\drawVPoly}{
 	\begin{figure}[h]
 		\centering
+    %\leavevmode\beginpgfgraphicnamed{jobVPoly}
 		\begin{tikzpicture}
 			\drawGrid
 			\drawPolyhedra
 			\polyGenerators{\lowSlope}{\highSlope}{\lowVert}
 		\end{tikzpicture}
+    %\endpgfgraphicnamed
 		\caption[]{V-Polyhedron: $\cone\left(
 				\svec{\highSlopeX}{\highSlopeY}\right) +
 				\conv\left(\svec{0}{0}, \svec{\lowVertX}{1}\right)$}
@@ -172,11 +180,13 @@
 \newcommand{\drawHPolytope}{
 	\begin{figure}[h]
 		\centering
+    %\leavevmode\beginpgfgraphicnamed{jobHPolytope}
 		\begin{tikzpicture}
 			\drawGrid
 			\drawPolytope
 			\hPolytope
 		\end{tikzpicture}
+    %\endpgfgraphicnamed
 		\caption[]{H-Polytope: $\spmb
 				-\highSlopeY & \highSlopeX \\
 				\lowSlopeY & -\lowSlopeX \\
@@ -189,11 +199,13 @@
 \newcommand{\drawVPolytope}{
 	\begin{figure}[h]
 		\centering
+    %\leavevmode\beginpgfgraphicnamed{jobVPolytope}
 		\begin{tikzpicture}
 			\drawGrid
 			\drawPolytope
 			\vPolytope
 		\end{tikzpicture}
+    %\endpgfgraphicnamed
 		\caption[]{V-Polytope: $\conv\left(
 				\svec{0}{0},
 				\svec{\lowVertX}{1},
@@ -206,6 +218,7 @@
 \newcommand{\drawNotFullDim}{
 	\begin{figure}[h]
 		\centering
+    %\leavevmode\beginpgfgraphicnamed{jobNotFullDim}
 		\begin{tikzpicture}
 			\drawGrid
 			\getHatchLine{\highSlope}{1}{\origin};
@@ -213,6 +226,7 @@
 			\getHatchLine{-1}{1}{\origin};
 			\getHatchLine{0.}{1}{\origin};
 		\end{tikzpicture}
+    %\endpgfgraphicnamed
 		\caption[]{H-Cone, not full-dimensional: \\
 			$\spmb -2 & 1 \\ 2 & -1 \\ -1 & -1 \\ 0 & -1 \spme \spmb x \\ y \spme
 				\leq \spmb 0 \\ 0 \\ 0 \\ 0 \spme$ }
@@ -223,6 +237,7 @@
 \newcommand{\drawNotPointed}{
 	\begin{figure}[h]
 		\centering
+    %\leavevmode\beginpgfgraphicnamed{jobNotPointed}
 		\begin{tikzpicture}
 			\clip (-3,-3) rectangle (3,3);
 			\draw[style=help lines] (-\MX,-\MX) grid (\MX,\MX);
@@ -234,6 +249,7 @@
 			\draw[style=GeneratorSty] \origin -- (2,0);
 			\draw[style=ConeStyle] \origin -- (-\MX,\MX) -- (\MX,\MX) -- (\MX,-\MX);
 		\end{tikzpicture}
+    %\endpgfgraphicnamed
 		\caption[]{V-Cone, not pointed: $\cone\left(
 				\svec{\highSlopeX}{\highSlopeY},
 				\svec{\lowSlopeX}{\lowSlopeY},
