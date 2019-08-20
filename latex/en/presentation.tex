@@ -469,9 +469,31 @@ $\set{\Bik B_j - \Bjk B_i \st i \in P,\, j \in N}, \quad
 \end{itemize}
 \end{frame}
 
+\begin{frame}{Pointed/ Full-Dimensional Polyhedra}
+\begin{itemize}
+  \item These ``essentially unique'' sets are ``minimal''
+  \item A set $V$ is called \textit{minimal} for $\cone(V)$ if
+        \[ (\forall \vec{v}\in V)\; \cone(V\setminus\{\vec{v}) \subset \cone(V) \]
+  \item A set $A$ is called \textit{minimal} for $\HC{A}$ if
+        \[ (\forall A_i \in A)\; \HC{A\setminus\set{A_i}} \supset \HC{A} \]
+  \item The definitions are similar for general polyhedra
+\end{itemize}
+\end{frame}
+
 \begin{frame}{Testing Methods}
 \begin{itemize}
-  \item The basic scheme of testing is as follows:
+  \item Suppose we have an H-Cone $\HC{A}$, know that $\HC{A} = \cone(V)$, and would like to test if $\cone(V) = \cone(V')$
+    \begin{alignat*}{2}
+       & AV'\leq\0 \;      & \Rightarrow & \; \cone(V') \subseteq \HC{A}\\
+       & V \subseteq V' \; & \Rightarrow & \; \cone(V) \subseteq \cone(V')\\
+       & \cone(V') = \HC{A} \;   & \Rightarrow & \; AV'\leq\0 \\
+       & \cone(V') = \cone(V)  \;& \overset{?}{\Rightarrow} & \; V \subseteq V'
+    \end{alignat*}
+  \item The last item would create an equivalence
+  \begin{itemize}
+    \item Must relax ``$\subseteq$'' (vectors vs rays)
+    \item Requires notion of ``essentially unique'' representation
+  \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -563,7 +585,7 @@ $\set{\Bik B_j - \Bjk B_i \st i \in P,\, j \in N}, \quad
 
 \begin{frame}{Dual Homogenization Cone}
 \begin{itemize}
-  \item To use minimality results, the following are used
+  \item For H-Polyhedra switching to the dual setting is slightly more complicated
   \item 	The following two statement are equivalent:
     \begin{enumerate}
       \item $\HP{A}{\vec{b}} = \HP{A'}{\vec{b}'}$
@@ -579,7 +601,7 @@ $\set{\Bik B_j - \Bjk B_i \st i \in P,\, j \in N}, \quad
 
 \begin{frame}{Pointed H-Polyhedra and Full-Dimensional V-Polyhedra}
 \begin{itemize}
-  \item $\vec{t}$ is a non-negative vector, and abbreviate {\LI} as LI. $\bar V$ denotes $\{\vec{v}-\vec{v}'\st\vec{v},\vec{v}'\in V\}$.\\
+  \item $\vec{t}$ is a non-negative vector, $V \neq \emptyset$, and abbreviate {\LI} as LI. $\bar V$ denotes $\{\vec{v}-\vec{v}'\st\vec{v},\vec{v}'\in V\}$.\\
 
   \renewcommand{\arraystretch}{1.3}
   \resizebox{\columnwidth}{!}{
@@ -596,13 +618,11 @@ $\set{\Bik B_j - \Bjk B_i \st i \in P,\, j \in N}, \quad
 
 \subsection{Basic Ideas for Proofs/Implementation}
 
-\begin{frame}{Make Titles Informative.}
-\end{frame}
-
-\begin{frame}{Make Titles Informative.}
-\end{frame}
-
-\begin{frame}{Make Titles Informative.}
+\begin{frame}{Not much to see here}
+\begin{itemize}
+  \item The proofs are more tedious than enlightening
+  \item The implementation is straightforward
+\end{itemize}
 \end{frame}
 
 
@@ -636,36 +656,34 @@ $\set{\Bik B_j - \Bjk B_i \st i \in P,\, j \in N}, \quad
 
 
 
-% All of the following is optional and typically not needed. 
-\appendix
-\section<presentation>*{\appendixname}
-\subsection<presentation>*{For Further Reading}
-
-\begin{frame}[allowframebreaks]
-	\frametitle<presentation>{For Further Reading}
-
-	\begin{thebibliography}{10}
-
-		\beamertemplatebookbibitems
-		% Start with overview books.
-
-		\bibitem{Author1990}
-		A.~Author.
-		\newblock {\em Handbook of Everything}.
-		\newblock Some Press, 1990.
-
-
-		\beamertemplatearticlebibitems
-		% Followed by interesting articles. Keep the list short. 
-
-		\bibitem{Someone2000}
-		S.~Someone.
-		\newblock On this and that.
-		\newblock {\em Journal of This and That}, 2(1):50--100,
-		2000.
-	\end{thebibliography}
-\end{frame}
-
+%% All of the following is optional and typically not needed. 
+%\appendix
+%\section<presentation>*{\appendixname}
+%\subsection<presentation>*{For Further Reading}
+%
+%\begin{frame}[allowframebreaks]
+%	\frametitle<presentation>{For Further Reading}
+%
+%	\begin{thebibliography}{10}
+%
+%		\beamertemplatebookbibitems
+%		% Start with overview books.
+%
+%		\bibitem{Author1990}
+%		A.~Author.
+%		\newblock {\em Handbook of Everything}.
+%		\newblock Some Press, 1990.
+%
+%
+%		\beamertemplatearticlebibitems
+%		% Followed by interesting articles. Keep the list short. 
+%
+%		\bibitem{Someone2000}
+%		S.~Someone.
+%		\newblock On this and that.
+%		\newblock {\em Journal of This and That}, 2(1):50--100,
+%		2000.
+%	\end{thebibliography}
+%\end{frame}
+%
 \end{document}
-
-
