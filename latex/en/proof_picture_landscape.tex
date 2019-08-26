@@ -1,0 +1,71 @@
+\documentclass[landscape]{article}
+\input{mymacros.tex}
+
+\begin{document}
+
+\begin{frame}{Picture of Proof}
+\definecolor{mygrey}{rgb}{.1,.1,.1}
+\newcommand{\FIGstep}{2}
+\newcommand{\FIGge}{8}
+\newcommand{\FIGgd}{\numexpr \FIGge-\FIGstep}
+\newcommand{\FIGgc}{\numexpr \FIGgd-\FIGstep}
+\newcommand{\FIGgb}{\numexpr \FIGgc-\FIGstep}
+\newcommand{\FIGga}{\numexpr \FIGgb-\FIGstep}
+\newcommand{\ptovcolor}{violet}
+\newcommand{\liftcolor}{blue}
+\newcommand{\dropcolor}{red}
+\newcommand{\VDropdesc}{$\Pi\circ\bigcap$}
+\newcommand{\HDropdesc}{$\Pi$}
+\newcommand{\HPdesc}{\HP{A}{\vec{b}}}
+\newcommand{\HPidesc}{\LHC}
+\newcommand{\HCdesc}{\HC{A}}
+\newcommand{\HCpdesc}{\pmb \0 & -I \\ I & -U \\ -I & U \pme \x \leq \0}
+\newcommand{\VPdesc}{\VP{U}{V}}
+%\newcommand{\VPidesc}{\cone\{\smallstack{\vec{0}}{U}\cup\smallstack{\vec{1}}{V}\}}
+\newcommand{\VPidesc}{\cone\pmb\vec{0}&\vec{1}\\{U}&{V}\pme}
+\newcommand{\VCdesc}{\cone(U)}
+\newcommand{\VCpdesc}{\cone \pmb 0 & I & -I\\ I & A & -A\pme}
+\begin{figure}[H]
+	\begin{centering}
+		\begin{tikzpicture}[>=triangle 45]
+			\node (HP)  at (\FIGgd,\FIGge) {\small\framebox{$\HPdesc$}};
+			\node (HPi) at (\FIGga,\FIGge) {\small\framebox{$\HPidesc$}};
+			\node (HC)  at (\FIGga,\FIGgc) {\small\framebox{$\HCdesc$}};
+			\node (HCp) at (\FIGgc,\FIGgb) {\small\framebox{$\HCpdesc$}};
+			%
+			\node (VP)  at (\FIGgb,\FIGga) {\small\framebox{$\VPdesc$}};
+			\node (VPi) at (\FIGge,\FIGga) {\small\framebox{$\VPidesc$}};
+			\node (VC)  at (\FIGge,\FIGgc) {\small\framebox{$\VCdesc$}};
+			\node (VCp) at (\FIGgc,\FIGgd) {\small\framebox{$\VCpdesc$}};
+			\draw[<->,color=\ptovcolor] (HP) to node[below]{} node[above]{} (HPi);
+			\draw[<->,color=\ptovcolor] (VP) to node[above]{} node[below]{} (VPi);
+			\draw[-,dashed,color=mygrey]  (HPi) to node[rotate=90,above]{} (HC);
+			\draw[-,dashed,color=mygrey]  (VPi) to node[rotate=90,below]{} (VC);
+			\draw[->,color=\liftcolor,bend left] (HC)  to node[above left]{} (VCp);
+			\draw[->,color=\dropcolor,bend left] (VCp) to node[above right]{} (VC);
+			\draw[->,color=\liftcolor,bend left] (VC)  to node[below right]{} (HCp);
+			\draw[->,color=\dropcolor,bend left] (HCp) to node[below left]{} (HC);
+			%HP <-> HPi
+			%VP <-> VPi
+			%HPi -  HC
+			%VPi -  VC
+			%HC  -> VCp
+			%VC  -> HCi
+			%VCp -> VC
+			%HCp -> HC
+			%
+			%HPi  <-> HP
+			%|
+			%| ____VCp___
+			%HC_        _VC
+			%   \__HCp_/ |
+			%            |
+			%   VP <->  VPi
+		\end{tikzpicture}
+		\caption{Diagram of the proof $P_H \leftrightarrow P_V$}
+		\label{fig:h_to_v}
+	\end{centering}
+\end{figure}
+\end{frame}
+
+\end{document}

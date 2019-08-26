@@ -2,8 +2,6 @@
 
 \documentclass{beamer}
 \input{mymacros.tex}
-
-% stuff
 % This file is a solution template for:
 
 % - Talk at a conference/colloquium.
@@ -105,9 +103,7 @@
 %\beamerdefaultoverlayspecification{<+->}
 
 
-
 \begin{document}
-
 
 \begin{frame}
 	\titlepage
@@ -136,53 +132,36 @@
 % - If you omit details that are vital to the proof/implementation,
 %   just say so once. Everybody will be happy with that.
 
+\section{Theorem}
 
-\section{After Action Review (AAR)}
+\subsection{Definitions and Statement}
+%
+%\begin{frame}{V/H Polyhedra/Cones}
+%  % - A title should summarize the slide in an understandable fashion
+%  %   for anyone how does not follow everything on the slide itself.
+%
+%  \begin{itemize}
+%  \item V-Cone: non-negative linear combinations of some set \\
+%          $\{U\t : \t \geq \0\}$
+%  \item V-Polytope: convex combinations of some set \\
+%          $\{V\blambda : \blambda \geq \0, \1^T\blambda = 1\}$
+%  \item V-Polyhedron: Minkowski Sum of V-Cone and V-Polytope \\
+%          $\{U\t + V\blambda : \t,\blambda \geq \0, \1^T\blambda = 1\}$
+%  \item H-Cone: solutions to system of linear inequalities \\
+%          $\{\x : A\x \leq \0 \}$
+%  \item H-Polyhedra: solutions to system of linear inequalities \\
+%          $\{\x : A\x \leq \vec{b} \}$
+%  \end{itemize}
+%\end{frame}
 
-\subsection{Goal / Outcome}
-
-\begin{frame}{Goal of Thesis}
-\begin{itemize}
-  \item<1-> Prove the {\MWT}
-  \item<2-> Implement the proof in C++
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Outcome of Thesis}
-\begin{itemize}
-  \item<1-> {\MWT} is proven for cones
-  \item<2-> Reductions are shown for polyhedra
-  \item<3-> Pointed and full-dimensional polyhedra are explored for the purposes of verifying the implementation
-\end{itemize}
-\end{frame}
-
-\subsection{Sustain / Improve}
-
-\begin{frame}{Sustain}
-\begin{itemize}
-  \item<1-> Proofs are self-contained
-  \item<2-> Material is ``non-trivial''
-  \item<3-> Figures and diagrams
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Improve}
-\begin{itemize}
-  \item<1-> Proofs missing quantification
-  \item<2-> Backwards definitions
-  \item<3-> Notation and concepts for matrices
-  \item<4-> (Typesetting issues, spelling errors and minor mistakes)
-\end{itemize}
-\end{frame}
-
-\section{The Work}
-
-\subsection{The {\MWT}}
-
+%my macros
 \newcommand{\UCone}{\{U\t \st \t \geq \0\}}
 \newcommand{\TUCone}{\pmb \0 & -I \\ I & -U \\ -I & U \pme}
 
 \begin{frame}{V/H Polyhedra/Cones}
+	% - A title should summarize the slide in an understandable fashion
+	%   for anyone how does not follow everything on the slide itself.
+
 	Let $U \in \R^{d\times l},\, V \in \R^{d\times m},\, A \in \R^{m\times d}$
 	\begin{itemize}
 		\item V-Cone:\\ $\UCone \;\equiv\; \cone(U)$
@@ -196,41 +175,229 @@
 \begin{frame}{\MWT}
 	\begin{itemize}
 		\item General Statement: \\
-		      V-Polyhedra and H-Polyhedra are different representations of the same objects
+		      V-Polyhedra and H-Polyhedra are the same things
 		      \pause
 		\item For Cones: \\
-		      V-Cones and H-Cones are different representations of the same objects
+		      V-Cones and H-Cones are the same things
 		      \pause
 	\end{itemize}
 	First, the proof is done for cones, then polyhedra are reduced to cones.
 \end{frame}
 
-% picture of the proof
-\pgfmathsetmacro\picwidth{\textwidth * 1.3}
-\begin{frame}
-\includegraphics[width = {\picwidth}pt, trim=6cm 0 0 4cm, page=1]{proof_picture_landscape.pdf}
+
+\subsection{Proof of the theorem}
+
+\begin{frame}{V-Cones are H-Cones}
+	Basic idea:
+	\begin{itemize}
+		\item rewrite V-Cone as a projection of an H-Cone
+		\item show that a projection of an H-Cone is an H-Cone
+	\end{itemize}
 \end{frame}
 
-\subsection{Not Original}
+\newcommand{\myalignw}{2.2cm}
+\def\myialign[#1]#2{\makebox[\myalignw][l]{#1} \;#2\;}
 
-\begin{frame}{What I ``Borrowed''}
-From Ziegler:
-\begin{itemize}
-  \item<1-> Fourier Motzkin Elimination for cones
-  \item<2-> Farkas Lemmas
-  \item<3-> General idea for polyhedral reductions
-\end{itemize}
+\begin{frame}[t]{V-Cones are H-Cones}{Lifting the V-Cone}
+	Say we are given $\UCone\ldots$
+	\medskip
+	\begin{itemize}
+		\only<1>{\item First, the non-negativity constraint}
+		      \only<2-7>{\item \myialign[$\t \geq \0$]{$\Leftrightarrow$}
+		      $\pmb \0 & -I\pme \xt \leq \0$}
+		      \only<3>{\item Next, capture the points}
+		      \only<4-7>{\item \myialign[$\x = U\t$]{$\Leftrightarrow$}
+		      $\pmb I & -U \\ -I & U \pme \xt \leq \0$}
+		      \only<5>{\item Finally, project the combined constraints}
+		      \only<6-7>{\item \myialign[$\UCone$]{$=$}
+		      $\left\{\x \St \TUCone \xt \leq \0 \right\}$}
+	\end{itemize}
+	\only<7>{The final expression is a projection of an H-Cone}
 \end{frame}
 
-\subsection{"Original"}
+\begin{frame}{V-Cones are H-Cones}{Projecting an H-Cone}
+	We project an H-Cone one coordinate at a time with
+	\alert{Fourier-Motzkin Elimination}
+	\begin{itemize}
+		\item<2-> Observation:\\[5pt]
+		      $\pmb A & \0 \pme \xt \leq \0 \Leftrightarrow A\x \leq \0$
+		\item<3-> Therefore: \\[5pt]
+		      $\left\{\x \St \pmb A & \0 \pme \xt \leq \0\right\} =
+			      \left\{ \x \st A\x \leq \0 \right\}$
+		\item<4-> So, projecting $\0$ columns is easy.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{V-Cones are H-Cones}{Fourier-Motzkin Elimination}
+	Suppose we are projecting column $k$ from $A\x\leq\0$.
+	\begin{itemize}
+		\item<2-> First, partition the rows as follows:\\
+		      $Z$: rows with $k$-th column $0$ \\
+		      $P$: rows with $k$-th column positive\\
+		      $N$: rows with $k$-th column negative
+		\item<3-> Create a new matrix $A'$ with rows as follows: \\[5pt]
+		      $\begin{cases}
+				      A_z                   & A_z \in Z            \\
+				      A_p^k A_n - A_n^k A_p & A_n \in N, A_p \in P
+			      \end{cases}$
+		\item<4-> You can show:\\
+		      $(\exists t)\,A(\x+t\e_k) \leq \0 \Leftrightarrow A'\x\leq\0$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{H-Cones are V-Cones}
+	Basic idea:
+	\begin{itemize}
+		\item rewrite V-Cone as a projection of intersection of an H-Cone with hyperplanes
+		\item show that a intersection of a V-Cone with a hyperplane is a V-Cone
+		\item projecting V-Cones is easy
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{H-Cones are V-Cones}{Lifting the H-Cone}
+	Say we are given $\HC{A}\ldots$
+	\medskip
+	\begin{itemize}
+		\only<1>{\item First, take up the slack}
+		      \only<2-7>{\item \myialign[$A\x\leq\0$]{$\Leftrightarrow$}
+		      $\exists \w\geq\0 \st A\x + \w = \0$}
+		      \only<3>{\item Next, capture the points}
+		      \only<4-7>{\item
+		      \myialign[$A\x + \w = \0$]{$\Leftrightarrow$}
+		      $\pmb \x \\ A\x \pme + \pmb \0 \\ \w \pme = \pmb \x \\ \0 \pme$}
+		      \only<5>{\item Finally, split the positive/negative contributions:}
+		      \only<6-7>{\item \myialign[$A\x\leq\0$]{$\Leftrightarrow$}
+		      $\xz \in \cone\pmb I & -I & \0 \\ A & -A & I \pme$}
+	\end{itemize}
+	\only<7>{The final expression is a intersection of a V-Cone with some hyperplanes}
+\end{frame}
+
+\begin{frame}[t]{H-Cones are V-Cones}{Intersecting a V-Cone}
+	We intersect a V-Cone one coordinate at a time with
+	\alert{Dual-Fourier-Motzkin Elimination}
+	\begin{itemize}
+		\item<2-> We need to characterize elements of $\cone(U)$ with the $k$-th element $0$.
+		      \only<3>{\item We use the following algebraic trick$\ldots$}
+		      \only<4-6>{
+		\item<4-> Suppose that $\x_i, \x_j \in \cone(U)$, $x_j^k < 0 < x_i^k$, $\sum_i x_i^k + \sum_j x_j^k = 0$, and let $1/\sigma := \sum_i x_i^k = -\sum_j x_j^k$.
+		\item<5-> We can rewrite $\sum_j \x_j + \sum_i \x_i = \sigma \sum_{i,j} x_i^k \x_j - x_j^k \x_i$
+		\item<6-> Note that: $x_i^k\x_j - x_j^k\x_i \in \cone(U) \cap \{\x \st x^k = 0\}$
+		      }
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{H-Cones are V-Cones}{Fourier-Motzkin Elimination}
+	Suppose we are intersecting $\set{x_k = 0}$ with $\cone(U)$.
+	\begin{itemize}
+		\item<2-> First, partition the columns as follows:\\
+		      $Z$: columns with $k$-th row $0$ \\
+		      $P$: columns with $k$-th row positive\\
+		      $N$: columns with $k$-th row negative
+		\item<3-> Create a new matrix $U'$ with columns as follows: \\[5pt]
+		      $\begin{cases}
+				      \x_z                      & \x_z \in Z             \\
+				      \x_p^k \x_n - \x_n^k \x_p & \x_n \in N, \x_p \in P
+			      \end{cases}$
+		\item<4-> You can show:\\
+		      $\y \in \cone(U), y^k = 0 \Leftrightarrow \y \in \cone(U')$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Reducing Polyhedra to Cones}
+	\begin{itemize}
+		\item For H-Polyhedra, move constraints to column $0$ and set that coordinate to $1$
+		      \pause
+		\item $\HP{A}{\vec{b}} = \LHC \cap \hpxz$
+		      \pause
+		\item For V-Polyhedra, use an intersection to enforce convex combinations
+		      \pause
+		\item $\VP{U}{V} = \Pi\left(\cone\pmb \0 & \1 \\ U & V \pme \cap \hpxz\right)$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Reducing Polyhedra to Cones}
+	$\VP{U}{V} = \Pi\left(\cone\pmb \0 & \1 \\ U & V \pme \cap \hpxz\right)$
+	\hrule
+	\begin{itemize}
+		\item This intersection is a slight complication, but handled in essentially the same way as before.  The basic idea:
+		      \pause
+		\item Denote $\sigma_i = \sum_i x_i^0$, $\sigma_j = \sum_j x_j^0$
+		      \pause
+		\item If $\sigma_i + \sigma_j = 1$, then $-\frac{\sigma_j}{\sigma_i} = 1 - \frac{1}{\sigma_i}$
+		      \pause
+		\item Then $\sum_i \x_i = \frac{\sum_i \x_i}{\sigma_i} + \left(1-\frac{1}{\sigma_i}\right)\sum_i \x_i = \frac{1}{\sigma_i}\sum_i \x_i - \frac{\sigma_j}{\sigma_i}\sum_i \x_i$
+		      \pause
+		\item We can rewrite $\sum_j \x_j + \sum_i \x_i =$ $\frac{1}{\sigma_i}\sum_i \x_i + \frac{1}{\sigma_i}\sum_{i,j} x_i^0\x_j - x_j^0\x_i$
+		      \pause
+		\item The left term is in $\conv\pmb \1\\ V\pme$, while the right term is in the cone but has $0$ in $0$-th coordinate.
+	\end{itemize}
+\end{frame}
 
 \begin{frame}
-\begin{itemize}
-  \item<1-> Some of the work and results are ``original''
-  \item<2-> I mean that I came up with them on my own, I'm sure they already exist somewhere
-  \item<3-> The implementation
-  \item<4-> The properties characterizing pointed and full-dimensional polyhedra and their proofs
-\end{itemize}
+\definecolor{mygrey}{rgb}{.1,.1,.1}
+\newcommand{\FIGstep}{2}
+\newcommand{\FIGge}{8}
+\newcommand{\FIGgd}{\numexpr \FIGge-\FIGstep}
+\newcommand{\FIGgc}{\numexpr \FIGgd-\FIGstep}
+\newcommand{\FIGgb}{\numexpr \FIGgc-\FIGstep}
+\newcommand{\FIGga}{\numexpr \FIGgb-\FIGstep}
+\newcommand{\ptovcolor}{violet}
+\newcommand{\liftcolor}{blue}
+\newcommand{\dropcolor}{red}
+\newcommand{\VDropdesc}{$\Pi\circ\bigcap$}
+\newcommand{\HDropdesc}{$\Pi$}
+\newcommand{\HPdesc}{\HP{A}{\vec{b}}}
+\newcommand{\HPidesc}{\LHC}
+\newcommand{\HCdesc}{\HC{A}}
+\newcommand{\HCpdesc}{\pmb \0 & -I \\ I & -U \\ -I & U \pme \x \leq \0}
+\newcommand{\VPdesc}{\VP{U}{V}}
+%\newcommand{\VPidesc}{\cone\{\smallstack{\vec{0}}{U}\cup\smallstack{\vec{1}}{V}\}}
+\newcommand{\VPidesc}{\cone\pmb\vec{0}&\vec{1}\\{U}&{V}\pme}
+\newcommand{\VCdesc}{\cone(U)}
+\newcommand{\VCpdesc}{\cone \pmb 0 & I & -I\\ I & A & -A\pme}
+\begin{figure}[H]
+	\begin{centering}
+		\begin{tikzpicture}[>=triangle 45, scale=.8]
+			\node (HP)  at (\FIGgd,\FIGge) {\small\framebox{$\HPdesc$}};
+			\node (HPi) at (\FIGga,\FIGge) {\small\framebox{$\HPidesc$}};
+			\node (HC)  at (\FIGga,\FIGgc) {\small\framebox{$\HCdesc$}};
+			\node (HCp) at (\FIGgc,\FIGgb) {\small\framebox{$\HCpdesc$}};
+			%
+			\node (VP)  at (\FIGgb,\FIGga) {\small\framebox{$\VPdesc$}};
+			\node (VPi) at (\FIGge,\FIGga) {\small\framebox{$\VPidesc$}};
+			\node (VC)  at (\FIGge,\FIGgc) {\small\framebox{$\VCdesc$}};
+			\node (VCp) at (\FIGgc,\FIGgd) {\small\framebox{$\VCpdesc$}};
+			\draw[<->,color=\ptovcolor] (HP) to node[below]{} node[above]{} (HPi);
+			\draw[<->,color=\ptovcolor] (VP) to node[above]{} node[below]{} (VPi);
+			\draw[-,dashed,color=mygrey]  (HPi) to node[rotate=90,above]{} (HC);
+			\draw[-,dashed,color=mygrey]  (VPi) to node[rotate=90,below]{} (VC);
+			\draw[->,color=\liftcolor,bend left] (HC)  to node[above left]{} (VCp);
+			\draw[->,color=\dropcolor,bend left] (VCp) to node[above right]{} (VC);
+			\draw[->,color=\liftcolor,bend left] (VC)  to node[below right]{} (HCp);
+			\draw[->,color=\dropcolor,bend left] (HCp) to node[below left]{} (HC);
+			%HP <-> HPi
+			%VP <-> VPi
+			%HPi -  HC
+			%VPi -  VC
+			%HC  -> VCp
+			%VC  -> HCi
+			%VCp -> VC
+			%HCp -> HC
+			%
+			%HPi  <-> HP
+			%|
+			%| ____VCp___
+			%HC_        _VC
+			%   \__HCp_/ |
+			%            |
+			%   VP <->  VPi
+		\end{tikzpicture}
+		\caption{Diagram of the proof $P_H \leftrightarrow P_V$}
+		\label{fig:h_to_v}
+	\end{centering}
+\end{figure}
+
+
 \end{frame}
 
 \subsection{Implementation}
@@ -284,7 +451,9 @@ $\set{\Bik B_j - \Bjk B_i \st i \in P,\, j \in N}, \quad
 \end{frame}
 
 
-\subsection{Pointed / Full-Dimensional Polyhedra}
+\section{Testing}
+
+\subsection{Minimal Sets of Generators}
 
 \begin{frame}{Pointed/ Full-Dimensional Polyhedra}
 \begin{itemize}
@@ -304,7 +473,7 @@ $\set{\Bik B_j - \Bjk B_i \st i \in P,\, j \in N}, \quad
 \begin{itemize}
   \item<1-> These ``essentially unique'' sets are ``minimal''
   \item<2-> A set $V$ is called \textit{minimal} for $\cone(V)$ if
-        \[ (\forall \vec{v}\in V)\; \cone(V\setminus\set{\vec{v}}) \subset \cone(V) \]
+        \[ (\forall \vec{v}\in V)\; \cone(V\setminus\{\vec{v}) \subset \cone(V) \]
   \item<3-> A set $A$ is called \textit{minimal} for $\HC{A}$ if
         \[ (\forall A_i \in A)\; \HC{A\setminus\set{A_i}} \supset \HC{A} \]
   \item<4-> The definitions are similar for general polyhedra
@@ -328,7 +497,7 @@ $\set{\Bik B_j - \Bjk B_i \st i \in P,\, j \in N}, \quad
 \end{itemize}
 \end{frame}
 
-%\subsection{Cones}
+\subsection{Cones}
 
 \begin{frame}{Pointed V-Cones}
 \begin{itemize}
@@ -337,9 +506,11 @@ $\set{\Bik B_j - \Bjk B_i \st i \in P,\, j \in N}, \quad
       \item $\cone(V)$ is pointed.
       \item $\t\geq\0,\; [V\t=\0 \Rightarrow \t=\0]$
     \end{enumerate}
-  %\item<2-> A set $V$ is called \textit{minimal} for $\cone(V)$ if:\\
-  %$(\forall \vec{v} \in V)\; \cone(V\setminus\{\vec{v}\}) \subset \cone(V)$
-	\item<2-> Suppose that $\cone(V)$ is pointed.  Then the following two statements are equivalent:
+
+  \item<2-> A set $V$ is called \textit{minimal} for $\cone(V)$ if:\\
+  $(\forall \vec{v} \in V)\; \cone(V\setminus\{\vec{v}\}) \subset \cone(V)$
+
+	\item<3-> Suppose that $\cone(V)$ is pointed.  Then the following two statements are equivalent:
 	\begin{enumerate}
 		\item V is minimal
 		\item $\t\geq\0,\,\vec{v}=V\e_i,\; [\vec{v}=V\t \Rightarrow \t=\e_i]$
@@ -363,12 +534,12 @@ $\set{\Bik B_j - \Bjk B_i \st i \in P,\, j \in N}, \quad
 \end{itemize}
 \end{frame}
 
-%\subsection{Polyhedra}
+\subsection{Polyhedra}
 
 \begin{frame}{Cones and Polyhedra}
 \begin{itemize}
-  \item<1-> General polyhedra are decomposed into a ``characteristic-cone'' and polytope
-  \item<2-> Suppose that $P = \HP{A}{b} = \VP{U}{V}$, and let $\vec{r}$ be a vector.  The following are equivalent:
+  \item<1-> General Polyhedra are decomposed into a ``characteristic-cone'' and polytope
+  \item<2-> Suppose that $P = \HP{A}{b} = \VP{U}{V}$.  Then the following three statements are equivalent:
     \begin{enumerate}
       \item $A\vec{r}\leq\0$
       \item $(\forall \vec{x}\in P)(\forall \alpha > 0)\;\vec{x} + \alpha\vec{r} \in P$
@@ -456,46 +627,19 @@ $\set{\Bik B_j - \Bjk B_i \st i \in P,\, j \in N}, \quad
 \end{itemize}
 \end{frame}
 
-\section{If I could do it again}
 
-\subsection{MWT for Cones}
+\section*{Summary}
 
-\begin{frame}{20/20 hindsight}
-\begin{itemize}
-  \item Since writing the thesis I've come up with a ``more elegant'' proof of the MWT for cones.  I would rather have used this proof, but here it is now
-  \item I've read a little about tensors, and think that using some of the ideas there and notation would have made things cleaner
-\end{itemize}
+\begin{frame}{Summary}
+
+	% Keep the summary *very short*.
+	\begin{itemize}
+		\item<1-> A V-Polyhedron could easily be represented as an H-Polyhedron with an infinite number of constraints
+		\item<2-> The {\MWT} tells us that a finite number are enough (an ``obvious'' fact)
+		\item<3-> The Farkas Lemma is a nice combinatorial result that encapsulates this fact
+    \item<4-> Pointed and Full-Dimensional polyhedra are ``non-degenerate'' in some sense that have even better properties for determining their representations
+	\end{itemize}
 \end{frame}
-
-\begin{frame}{Better MWT for Cones}
-\begin{itemize}
-  \item H-Cone $\to$ V-Cone.  Use same transform and ``tensor-notation''
-  \item Farkas Lemma using the following facts:
-    \begin{itemize}
-    \item Intersection of a closed set with a compact set is compact
-    \item Continuous real-valued function attains maximum on a compact set
-    \item Projection is bi-continuous on a finite product topology
-    \item Finitely generated cone is closed (project $V\to H$ transform)
-    \end{itemize}
-  \item Better dual cone: $\HC{A} = \cone(U) \Leftrightarrow \cone(A^T) = \HC{U^T}$
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Tensor-like notation}
-First, we write $\HC{A} = \set{ \vec{x} \St
-    \pmb \vec{x} \\ \0 \pme \in 
-      \cone \pmb I & -I & \0 \\ A & -A & I \pme }$
-Now we need to do our intersections:
-\begin{itemize}
-  \item Let $\vec{u} \in \cone(U)$ with $u_l = 0$
-  \item Let $\vec{p}^i t_i$ sum over elements of U with positive $l$-th elements
-  \item $\vec{u} = \vec{p}^i t_i + \vec{n}^j t_j + \vec{z}^k t_k$
-  \item $u_l = 0 \Rightarrow p^i_l t_i + n^j_l t_j = 0 \dots \quad \sigma := p^i_l t_i = -n^j_l t_j$
-  \item $\vec{u} = \frac{\vec{n}^j t_j p^i_l t_i - \vec{p}^i t_i n^j_l t_j}{\sigma} + \vec{z}^k t_k = (\vec{n}^j p^i_l - \vec{p}^i n^j_l)\frac{t_i t_j}{\sigma} + \vec{z}^k t_k $
-\end{itemize}
-\end{frame}
-
-\subsection{Summary}
 
 \begin{frame}{Further Considerations}
 \begin{itemize}
@@ -510,6 +654,7 @@ Now we need to do our intersections:
 \end{frame}
 
 
+
 %% All of the following is optional and typically not needed. 
 %\appendix
 %\section<presentation>*{\appendixname}
@@ -520,8 +665,6 @@ Now we need to do our intersections:
 %
 %	\begin{thebibliography}{10}
 %
-
-
 %		\beamertemplatebookbibitems
 %		% Start with overview books.
 %
@@ -542,5 +685,4 @@ Now we need to do our intersections:
 %	\end{thebibliography}
 %\end{frame}
 %
-
 \end{document}
