@@ -137,7 +137,7 @@
 %   just say so once. Everybody will be happy with that.
 
 
-\section{After Action Review (AAR)}
+\section{Goal and Outcome}
 
 \subsection{Goal / Outcome}
 
@@ -150,15 +150,15 @@
 
 \begin{frame}{Outcome of Thesis}
 \begin{itemize}
-  \item<1-> {\MWT} is proven for cones
-  \item<2-> Reductions are shown for polyhedra
+  \item<1-> {\MWT} is proven in line with Ziegler
+  \item<2-> Simple implementation for command line in C++
   \item<3-> Pointed and full-dimensional polyhedra are explored for the purposes of verifying the implementation
 \end{itemize}
 \end{frame}
 
-\subsection{Sustain / Improve}
+\subsection{Strengths and Weaknesses}
 
-\begin{frame}{Sustain}
+\begin{frame}{Strengths}
 \begin{itemize}
   \item<1-> Proofs are self-contained
   \item<2-> Material is ``non-trivial''
@@ -166,7 +166,7 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Improve}
+\begin{frame}{Weaknesses}
 \begin{itemize}
   \item<1-> Proofs missing quantification
   \item<2-> Backwards definitions
@@ -177,10 +177,20 @@
 
 \section{The Work}
 
-\subsection{The {\MWT}}
+%\subsection{The {\MWT}}
+\subsection{Not Original}
 
 \newcommand{\UCone}{\{U\t \st \t \geq \0\}}
 \newcommand{\TUCone}{\pmb \0 & -I \\ I & -U \\ -I & U \pme}
+
+\begin{frame}{What I ``Borrowed''}
+From Ziegler:
+\begin{itemize}
+  \item<1-> Fourier Motzkin Elimination for cones
+  \item<2-> Farkas Lemmas
+  \item<3-> General idea for polyhedral reductions
+\end{itemize}
+\end{frame}
 
 \begin{frame}{V/H Polyhedra/Cones}
 	Let $U \in \R^{d\times l},\, V \in \R^{d\times m},\, A \in \R^{m\times d}$
@@ -211,27 +221,17 @@
 \includegraphics[width = {\picwidth}pt, trim=6cm 0 0 4cm, page=1]{proof_picture_landscape.pdf}
 \end{frame}
 
-\subsection{Not Original}
 
-\begin{frame}{What I ``Borrowed''}
-From Ziegler:
-\begin{itemize}
-  \item<1-> Fourier Motzkin Elimination for cones
-  \item<2-> Farkas Lemmas
-  \item<3-> General idea for polyhedral reductions
-\end{itemize}
-\end{frame}
-
-\subsection{"Original"}
-
-\begin{frame}
-\begin{itemize}
-  \item<1-> Some of the work and results are ``original''
-  \item<2-> I mean that I came up with them on my own, I'm sure they already exist somewhere
-  \item<3-> The implementation
-  \item<4-> The properties characterizing pointed and full-dimensional polyhedra and their proofs
-\end{itemize}
-\end{frame}
+%\subsection{"Original"}
+%
+%\begin{frame}
+%\begin{itemize}
+%  \item<1-> Some of the work and results are ``original''
+%  \item<2-> I mean that I came up with them on my own, I'm sure they already exist somewhere
+%  \item<3-> The implementation
+%  \item<4-> The properties characterizing pointed and full-dimensional polyhedra and their proofs
+%\end{itemize}
+%\end{frame}
 
 \subsection{Implementation}
 
@@ -283,33 +283,7 @@ $\set{\Bik B_j - \Bjk B_i \st i \in P,\, j \in N}, \quad
 	\set{\Yi Y^j - \Yj Y^i \st i \in P,\, j\in N} $
 \end{frame}
 
-
 \subsection{Pointed / Full-Dimensional Polyhedra}
-
-\begin{frame}{Pointed/ Full-Dimensional Polyhedra}
-\begin{itemize}
-  \item These are basically non-degeneracy constraints.
-    \begin{itemize}
-      \item Pointed Polyhedra have at least one vertex
-      \item Full dimensional polyhedra contain an affine independent set
-    \end{itemize}
-
-  \item Pointed V-Polyhedra and Full-Dimensional H-Polyhedra have ``essentially unique'' sets of generators
-  \item These ``essentially unique'' sets make it easy to test for equivalence
-  \item The characterizations are similar to ``linear independence''
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Pointed/ Full-Dimensional Polyhedra}
-\begin{itemize}
-  \item<1-> These ``essentially unique'' sets are ``minimal''
-  \item<2-> A set $V$ is called \textit{minimal} for $\cone(V)$ if
-        \[ (\forall \vec{v}\in V)\; \cone(V\setminus\set{\vec{v}}) \subset \cone(V) \]
-  \item<3-> A set $A$ is called \textit{minimal} for $\HC{A}$ if
-        \[ (\forall A_i \in A)\; \HC{A\setminus\set{A_i}} \supset \HC{A} \]
-  \item<4-> The definitions are similar for general polyhedra
-\end{itemize}
-\end{frame}
 
 \begin{frame}{Testing Methods}
 \begin{itemize}
@@ -317,14 +291,38 @@ $\set{\Bik B_j - \Bjk B_i \st i \in P,\, j \in N}, \quad
     \begin{alignat*}{2}
        & AV'\leq\0 \;      & \Rightarrow & \; \cone(V') \subseteq \HC{A}\\
        & V \subseteq V' \; & \Rightarrow & \; \cone(V) \subseteq \cone(V')\\
-       & \cone(V') = \HC{A} \;   & \Rightarrow & \; AV'\leq\0 \\
-       & \cone(V') = \cone(V)  \;& \overset{?}{\Rightarrow} & \; V \subseteq V'
+       & \cone(V') \subseteq \HC{A} \;   & \Rightarrow & \; AV'\leq\0 \\
+       & \cone(V) \subseteq \cone(V')  \;& \overset{?}{\Rightarrow} & \; V \subseteq V'
     \end{alignat*}
   \item<2-> The last item would create an equivalence
   \begin{itemize}
     \item<3-> Must relax ``$\subseteq$'' (vectors vs rays)
     \item<4-> Requires notion of ``essentially unique'' representation
   \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Pointed/ Full-Dimensional Polyhedra}
+\begin{itemize}
+  \item<1-> These are basically non-degeneracy constraints.
+    \begin{itemize}
+      \item<2-> Pointed Polyhedra have at least one vertex
+      \item<3-> Full dimensional polyhedra contain an affine independent set
+    \end{itemize}
+  \item<4-> Pointed V-Polyhedra and Full-Dimensional H-Polyhedra have ``essentially unique'' sets of generators / contraints
+  \item<5-> These ``essentially unique'' sets make it easy to test for equivalence
+  \item<6-> The characterizations are similar to ``linear independence''
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Pointed/ Full-Dimensional Polyhedra}
+\begin{itemize}
+  \item<1-> These ``essentially unique'' sets are ``minimal''
+  \item<2-> A set $V$ is called \textit{minimal} for $\cone(V)$ if
+        \[ (\forall \vec{v}\in V)\; \cone(V\setminus\set{\vec{v}}) \subsetneq \cone(V) \]
+  \item<3-> A set $A$ is called \textit{minimal} for $\HC{A}$ if
+        \[ (\forall A_i \in A)\; \HC{A\setminus\set{A_i}} \supsetneq \HC{A} \]
+  \item<4-> The definitions are similar for general polyhedra
 \end{itemize}
 \end{frame}
 
@@ -339,25 +337,37 @@ $\set{\Bik B_j - \Bjk B_i \st i \in P,\, j \in N}, \quad
     \end{enumerate}
   %\item<2-> A set $V$ is called \textit{minimal} for $\cone(V)$ if:\\
   %$(\forall \vec{v} \in V)\; \cone(V\setminus\{\vec{v}\}) \subset \cone(V)$
-	\item<2-> Suppose that $\cone(V)$ is pointed.  Then the following two statements are equivalent:
+	\item<2-> Suppose that $\cone(V)$ is pointed.  The following two statements are equivalent:
 	\begin{enumerate}
 		\item V is minimal
 		\item $\t\geq\0,\,\vec{v}=V\e_i,\; [\vec{v}=V\t \Rightarrow \t=\e_i]$
 	\end{enumerate}
+  \item<3-> ``No generator can be non-trivially generated''
 \end{itemize}
+\end{frame}
+
+\begin{frame}{Farkas Lemma}
+\begin{enumerate}
+  \item<1-> Farkas Lemma:
+    Let $U \in \R^{d\times n}$.  Precisely one of the following is true:
+    \begin{align*}
+       & (\exists \t \geq \0) : \x = U\t                \\
+       & (\exists \y) : U^T\y \leq 0,\; \ip{\y}{\x} > 0
+    \end{align*}
+  \item<2-> i.e. a point is contained in a cone or can be separated from it with a hyperplane
+\end{enumerate}
 \end{frame}
 
 \begin{frame}{Full-Dimensional H-Cones}
 \begin{itemize}
-  \item<1-> All definitions are nearly identical, but we use the Farkas' lemma to consider the ``dual cone''
-  \item<2-> Farkas Lemma:
-    Let $U \in \R^{d\times n}$.  Precisely one of the following is true:
-    \begin{align*}
-       & (\exists \t \geq \0) : \x = U\t                \\
-       & (\exists \y) : U^T\y \leq 0,\; \ip{\x}{\y} > 0
-    \end{align*}
-  \item<3-> i.e. a point is contained in a cone or can be separated from it with a hyperplane
-  \item<4-> The Farkas Lemma can be used to prove the following: 
+  \item<1-> A set $V$ of vectors is \textit{full-dimensional} if 
+  \[ \forall\y\neq\0, \forall c\in\R, \exists \vec{v} \in V:\; \y^T \vec{v} \neq c \]
+  \item<2->The following two statements are equivalent:
+    \begin{enumerate}
+      \item $\HC{A}$ is full dimensional and $A$ is minimal
+      \item $\cone(A^T)$ is pointed and $A$ is minimal
+    \end{enumerate}
+  \item<3-> The Farkas Lemma can be used to prove the following: 
     \[\HC{A} = \HC{A'} \Leftrightarrow \cone(A^T) = \cone(A'^T)\]
     ($\cone(A^T)$ is what I call the ``dual cone'')
 \end{itemize}
@@ -374,14 +384,15 @@ $\set{\Bik B_j - \Bjk B_i \st i \in P,\, j \in N}, \quad
       \item $(\forall \vec{x}\in P)(\forall \alpha > 0)\;\vec{x} + \alpha\vec{r} \in P$
       \item $\vec{r} \in \cone(U)$
     \end{enumerate}
-  \item<3-> Note that $(2)$ in the proof above is independent of $A$ and $U$.
+  \item<3-> $2 \Rightarrow 3$ requires the Farkas Lemma
+  \item<4-> Note that $(2)$ in the proof above is independent of $A$ and $U$.
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Pointed V-Polyhedra}
 \begin{itemize}
-  \item<1-> In $P = \cone(U)+\conv(V)$ we need $U$ to be minimal as for V-Cones
-  \item<2-> Minimality for the set $\conv(V)$ -- a polytope -- is given by the vertex set
+  \item<1-> Minimality for the set $\conv(V)$ -- a polytope -- is given by the vertex set
+  \item<2-> In $P = \cone(U)+\conv(V)$ we need $U$ to be minimal as for V-Cones
   \item<3-> Complication: a vertex of $\conv(V)$ may not be a vertex of $P$
 \end{itemize}
 \end{frame}
@@ -391,7 +402,7 @@ $\set{\Bik B_j - \Bjk B_i \st i \in P,\, j \in N}, \quad
 	\item<1-> If $\vec{v}$ is a vertex of $\VP{U}{V}$, then $[\vec{v} = U\vec{t} + V\blambda] \Rightarrow \vec{t} = \0$  \\
   (I call $\vec{v}$ here \textit{U-free})
   \item<2-> If $\vec{v}$ is a vertex of $\VP{U}{V}$, then $\vec{v}$ is a vertex of $\conv(V)$
-	\item<3-> Let $P = \cone(U)+ \cone(V)$.  Then the following are equivalent
+	\item<3-> Let $P = \cone(U)+ \cone(V)$ be pointed.  The following are equivalent
     \begin{enumerate}
       \item $(U,V)$ is minimal for $P$
       \item $U$ is minimal for $\cone(U)$, $V$ is the vertex set of $P$
@@ -401,7 +412,7 @@ $\set{\Bik B_j - \Bjk B_i \st i \in P,\, j \in N}, \quad
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Full-Dimensional H-Polyhedra}
+\begin{frame}{Farkas Lemma 2}
 \begin{itemize}
   \item<1-> We need another form of the Farkas Lemma:
       \[ (\exists \vec{t}\geq\0) \vec{t}^T A = \vec{y},\, \vec{t}^T\vec{b} \leq c \Leftrightarrow
@@ -411,8 +422,24 @@ $\set{\Bik B_j - \Bjk B_i \st i \in P,\, j \in N}, \quad
         \end{cases}
       \]
   \item<2-> Basically, a constraint is valid for a polyhedron if and only if it is a non-negative combination of rows of constraints (plus some change)
-  \item<3-> If $P = \HP{A}{\vec{b}}$ is full dimensional, and $\vec{y}^T A = \0$ with $\vec{y}\geq\0$, then either $\vec{y} = \0$ or $\vec{y}^T \vec{b} > \0$.
-  \item<4-> $\vec{y}^T A = \0,\;\vec{y}^T \vec{b} > \0$ occurs when two of the bounding hyperplanes are parallel
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Full-Dimensional H-Polyhedra}
+\begin{itemize}
+  \item<1-> The following are equivalent
+  \begin{enumerate}
+    \item $\HP{A}{\vec{b}}$ is full-dimensional
+    \item $ \y\geq\0,\, \vec{y}^T A = \0 \Rightarrow 
+      \vec{y} = \0 \text{ or } \vec{y}^T \vec{b} > \0 $
+  \end{enumerate}
+  \item<2-> $\vec{y}^T A = \0,\;\vec{y}^T \vec{b} > \0$ occurs when two of the bounding hyperplanes are parallel
+  \item<3-> If $\HP{A}{\vec{b}}$ is full-dimensional, the following are equivalent
+  \begin{enumerate}
+    \item $(A,\vec{b})$ is minimal
+    \item $\y\geq\0,\y\neq\e_i, \y^T A = A_i \Rightarrow \y^T\vec{b} > b_i$
+  \end{enumerate}
+  \item<4-> ``A non trivially generated row generates a trivial constraint''
 \end{itemize}
 \end{frame}
 
@@ -456,27 +483,37 @@ $\set{\Bik B_j - \Bjk B_i \st i \in P,\, j \in N}, \quad
 \end{itemize}
 \end{frame}
 
-\section{If I could do it again}
 
-\subsection{MWT for Cones}
+\section{Closing Remarks}
 
-\begin{frame}{20/20 hindsight}
-\begin{itemize}
-  \item Since writing the thesis I've come up with a ``more elegant'' proof of the MWT for cones.  I would rather have used this proof, but here it is now
-  \item I've read a little about tensors, and think that using some of the ideas there and notation would have made things cleaner
-\end{itemize}
-\end{frame}
+\subsection{If I could do it again}
+
+%\begin{frame}{20/20 hindsight}
+%\begin{itemize}
+%  \item Since writing the thesis I've come up with a ``more elegant'' proof of the MWT for cones.  I would rather have used this proof, but here it is now
+%  \item I've read a little about tensors, and think that using some of the ideas there and notation would have made things cleaner
+%\end{itemize}
+%\end{frame}
 
 \begin{frame}{Better MWT for Cones}
 \begin{itemize}
   \item H-Cone $\to$ V-Cone.  Use same transform and ``tensor-notation''
   \item Farkas Lemma using the following facts:
-    \begin{itemize}
-    \item Intersection of a closed set with a compact set is compact
-    \item Continuous real-valued function attains maximum on a compact set
-    \item Projection is bi-continuous on a finite product topology
-    \item Finitely generated cone is closed (project $V\to H$ transform)
-    \end{itemize}
+  \begin{enumerate}
+    \item An intersection of closed sets is closed
+    \item A projection of a closed subset of $\R^n$ is closed
+    \item (Heine-Borel) A subset of $\R^n$ is compact if and only if it is closed
+          and bounded
+    \item A continuous function on a compact subset of $\R^n$ achieves its maximum
+    \item Linear functions on $\R^n$ are continuous
+    \item The Cauchy-Shwartz inequality
+  \end{enumerate}
+%  \begin{itemize}
+%    \item Intersection of a closed set with a compact set is compact
+%    \item Continuous real-valued function attains maximum on a compact set
+%    \item Projection is bi-continuous on a finite product topology
+%    \item Finitely generated cone is closed (project $V\to H$ transform)
+%    \end{itemize}
   \item Better dual cone: $\HC{A} = \cone(U) \Leftrightarrow \cone(A^T) = \HC{U^T}$
 \end{itemize}
 \end{frame}
@@ -497,15 +534,25 @@ Now we need to do our intersections:
 
 \subsection{Summary}
 
+\begin{frame}{Summary}
+	% Keep the summary *very short*.
+	\begin{itemize}
+		\item<1-> Finite generation
+		\item<2-> The Farkas Lemma (separation)
+    \item<3-> Pointed and Full-Dimensional polyhedra are ``non-degenerate''
+	\end{itemize}
+\end{frame}
+
 \begin{frame}{Further Considerations}
 \begin{itemize}
   \item Better algorithms (Dual-Description)
   \item Other interpretations...
   \begin{itemize}
-    \item ...Systems of logical deduction
+    \item ...Systems of logical deduction: \\
+      Hahn-Banach vs Incompleteness
     \item ...Systems where ``lift and drop'' creates a dual representation
   \end{itemize}
-  \item Are there any useful implications for ``polyhedra complexes'' or ``chains''?
+  %\item Are there any useful implications for ``polyhedra complexes'' or ``chains''?
 \end{itemize}
 \end{frame}
 
